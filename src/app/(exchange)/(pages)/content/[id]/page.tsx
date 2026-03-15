@@ -470,7 +470,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
 
                 {/* Wayfinder — collapsible on mobile */}
                 <details className="lg:open group" open>
-                  <summary className="px-5 py-4 cursor-pointer lg:cursor-default list-none flex items-center justify-between" style={{ borderBottom: `1px solid ${RULE}` }}>
+                  <summary className="px-5 py-4 cursor-pointer lg:cursor-default list-none flex items-center justify-between" style={{ borderBottom: `3px solid ${RULE}` }}>
                     <h2 className="text-sm font-bold text-ink uppercase tracking-wider">Wayfinder</h2>
                     <span className="lg:hidden text-muted group-open:rotate-180 transition-transform">
                       <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
@@ -479,7 +479,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
 
                 {/* Source link */}
                 {item.source_url && (
-                  <div className="px-5 py-3" style={{ background: SIDEBAR_BG, borderBottom: `1px solid ${RULE}` }}>
+                  <div className="px-5 py-3" style={{ background: SIDEBAR_BG, borderBottom: `3px solid ${RULE}` }}>
                     <a href={item.source_url} target="_blank" rel="noopener noreferrer"
                       className="text-sm font-semibold hover:underline flex items-center gap-1.5" style={{ color: themeColor }}
                     >
@@ -491,7 +491,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
 
                 {/* Topic */}
                 {themeEntry && (
-                  <div className="px-5 py-3" style={{ borderBottom: `1px solid ${RULE}` }}>
+                  <div className="px-5 py-3" style={{ borderBottom: `3px solid ${RULE}` }}>
                     <Link href={'/pathways/' + (themeSlug || '')} className="flex items-center gap-2 group">
                       <FlowerOfLife size={16} color={themeColor} opacity={0.7} />
                       <span className="text-sm font-semibold group-hover:underline" style={{ color: themeColor }}>{themeEntry.name}</span>
@@ -501,7 +501,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
 
                 {/* Focus Areas */}
                 {focusAreas.length > 0 && (
-                  <div className="px-5 py-3" style={{ borderBottom: `1px solid ${RULE}` }}>
+                  <div className="px-5 py-3" style={{ borderBottom: `3px solid ${RULE}` }}>
                     <p className="text-xs font-bold text-muted uppercase tracking-wider mb-2">Focus Areas</p>
                     <div className="flex flex-wrap gap-1.5">
                       {focusAreas.map(function (fa: any) {
@@ -520,7 +520,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
 
                 {/* Details row — compact single-value items */}
                 {(audienceData && (audienceData as any[]).length > 0 || timeData || geoScope || contentType) && (
-                  <div className="px-5 py-3" style={{ borderBottom: `1px solid ${RULE}` }}>
+                  <div className="px-5 py-3" style={{ borderBottom: `3px solid ${RULE}` }}>
                     <div className="space-y-1.5 text-xs">
                       {audienceData && (audienceData as any[]).length > 0 && (
                         <div className="flex gap-2">
@@ -607,7 +607,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
       </section>
 
       {/* ── FOOTER CODA ── */}
-      <section style={{ background: SIDEBAR_BG, borderTop: `1px solid ${RULE}` }}>
+      <section style={{ background: SIDEBAR_BG, borderTop: `3px solid ${RULE}` }}>
         <div className="max-w-[820px] mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
           <Link
             href="/explore"
@@ -642,7 +642,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
 /* ── Sidebar Section Component (unused, kept for reference) ── */
 function SidebarSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="px-5 py-3" style={{ borderBottom: `1px solid ${RULE}` }}>
+    <div className="px-5 py-3" style={{ borderBottom: `3px solid ${RULE}` }}>
       <h4 className="text-xs font-bold text-muted uppercase tracking-wider mb-2">{title}</h4>
       <div>{children}</div>
     </div>

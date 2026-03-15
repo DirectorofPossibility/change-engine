@@ -301,7 +301,7 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
               {bio && bio.length > 200 && (
                 <section className="mb-8">
                   <h2 className="font-display text-xl font-bold mb-2" style={{ color: INK }}>{t('detail.about')}</h2>
-                  <div className="h-px mb-3" style={{ background: `${themeColor}30` }} />
+                  <div className="h-[3px] mb-3" style={{ background: `${themeColor}30` }} />
                   <p className="text-[0.95rem] leading-relaxed" style={{ color: DIM }}>{bio}</p>
                 </section>
               )}
@@ -310,7 +310,7 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
               {(profile?.address_office || profile?.address_district) && (
                 <section className="mb-8">
                   <h2 className="font-display text-xl font-bold mb-2" style={{ color: INK }}>Offices</h2>
-                  <div className="h-px mb-3" style={{ background: `${themeColor}30` }} />
+                  <div className="h-[3px] mb-3" style={{ background: `${themeColor}30` }} />
                   <div className="space-y-3">
                     {profile?.address_office && (
                       <div className="flex items-start gap-2 text-[0.9rem]" style={{ color: DIM }}>
@@ -341,7 +341,7 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
                     <h2 className="font-display text-xl font-bold" style={{ color: INK }}>{t('official.counties')}</h2>
                     <span className="font-mono text-[0.6rem] uppercase tracking-wider" style={{ color: DIM }}>{counties.length}</span>
                   </div>
-                  <div className="h-px mb-3" style={{ background: `${themeColor}30` }} />
+                  <div className="h-[3px] mb-3" style={{ background: `${themeColor}30` }} />
                   <div className="space-y-1">
                     {counties.map(function (c) {
                       return (
@@ -355,7 +355,7 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
               {/* District Info — collapsible */}
               {(official.district_type || official.district_id) && (
                 <details className="mb-8 group">
-                  <summary className="flex items-center justify-between cursor-pointer py-3" style={{ borderBottom: `1px solid ${RULE}` }}>
+                  <summary className="flex items-center justify-between cursor-pointer py-3" style={{ borderBottom: `3px solid ${RULE}` }}>
                     <span className="font-display text-xl font-bold" style={{ color: INK }}>{t('official.district')}</span>
                     <svg width="16" height="16" viewBox="0 0 20 20" fill="none" className="transition-transform group-open:rotate-180">
                       <path d="M5 7.5L10 12.5L15 7.5" stroke={DIM} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -410,12 +410,12 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
                     <h2 className="font-display text-xl font-bold" style={{ color: INK }}>{t('official.focus_areas')}</h2>
                     <span className="font-mono text-[0.6rem] uppercase tracking-wider" style={{ color: DIM }}>{focusAreas.length}</span>
                   </div>
-                  <div className="h-px mb-3" style={{ background: `${themeColor}30` }} />
+                  <div className="h-[3px] mb-3" style={{ background: `${themeColor}30` }} />
                   <div>
                     {focusAreas.map(function (fa, i) {
                       const dotColor = FOCUS_DOT_COLORS[i % FOCUS_DOT_COLORS.length]
                       return (
-                        <Link key={fa.focus_id} href={'/explore/focus/' + fa.focus_id} className="flex items-center gap-2 py-2 text-[0.9rem] hover:underline" style={{ borderBottom: `1px solid ${RULE}` }}>
+                        <Link key={fa.focus_id} href={'/explore/focus/' + fa.focus_id} className="flex items-center gap-2 py-2 text-[0.9rem] hover:underline" style={{ borderBottom: `3px solid ${RULE}` }}>
                           <span className="w-2 h-2 flex-shrink-0 rounded-full" style={{ background: dotColor }} />
                           <span style={{ color: INK }}>{fa.focus_area_name}</span>
                         </Link>
@@ -432,10 +432,10 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
                     <h2 className="font-display text-xl font-bold" style={{ color: INK }}>{t('official.committees')}</h2>
                     <span className="font-mono text-[0.6rem] uppercase tracking-wider" style={{ color: DIM }}>{committeeList.length}</span>
                   </div>
-                  <div className="h-px mb-3" style={{ background: `${themeColor}30` }} />
+                  <div className="h-[3px] mb-3" style={{ background: `${themeColor}30` }} />
                   {committeeList.slice(0, 4).map(function (c, i) {
                     return (
-                      <div key={i} className="py-3" style={{ borderBottom: i < Math.min(committeeList.length, 4) - 1 ? `1px solid ${RULE}` : 'none' }}>
+                      <div key={i} className="py-3" style={{ borderBottom: i < Math.min(committeeList.length, 4) - 1 ? `3px solid ${RULE}` : 'none' }}>
                         <div className="flex items-start justify-between gap-3">
                           <div>
                             <p className="text-[0.9rem] font-semibold" style={{ color: INK }}>{c.committee_name}</p>
@@ -459,7 +459,7 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
                       </summary>
                       {committeeList.slice(4).map(function (c, i) {
                         return (
-                          <div key={i + 4} className="py-3" style={{ borderBottom: i < committeeList.length - 5 ? `1px solid ${RULE}` : 'none' }}>
+                          <div key={i + 4} className="py-3" style={{ borderBottom: i < committeeList.length - 5 ? `3px solid ${RULE}` : 'none' }}>
                             <div className="flex items-start justify-between gap-3">
                               <div>
                                 <p className="text-[0.9rem] font-semibold" style={{ color: INK }}>{c.committee_name}</p>
@@ -488,11 +488,11 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
                     <h2 className="font-display text-xl font-bold" style={{ color: INK }}>{t('official.recent_votes')}</h2>
                     <span className="font-mono text-[0.6rem] uppercase tracking-wider" style={{ color: DIM }}>{voteList.length}</span>
                   </div>
-                  <div className="h-px mb-3" style={{ background: `${themeColor}30` }} />
+                  <div className="h-[3px] mb-3" style={{ background: `${themeColor}30` }} />
                   {voteList.slice(0, 4).map(function (v, i) {
                     const voteColor = v.vote === 'Yea' ? '#2d5a27' : v.vote === 'Nay' ? '#a12323' : DIM
                     const inner = (
-                      <div className="flex items-center justify-between gap-3 py-3" style={{ borderBottom: i < Math.min(voteList.length, 4) - 1 ? `1px solid ${RULE}` : 'none' }}>
+                      <div className="flex items-center justify-between gap-3 py-3" style={{ borderBottom: i < Math.min(voteList.length, 4) - 1 ? `3px solid ${RULE}` : 'none' }}>
                         <div className="min-w-0">
                           <p className="truncate text-[0.9rem] font-semibold" style={{ color: INK }}>
                             {v.bill_number || t('official.vote')}
@@ -521,7 +521,7 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
                       {voteList.slice(4).map(function (v, i) {
                         const voteColor = v.vote === 'Yea' ? '#2d5a27' : v.vote === 'Nay' ? '#a12323' : DIM
                         const inner = (
-                          <div className="flex items-center justify-between gap-3 py-3" style={{ borderBottom: i < voteList.length - 5 ? `1px solid ${RULE}` : 'none' }}>
+                          <div className="flex items-center justify-between gap-3 py-3" style={{ borderBottom: i < voteList.length - 5 ? `3px solid ${RULE}` : 'none' }}>
                             <div className="min-w-0">
                               <p className="truncate text-[0.9rem] font-semibold" style={{ color: INK }}>{v.bill_number || t('official.vote')}</p>
                               <div className="flex items-center gap-2 mt-0.5">
@@ -550,7 +550,7 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
                     <h2 className="font-display text-xl font-bold" style={{ color: INK }}>{t('official.policies')}</h2>
                     <span className="font-mono text-[0.6rem] uppercase tracking-wider" style={{ color: DIM }}>{policies.length}</span>
                   </div>
-                  <div className="h-px mb-3" style={{ background: `${themeColor}30` }} />
+                  <div className="h-[3px] mb-3" style={{ background: `${themeColor}30` }} />
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-0" style={{ borderLeft: `1px solid ${RULE}`, borderTop: `1px solid ${RULE}` }}>
                     {policies.map(function (p) {
                       const pt = policyTranslations[p.policy_id]
@@ -581,10 +581,10 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
                     <h2 className="font-display text-xl font-bold" style={{ color: INK }}>Related Services</h2>
                     <span className="font-mono text-[0.6rem] uppercase tracking-wider" style={{ color: DIM }}>{relatedServices.length}</span>
                   </div>
-                  <div className="h-px mb-3" style={{ background: `${themeColor}30` }} />
+                  <div className="h-[3px] mb-3" style={{ background: `${themeColor}30` }} />
                   {relatedServices.map(function (svc: any) {
                     return (
-                      <Link key={svc.service_id} href={'/services/' + svc.service_id} className="flex items-start gap-3 py-2.5 hover:underline" style={{ borderBottom: `1px solid ${RULE}` }}>
+                      <Link key={svc.service_id} href={'/services/' + svc.service_id} className="flex items-start gap-3 py-2.5 hover:underline" style={{ borderBottom: `3px solid ${RULE}` }}>
                         <span className="mt-2 flex-shrink-0 inline-block w-1.5 h-1.5 rounded-full" style={{ background: themeColor }} />
                         <div className="min-w-0">
                           <span className="block font-semibold text-[0.9rem]" style={{ color: INK }}>{svc.service_name}</span>
@@ -606,7 +606,7 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
               )}
 
               {/* Sidebar extras — below main content on mobile */}
-              <div className="lg:hidden space-y-6 mt-8 pt-8" style={{ borderTop: `1px solid ${RULE}` }}>
+              <div className="lg:hidden space-y-6 mt-8 pt-8" style={{ borderTop: `3px solid ${RULE}` }}>
                 <FeaturedPromo variant="card" />
                 {quote && <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={themeColor} />}
               </div>
@@ -635,7 +635,7 @@ export default async function OfficialDetailPage({ params }: { params: Promise<{
       </section>
 
       {/* ── FOOTER CODA ── */}
-      <section style={{ background: SIDEBAR_BG, borderTop: `1px solid ${RULE}` }}>
+      <section style={{ background: SIDEBAR_BG, borderTop: `3px solid ${RULE}` }}>
         <div className="max-w-[820px] mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
           <Link
             href="/officials"

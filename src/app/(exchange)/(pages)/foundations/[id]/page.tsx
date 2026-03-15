@@ -157,7 +157,7 @@ export default async function FoundationDetailPage({ params }: { params: Promise
                     <h2 className="font-display text-xl font-bold" style={{ color: INK }}>Focus Areas</h2>
                     <span className="font-mono text-[0.6rem] uppercase tracking-wider" style={{ color: DIM }}>{focusAreas.length}</span>
                   </div>
-                  <div className="h-px mb-3" style={{ background: `${themeColor}30` }} />
+                  <div className="h-[3px] mb-3" style={{ background: `${themeColor}30` }} />
                   <div className="flex flex-wrap gap-2">
                     {focusAreas.map(function (fa) {
                       return (
@@ -182,11 +182,11 @@ export default async function FoundationDetailPage({ params }: { params: Promise
                     <h2 className="font-display text-xl font-bold" style={{ color: INK }}>People</h2>
                     <span className="font-mono text-[0.6rem] uppercase tracking-wider" style={{ color: DIM }}>{people.length}</span>
                   </div>
-                  <div className="h-px mb-3" style={{ background: `${themeColor}30` }} />
+                  <div className="h-[3px] mb-3" style={{ background: `${themeColor}30` }} />
                   <div className="space-y-1">
                     {people.slice(0, 4).map(function (p: any, i: number) {
                       return (
-                        <div key={i} className="flex items-baseline gap-2 py-2" style={{ borderBottom: `1px solid ${RULE}` }}>
+                        <div key={i} className="flex items-baseline gap-2 py-2" style={{ borderBottom: `3px solid ${RULE}` }}>
                           <span className="mt-1.5 flex-shrink-0 inline-block w-1.5 h-1.5 rounded-full" style={{ background: themeColor }} />
                           <span className="text-[0.9rem] font-semibold" style={{ color: INK }}>{p.person_name}</span>
                           {(p.role || p.title) && (
@@ -203,7 +203,7 @@ export default async function FoundationDetailPage({ params }: { params: Promise
                         <div className="space-y-1 mt-1">
                           {people.slice(4).map(function (p: any, i: number) {
                             return (
-                              <div key={i + 4} className="flex items-baseline gap-2 py-2" style={{ borderBottom: `1px solid ${RULE}` }}>
+                              <div key={i + 4} className="flex items-baseline gap-2 py-2" style={{ borderBottom: `3px solid ${RULE}` }}>
                                 <span className="mt-1.5 flex-shrink-0 inline-block w-1.5 h-1.5 rounded-full" style={{ background: themeColor }} />
                                 <span className="text-[0.9rem] font-semibold" style={{ color: INK }}>{p.person_name}</span>
                                 {(p.role || p.title) && (
@@ -227,7 +227,7 @@ export default async function FoundationDetailPage({ params }: { params: Promise
               )}
 
               {/* Sidebar extras — below main content on mobile */}
-              <div className="lg:hidden space-y-6 mt-8 pt-8" style={{ borderTop: `1px solid ${RULE}` }}>
+              <div className="lg:hidden space-y-6 mt-8 pt-8" style={{ borderTop: `3px solid ${RULE}` }}>
                 <FeaturedPromo variant="card" />
               </div>
             </div>
@@ -254,7 +254,7 @@ export default async function FoundationDetailPage({ params }: { params: Promise
       </section>
 
       {/* ── FOOTER CODA ── */}
-      <section style={{ background: SIDEBAR_BG, borderTop: `1px solid ${RULE}` }}>
+      <section style={{ background: SIDEBAR_BG, borderTop: `3px solid ${RULE}` }}>
         <div className="max-w-[820px] mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
           <Link
             href="/foundations"

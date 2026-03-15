@@ -251,7 +251,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
 
       {/* ── Stats Bar — At a Glance ── */}
       {stats.length > 0 && (
-        <div style={{ background: SIDEBAR_BG, borderBottom: `1px solid ${RULE}` }}>
+        <div style={{ background: SIDEBAR_BG, borderBottom: `3px solid ${RULE}` }}>
           <div className="max-w-[1200px] mx-auto px-6">
             <div className="flex flex-wrap divide-x" style={{ borderColor: RULE }}>
               {stats.map(function (s) {
@@ -281,7 +281,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
               {showAbout && (
                 <section className="mb-8">
                   <h2 className="font-display text-xl font-bold mb-2" style={{ color: INK }}>{t('detail.about')}</h2>
-                  <div className="h-px mb-3" style={{ background: `${themeColor}30` }} />
+                  <div className="h-[3px] mb-3" style={{ background: `${themeColor}30` }} />
                   <p className="text-[0.95rem] leading-relaxed" style={{ color: DIM }}>{displayOrgDesc}</p>
                 </section>
               )}
@@ -293,13 +293,13 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
                     <h2 className="font-display text-xl font-bold" style={{ color: INK }}>Services</h2>
                     <span className="font-mono text-[0.6rem] uppercase tracking-wider" style={{ color: DIM }}>{services.length}</span>
                   </div>
-                  <div className="h-px mb-3" style={{ background: `${themeColor}30` }} />
+                  <div className="h-[3px] mb-3" style={{ background: `${themeColor}30` }} />
                   {services.slice(0, 4).map(function (svc) {
                     const st = serviceTranslations[svc.service_id]
                     const svcName = st?.title || svc.service_name
                     const svcDesc = st?.summary || svc.description_5th_grade
                     return (
-                      <Link key={svc.service_id} href={'/services/' + svc.service_id} className="flex items-start gap-3 py-2.5 hover:underline" style={{ borderBottom: `1px solid ${RULE}` }}>
+                      <Link key={svc.service_id} href={'/services/' + svc.service_id} className="flex items-start gap-3 py-2.5 hover:underline" style={{ borderBottom: `3px solid ${RULE}` }}>
                         <span className="mt-2 flex-shrink-0 inline-block w-1.5 h-1.5 rounded-full" style={{ background: themeColor }} />
                         <div className="min-w-0">
                           <span className="block font-semibold text-[0.9rem]" style={{ color: INK }}>{svcName}</span>
@@ -317,7 +317,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
                         const st = serviceTranslations[svc.service_id]
                         const svcName = st?.title || svc.service_name
                         return (
-                          <Link key={svc.service_id} href={'/services/' + svc.service_id} className="flex items-start gap-3 py-2.5 hover:underline" style={{ borderBottom: `1px solid ${RULE}` }}>
+                          <Link key={svc.service_id} href={'/services/' + svc.service_id} className="flex items-start gap-3 py-2.5 hover:underline" style={{ borderBottom: `3px solid ${RULE}` }}>
                             <span className="mt-2 flex-shrink-0 inline-block w-1.5 h-1.5 rounded-full" style={{ background: themeColor }} />
                             <span className="font-semibold text-[0.9rem]" style={{ color: INK }}>{svcName}</span>
                           </Link>
@@ -335,7 +335,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
                     <h2 className="font-display text-xl font-bold" style={{ color: INK }}>News & Resources</h2>
                     <span className="font-mono text-[0.6rem] uppercase tracking-wider" style={{ color: DIM }}>{content.length}</span>
                   </div>
-                  <div className="h-px mb-3" style={{ background: `${themeColor}30` }} />
+                  <div className="h-[3px] mb-3" style={{ background: `${themeColor}30` }} />
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {content.map(function (item: any) {
                       const ct = item.inbox_id ? contentTranslations[item.inbox_id] : undefined
@@ -372,10 +372,10 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
                     <h2 className="font-display text-xl font-bold" style={{ color: INK }}>Opportunities</h2>
                     <span className="font-mono text-[0.6rem] uppercase tracking-wider" style={{ color: DIM }}>{opportunities.length}</span>
                   </div>
-                  <div className="h-px mb-3" style={{ background: `${themeColor}30` }} />
+                  <div className="h-[3px] mb-3" style={{ background: `${themeColor}30` }} />
                   {opportunities.map(function (opp: any) {
                     return (
-                      <Link key={opp.opportunity_id} href={'/opportunities/' + opp.opportunity_id} className="flex items-start gap-3 py-2.5 hover:underline" style={{ borderBottom: `1px solid ${RULE}` }}>
+                      <Link key={opp.opportunity_id} href={'/opportunities/' + opp.opportunity_id} className="flex items-start gap-3 py-2.5 hover:underline" style={{ borderBottom: `3px solid ${RULE}` }}>
                         <span className="mt-2 flex-shrink-0 inline-block w-1.5 h-1.5 rounded-full" style={{ background: themeColor }} />
                         <div className="min-w-0">
                           <span className="block font-semibold text-[0.9rem]" style={{ color: INK }}>{opp.opportunity_name}</span>
@@ -405,7 +405,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
               {/* Details accordion — Hours + Tags */}
               {hasDetails && (
                 <details className="mb-8 group">
-                  <summary className="flex items-center justify-between cursor-pointer py-3" style={{ borderBottom: `1px solid ${RULE}` }}>
+                  <summary className="flex items-center justify-between cursor-pointer py-3" style={{ borderBottom: `3px solid ${RULE}` }}>
                     <span className="font-mono text-[0.65rem] font-bold uppercase tracking-[0.1em]" style={{ color: DIM }}>Details</span>
                     <svg width="16" height="16" viewBox="0 0 20 20" fill="none" className="transition-transform group-open:rotate-180">
                       <path d="M5 7.5L10 12.5L15 7.5" stroke={DIM} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -420,7 +420,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-0.5">
                           {hoursList.map(function (h) {
                             return (
-                              <div key={h.day} className="flex justify-between py-1" style={{ borderBottom: `1px solid ${RULE}` }}>
+                              <div key={h.day} className="flex justify-between py-1" style={{ borderBottom: `3px solid ${RULE}` }}>
                                 <span className="text-sm font-medium" style={{ color: INK }}>{h.day}</span>
                                 <span className="text-sm" style={{ color: DIM }}>{h.time}</span>
                               </div>
@@ -441,7 +441,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
               )}
 
               {/* Sidebar extras — below main content on mobile */}
-              <div className="lg:hidden space-y-6 mt-8 pt-8" style={{ borderTop: `1px solid ${RULE}` }}>
+              <div className="lg:hidden space-y-6 mt-8 pt-8" style={{ borderTop: `3px solid ${RULE}` }}>
                 <FeaturedPromo variant="card" />
                 {quote && <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={themeColor} />}
               </div>
@@ -470,7 +470,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
       </section>
 
       {/* ── FOOTER CODA ── */}
-      <section style={{ background: SIDEBAR_BG, borderTop: `1px solid ${RULE}` }}>
+      <section style={{ background: SIDEBAR_BG, borderTop: `3px solid ${RULE}` }}>
         <div className="max-w-[820px] mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
           <Link
             href="/organizations"

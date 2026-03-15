@@ -226,7 +226,7 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
               {displayDesc && displayDesc.length > 200 && (
                 <section className="mb-8">
                   <h2 className="font-display text-xl font-bold mb-2" style={{ color: INK }}>About This Opportunity</h2>
-                  <div className="h-px mb-3" style={{ background: `${themeColor}30` }} />
+                  <div className="h-[3px] mb-3" style={{ background: `${themeColor}30` }} />
                   <p className="text-[0.95rem] leading-relaxed" style={{ color: DIM }}>{displayDesc}</p>
                 </section>
               )}
@@ -235,7 +235,7 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
               {(timeCommitmentName || opportunity.spots_available != null) && (
                 <section className="mb-8">
                   <h2 className="font-display text-xl font-bold mb-2" style={{ color: INK }}>Details</h2>
-                  <div className="h-px mb-3" style={{ background: `${themeColor}30` }} />
+                  <div className="h-[3px] mb-3" style={{ background: `${themeColor}30` }} />
                   <div className="space-y-3">
                     {timeCommitmentName && (
                       <p className="flex items-center gap-2 text-[0.9rem]" style={{ color: DIM }}>
@@ -258,7 +258,7 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
                     <h2 className="font-display text-xl font-bold" style={{ color: INK }}>Focus Areas</h2>
                     <span className="font-mono text-[0.65rem]" style={{ color: DIM }}>{focusAreas.length}</span>
                   </div>
-                  <div className="h-px mb-3" style={{ background: `${themeColor}30` }} />
+                  <div className="h-[3px] mb-3" style={{ background: `${themeColor}30` }} />
                   <div className="flex flex-wrap gap-x-4 gap-y-2">
                     {focusAreas.map(function (fa) {
                       return (
@@ -279,7 +279,7 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
                     <h2 className="font-display text-xl font-bold" style={{ color: INK }}>Skills Involved</h2>
                     <span className="font-mono text-[0.65rem]" style={{ color: DIM }}>{skills.length}</span>
                   </div>
-                  <div className="h-px mb-3" style={{ background: `${themeColor}30` }} />
+                  <div className="h-[3px] mb-3" style={{ background: `${themeColor}30` }} />
                   <div className="flex flex-wrap gap-x-4 gap-y-2">
                     {skills.map(function (s) {
                       return (
@@ -297,18 +297,18 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
               {opportunity.min_age != null && opportunity.min_age > 0 && (
                 <section className="mb-8">
                   <h2 className="font-display text-xl font-bold mb-2" style={{ color: INK }}>Who Can Participate</h2>
-                  <div className="h-px mb-3" style={{ background: `${themeColor}30` }} />
+                  <div className="h-[3px] mb-3" style={{ background: `${themeColor}30` }} />
                   <p className="text-[0.95rem] leading-relaxed" style={{ color: DIM }}>Minimum age: {opportunity.min_age} years</p>
                 </section>
               )}
 
-              <div className="my-8 h-px" style={{ background: RULE }} />
+              <div className="my-8 h-[3px]" style={{ background: RULE }} />
 
               {/* Organization card */}
               {org && (
                 <section className="mb-8">
                   <h2 className="font-display text-xl font-bold mb-2" style={{ color: INK }}>Organization</h2>
-                  <div className="h-px mb-3" style={{ background: `${themeColor}30` }} />
+                  <div className="h-[3px] mb-3" style={{ background: `${themeColor}30` }} />
                   <Link href={'/organizations/' + org.org_id} className="flex items-center gap-4 p-4 transition-colors hover:bg-gray-50 rounded" style={{ border: `1px solid ${RULE}` }}>
                     {org.logo_url && (
                       <Image src={org.logo_url} alt="" width={48} height={48} className="w-12 h-12 rounded object-contain flex-shrink-0 bg-gray-50" />
@@ -324,7 +324,7 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
               )}
 
               {/* Sidebar extras — below main content on mobile */}
-              <div className="lg:hidden space-y-6 mt-8 pt-8" style={{ borderTop: `1px solid ${RULE}` }}>
+              <div className="lg:hidden space-y-6 mt-8 pt-8" style={{ borderTop: `3px solid ${RULE}` }}>
                 <FeaturedPromo variant="card" />
                 {quote && <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={themeColor} />}
               </div>
@@ -351,7 +351,7 @@ export default async function OpportunityDetailPage({ params }: { params: Promis
       </section>
 
       {/* ── FOOTER CODA ── */}
-      <section style={{ background: SIDEBAR_BG, borderTop: `1px solid ${RULE}` }}>
+      <section style={{ background: SIDEBAR_BG, borderTop: `3px solid ${RULE}` }}>
         <div className="max-w-[820px] mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
           <Link
             href="/opportunities"

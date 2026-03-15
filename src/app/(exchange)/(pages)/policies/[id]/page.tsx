@@ -243,28 +243,28 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
               {/* Quick Facts */}
               <section className="mb-8">
                 <h2 className="font-display text-xl font-bold mb-2" style={{ color: INK }}>{t('policy.quick_facts')}</h2>
-                <div className="h-px mb-3" style={{ background: `${levelColor}30` }} />
+                <div className="h-[3px] mb-3" style={{ background: `${levelColor}30` }} />
                 <div className="space-y-2 text-sm">
                   {policy.level && (
-                    <div className="flex justify-between py-1" style={{ borderBottom: `1px solid ${RULE}` }}>
+                    <div className="flex justify-between py-1" style={{ borderBottom: `3px solid ${RULE}` }}>
                       <span className="text-xs" style={{ color: DIM }}>{t('policy.level')}</span>
                       <span className="font-semibold" style={{ color: INK }}>{policy.level}</span>
                     </div>
                   )}
                   {policy.status && (
-                    <div className="flex justify-between py-1" style={{ borderBottom: `1px solid ${RULE}` }}>
+                    <div className="flex justify-between py-1" style={{ borderBottom: `3px solid ${RULE}` }}>
                       <span className="text-xs" style={{ color: DIM }}>{t('policy.status')}</span>
                       <span className="font-semibold" style={{ color: sc.textColor }}>{policy.status}</span>
                     </div>
                   )}
                   {policy.introduced_date && (
-                    <div className="flex justify-between py-1" style={{ borderBottom: `1px solid ${RULE}` }}>
+                    <div className="flex justify-between py-1" style={{ borderBottom: `3px solid ${RULE}` }}>
                       <span className="text-xs" style={{ color: DIM }}>{t('policy.introduced')}</span>
                       <span style={{ color: INK }}>{new Date(policy.introduced_date).toLocaleDateString()}</span>
                     </div>
                   )}
                   {policy.data_source && (
-                    <div className="flex justify-between py-1" style={{ borderBottom: `1px solid ${RULE}` }}>
+                    <div className="flex justify-between py-1" style={{ borderBottom: `3px solid ${RULE}` }}>
                       <span className="text-xs" style={{ color: DIM }}>{t('policy.source')}</span>
                       <span className="capitalize" style={{ color: INK }}>{policy.data_source.replace(/_/g, ' ')}</span>
                     </div>
@@ -276,7 +276,7 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
               {displaySummary && (
                 <section className="mb-8">
                   <h2 className="font-display text-xl font-bold mb-2" style={{ color: INK }}>{t('policy.what_it_does')}</h2>
-                  <div className="h-px mb-3" style={{ background: `${levelColor}30` }} />
+                  <div className="h-[3px] mb-3" style={{ background: `${levelColor}30` }} />
                   <p className="text-[0.95rem] leading-relaxed" style={{ color: DIM }}>{displaySummary}</p>
                 </section>
               )}
@@ -289,7 +289,7 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
               {/* AI Break It Down */}
               <BreakItDown title={displayName} summary={displaySummary} type="policy" />
 
-              <div className="my-8 h-px" style={{ background: RULE }} />
+              <div className="my-8 h-[3px]" style={{ background: RULE }} />
 
               {/* Focus areas */}
               {focusAreas.length > 0 && (
@@ -298,7 +298,7 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
                     <h2 className="font-display text-xl font-bold" style={{ color: INK }}>{t('policy.topics')}</h2>
                     <span className="font-mono text-[0.6rem] uppercase tracking-wider" style={{ color: DIM }}>{focusAreas.length}</span>
                   </div>
-                  <div className="h-px mb-3" style={{ background: `${levelColor}30` }} />
+                  <div className="h-[3px] mb-3" style={{ background: `${levelColor}30` }} />
                   <FocusAreaPills focusAreas={focusAreas} />
                 </section>
               )}
@@ -307,7 +307,7 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
               {geography.length > 0 && (
                 <section className="mb-8">
                   <h2 className="font-display text-xl font-bold mb-2" style={{ color: INK }}>{t('policy.where_applies')}</h2>
-                  <div className="h-px mb-3" style={{ background: `${levelColor}30` }} />
+                  <div className="h-[3px] mb-3" style={{ background: `${levelColor}30` }} />
                   <div className="space-y-3">
                     {Object.entries(geoByType).map(function ([geoType, ids]) {
                       return (
@@ -332,10 +332,10 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
               {/* Timeline */}
               <section className="mb-8">
                 <h2 className="font-display text-xl font-bold mb-2" style={{ color: INK }}>{t('policy.timeline')}</h2>
-                <div className="h-px mb-3" style={{ background: `${levelColor}30` }} />
+                <div className="h-[3px] mb-3" style={{ background: `${levelColor}30` }} />
                 <div>
                   {policy.introduced_date && (
-                    <div className="flex items-start gap-4 py-4" style={{ borderBottom: `1px solid ${RULE}` }}>
+                    <div className="flex items-start gap-4 py-4" style={{ borderBottom: `3px solid ${RULE}` }}>
                       <span className="inline-block shrink-0" style={{ width: 8, height: 8, background: '#1b5e8a', marginTop: 5 }} />
                       <div>
                         <p className="text-[0.9rem] font-semibold" style={{ color: INK }}>{t('policy.introduced')}</p>
@@ -344,7 +344,7 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
                     </div>
                   )}
                   {policy.last_action && (
-                    <div className="flex items-start gap-4 py-4" style={{ borderBottom: `1px solid ${RULE}` }}>
+                    <div className="flex items-start gap-4 py-4" style={{ borderBottom: `3px solid ${RULE}` }}>
                       <span className="inline-block shrink-0" style={{ width: 8, height: 8, background: sc.dotColor, marginTop: 5 }} />
                       <div>
                         <p className="text-[0.9rem] font-semibold" style={{ color: INK }}>{t('policy.latest_action')}</p>
@@ -371,7 +371,7 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
                 </div>
               </section>
 
-              <div className="my-8 h-px" style={{ background: RULE }} />
+              <div className="my-8 h-[3px]" style={{ background: RULE }} />
 
               {/* Decision Makers */}
               {officials.length > 0 && (
@@ -380,7 +380,7 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
                     <h2 className="font-display text-xl font-bold" style={{ color: INK }}>{t('policy.leaders_connected')}</h2>
                     <span className="font-mono text-[0.6rem] uppercase tracking-wider" style={{ color: DIM }}>{officials.length}</span>
                   </div>
-                  <div className="h-px mb-3" style={{ background: `${levelColor}30` }} />
+                  <div className="h-[3px] mb-3" style={{ background: `${levelColor}30` }} />
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {officials.map(function (o) {
                       const ot = officialTranslations[o.official_id]
@@ -411,10 +411,10 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
                     <h2 className="font-display text-xl font-bold" style={{ color: INK }}>Related Services</h2>
                     <span className="font-mono text-[0.6rem] uppercase tracking-wider" style={{ color: DIM }}>{displayRelatedServices.length}</span>
                   </div>
-                  <div className="h-px mb-3" style={{ background: `${levelColor}30` }} />
+                  <div className="h-[3px] mb-3" style={{ background: `${levelColor}30` }} />
                   {displayRelatedServices.map(function (svc: any) {
                     return (
-                      <Link key={svc.service_id} href={'/services/' + svc.service_id} className="flex items-start gap-3 py-2.5 hover:underline" style={{ borderBottom: `1px solid ${RULE}` }}>
+                      <Link key={svc.service_id} href={'/services/' + svc.service_id} className="flex items-start gap-3 py-2.5 hover:underline" style={{ borderBottom: `3px solid ${RULE}` }}>
                         <span className="mt-2 flex-shrink-0 inline-block w-1.5 h-1.5 rounded-full" style={{ background: levelColor }} />
                         <div className="min-w-0">
                           <span className="block font-semibold text-[0.9rem]" style={{ color: INK }}>{svc.service_name}</span>
@@ -435,7 +435,7 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
                     <h2 className="font-display text-xl font-bold" style={{ color: INK }}>{t('policy.related_policies')}</h2>
                     <span className="font-mono text-[0.6rem] uppercase tracking-wider" style={{ color: DIM }}>{related.length}</span>
                   </div>
-                  <div className="h-px mb-3" style={{ background: `${levelColor}30` }} />
+                  <div className="h-[3px] mb-3" style={{ background: `${levelColor}30` }} />
                   <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: 0 }}>
                     {related.map(function (p, i) {
                       const rpt = relatedPolicyTranslations[p.policy_id]
@@ -461,7 +461,7 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
               )}
 
               {/* Sidebar extras — below main content on mobile */}
-              <div className="lg:hidden space-y-6 mt-8 pt-8" style={{ borderTop: `1px solid ${RULE}` }}>
+              <div className="lg:hidden space-y-6 mt-8 pt-8" style={{ borderTop: `3px solid ${RULE}` }}>
                 <FeaturedPromo variant="card" />
                 {quote && <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={levelColor} />}
               </div>
@@ -488,7 +488,7 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
       </section>
 
       {/* ── FOOTER CODA ── */}
-      <section style={{ background: SIDEBAR_BG, borderTop: `1px solid ${RULE}` }}>
+      <section style={{ background: SIDEBAR_BG, borderTop: `3px solid ${RULE}` }}>
         <div className="max-w-[820px] mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
           <Link
             href="/policies"

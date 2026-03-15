@@ -66,7 +66,7 @@ export function ContentTabs(props: ContentTabsProps) {
   return (
     <div className="flex flex-col md:flex-row gap-0">
       {/* ── Vertical tab rail ── */}
-      <div className="md:w-[180px] flex-shrink-0 md:border-r border-b md:border-b-0 border-rule">
+      <div className="md:w-[180px] flex-shrink-0 md:border-r-[3px] border-b-[3px] md:border-b-0 border-rule">
         <div className="flex md:flex-col overflow-x-auto md:overflow-visible md:sticky md:top-[72px]">
           {TABS.map(function (tab) {
             const Icon = tab.icon

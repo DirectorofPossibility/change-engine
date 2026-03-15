@@ -5,7 +5,7 @@ import { cookies } from 'next/headers'
 import {
   BookOpen, Heart, Scale, ChevronDown,
   Phone, Globe, Gift, Users, Calendar, MapPin,
-  FileText, Tag,
+  FileText,
 } from 'lucide-react'
 import type { WayfinderData } from '@/lib/types/exchange'
 import { getNeighborhoodByZip } from '@/lib/data/exchange'
@@ -38,7 +38,7 @@ function ConnectionContext({ focusAreas, t }: { focusAreas: Array<{ focus_area_n
 async function GeoContext({ zip, nearLabel }: { zip: string; nearLabel: string }) {
   const hood = await getNeighborhoodByZip(zip)
   return (
-    <div className="px-4 py-2 border-b border-brand-border bg-brand-bg/50">
+    <div className="px-4 py-2 border-b-[3px] border-brand-border bg-brand-bg/50">
       <div className="flex items-center gap-1.5">
         <MapPin size={12} className="text-brand-accent flex-shrink-0" />
         <span className="text-[11px] text-brand-muted">
@@ -73,7 +73,7 @@ function WayfinderTier({ icon, label, count, centerLabel, centerColor, centerHre
 }) {
   if (count === 0) return null
   return (
-    <details open={isOpen} className="group border-t border-brand-border">
+    <details open={isOpen} className="group border-t-[3px] border-brand-border">
       <summary className="flex items-center justify-between cursor-pointer px-4 py-3 hover:bg-brand-bg/50 transition-colors select-none relative">
         {tipKey && <WayfinderTooltipPos tipKey={tipKey} position="right" />}
         <div className="flex items-center gap-2">
@@ -91,89 +91,6 @@ function WayfinderTier({ icon, label, count, centerLabel, centerColor, centerHre
         {children}
       </div>
     </details>
-  )
-}
-
-/** Taxonomy metadata panel — SDGs, SDOH, gov level, action types, time commitment, NTEE/AIRS. */
-function TaxonomyPanel({ taxonomy, userRole, t }: { taxonomy: NonNullable<WayfinderData['taxonomy']>; userRole?: string; t: (key: string) => string }) {
-  const hasContent = taxonomy.sdgs.length > 0 || taxonomy.sdohDomain || taxonomy.govLevel || taxonomy.actionTypes.length > 0 || taxonomy.timeCommitment
-  const hasAdminContent = (userRole === 'admin' || userRole === 'partner') && (taxonomy.ntee_codes.length > 0 || taxonomy.airs_codes.length > 0)
-  if (!hasContent && !hasAdminContent) return null
-
-  return (
-    <div className="px-4 py-3 border-b border-brand-border space-y-2.5 relative">
-      <WayfinderTooltipPos tipKey="taxonomy_section" position="top" />
-      {taxonomy.sdgs.length > 0 && (
-        <div>
-          <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">{t('wayfinder.global_goals')}</div>
-          <div className="flex flex-wrap gap-1">
-            {taxonomy.sdgs.map(function (s) {
-              return (
-                <Link key={s.sdg_id} href={'/search?sdg=' + encodeURIComponent(s.sdg_id) + '&label=' + encodeURIComponent(s.sdg_name)}
-                  className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-white text-xs hover:opacity-80 transition-opacity"
-                  style={{ backgroundColor: s.sdg_color || '#4C9F38' }}>
-                  {s.sdg_number}. {s.sdg_name}
-                </Link>
-              )
-            })}
-          </div>
-        </div>
-      )}
-      {taxonomy.sdohDomain && (
-        <div>
-          <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">{t('wayfinder.health_determinant')}</div>
-          <Link href={'/search?sdoh=' + encodeURIComponent(taxonomy.sdohDomain.sdoh_code) + '&label=' + encodeURIComponent(taxonomy.sdohDomain.sdoh_name)} className="text-xs text-brand-accent hover:underline">
-            {taxonomy.sdohDomain.sdoh_name}
-          </Link>
-        </div>
-      )}
-      {taxonomy.govLevel && (
-        <div>
-          <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">{t('wayfinder.government_level')}</div>
-          <Link href={'/search?gov_level=' + encodeURIComponent(taxonomy.govLevel.gov_level_id) + '&label=' + encodeURIComponent(taxonomy.govLevel.gov_level_name)} className="text-xs text-brand-accent hover:underline">
-            {taxonomy.govLevel.gov_level_name}
-          </Link>
-        </div>
-      )}
-      {taxonomy.actionTypes.length > 0 && (
-        <div>
-          <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">{t('wayfinder.action_types')}</div>
-          <div className="flex flex-wrap gap-1">
-            {taxonomy.actionTypes.map(function (at) {
-              return (
-                <Link key={at.action_type_id} href={'/search?action_type=' + encodeURIComponent(at.action_type_id) + '&label=' + encodeURIComponent(at.action_type_name)}
-                  className="px-1.5 py-0.5 rounded bg-brand-bg text-brand-accent text-xs hover:underline">
-                  {at.action_type_name}
-                </Link>
-              )
-            })}
-          </div>
-        </div>
-      )}
-      {taxonomy.timeCommitment && (
-        <div>
-          <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1">{t('wayfinder.time_commitment')}</div>
-          <Link href={'/search?time=' + encodeURIComponent(taxonomy.timeCommitment.time_id) + '&label=' + encodeURIComponent(taxonomy.timeCommitment.time_name)} className="text-xs text-brand-accent hover:underline">{taxonomy.timeCommitment.time_name}</Link>
-        </div>
-      )}
-      {(userRole === 'admin' || userRole === 'partner') && (
-        <>
-          {taxonomy.ntee_codes.length > 0 && (
-            <div className="relative">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">NTEE</span>
-              <WayfinderTooltipPos tipKey="ntee_code" position="bottom" />
-              <p className="text-xs text-brand-text mt-0.5 font-mono">{taxonomy.ntee_codes.join(', ')}</p>
-            </div>
-          )}
-          {taxonomy.airs_codes.length > 0 && (
-            <div>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">AIRS</span>
-              <p className="text-xs text-brand-text mt-0.5 font-mono">{taxonomy.airs_codes.join(', ')}</p>
-            </div>
-          )}
-        </>
-      )}
-    </div>
   )
 }
 
@@ -222,7 +139,7 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
       <WayfinderTracker entityType={currentType} entityId={currentId} />
 
       {/* Header */}
-      <div className="p-4 border-b border-brand-border relative">
+      <div className="p-4 border-b-[3px] border-brand-border relative">
         <h3 className="font-display text-base font-semibold text-brand-text tracking-wide">
           {t('wayfinder.title')}
         </h3>
@@ -233,7 +150,7 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
 
       {/* Organization anchors — always open */}
       {data.organizations.length > 0 && (
-        <details open className="border-t border-brand-border group/section">
+        <details open className="border-t-[3px] border-brand-border group/section">
           <summary className="flex items-center justify-between cursor-pointer px-4 py-3 hover:bg-brand-bg/50 transition-colors select-none">
             <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">{t('wayfinder.organizations') || 'Organizations'}</span>
             <ChevronDown size={12} className="text-brand-muted transition-transform group-open/section:rotate-180" />
@@ -295,12 +212,12 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
 
       {/* Flower of Life graph — collapsible, closed */}
       {!designV1 && data.themes.length > 0 && (
-        <details className="border-t border-brand-border group/section">
+        <details className="border-t-[3px] border-brand-border group/section">
           <summary className="flex items-center justify-between cursor-pointer px-4 py-3 hover:bg-brand-bg/50 transition-colors select-none">
             <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">{t('wayfinder.topics')}</span>
             <ChevronDown size={12} className="text-brand-muted transition-transform group-open/section:rotate-180" />
           </summary>
-          <div className="relative border-t border-brand-border">
+          <div className="relative border-t-[3px] border-brand-border">
             <CompactCircleGraph
               activePathways={data.themes}
               accentColor={data.themes.length > 0 ? (THEMES as any)[data.themes[0]]?.color : undefined}
@@ -329,7 +246,7 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
 
       {/* Focus area dots — collapsible, closed */}
       {data.focusAreas.length > 0 && (
-        <details className="border-t border-brand-border group/section">
+        <details className="border-t-[3px] border-brand-border group/section">
           <summary className="flex items-center justify-between cursor-pointer px-4 py-3 hover:bg-brand-bg/50 transition-colors select-none relative">
             <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">{t('wayfinder.focus_areas')}</span>
             <WayfinderTooltipPos tipKey="focus_area_dots" position="bottom" />
@@ -353,14 +270,117 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
         </details>
       )}
 
-      {/* Taxonomy — collapsible, closed */}
-      {data.taxonomy && (
-        <details className="border-t border-brand-border group/section">
+      {/* SDGs */}
+      {data.taxonomy?.sdgs && data.taxonomy.sdgs.length > 0 && (
+        <details className="border-t-[3px] border-brand-border group/section">
           <summary className="flex items-center justify-between cursor-pointer px-4 py-3 hover:bg-brand-bg/50 transition-colors select-none">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">{t('wayfinder.taxonomy') || 'Classification'}</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">{t('wayfinder.global_goals') || 'Global Goals'}</span>
             <ChevronDown size={12} className="text-brand-muted transition-transform group-open/section:rotate-180" />
           </summary>
-          <TaxonomyPanel taxonomy={data.taxonomy} userRole={userRole} t={t} />
+          <div className="px-4 pb-3">
+            <div className="flex flex-wrap gap-1">
+              {data.taxonomy.sdgs.map(function (s) {
+                return (
+                  <Link key={s.sdg_id} href={'/search?sdg=' + encodeURIComponent(s.sdg_id) + '&label=' + encodeURIComponent(s.sdg_name)}
+                    className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-white text-xs hover:opacity-80 transition-opacity"
+                    style={{ backgroundColor: s.sdg_color || '#4C9F38' }}>
+                    {s.sdg_number}. {s.sdg_name}
+                  </Link>
+                )
+              })}
+            </div>
+          </div>
+        </details>
+      )}
+
+      {/* Health Determinant */}
+      {data.taxonomy?.sdohDomain && (
+        <details className="border-t-[3px] border-brand-border group/section">
+          <summary className="flex items-center justify-between cursor-pointer px-4 py-3 hover:bg-brand-bg/50 transition-colors select-none">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">{t('wayfinder.health_determinant') || 'Health Determinant'}</span>
+            <ChevronDown size={12} className="text-brand-muted transition-transform group-open/section:rotate-180" />
+          </summary>
+          <div className="px-4 pb-3">
+            <Link href={'/search?sdoh=' + encodeURIComponent(data.taxonomy.sdohDomain.sdoh_code) + '&label=' + encodeURIComponent(data.taxonomy.sdohDomain.sdoh_name)} className="text-xs text-brand-accent hover:underline">
+              {data.taxonomy.sdohDomain.sdoh_name}
+            </Link>
+          </div>
+        </details>
+      )}
+
+      {/* Government Level */}
+      {data.taxonomy?.govLevel && (
+        <details className="border-t-[3px] border-brand-border group/section">
+          <summary className="flex items-center justify-between cursor-pointer px-4 py-3 hover:bg-brand-bg/50 transition-colors select-none">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">{t('wayfinder.government_level') || 'Government Level'}</span>
+            <ChevronDown size={12} className="text-brand-muted transition-transform group-open/section:rotate-180" />
+          </summary>
+          <div className="px-4 pb-3">
+            <Link href={'/search?gov_level=' + encodeURIComponent(data.taxonomy.govLevel.gov_level_id) + '&label=' + encodeURIComponent(data.taxonomy.govLevel.gov_level_name)} className="text-xs text-brand-accent hover:underline">
+              {data.taxonomy.govLevel.gov_level_name}
+            </Link>
+          </div>
+        </details>
+      )}
+
+      {/* Action Types */}
+      {data.taxonomy?.actionTypes && data.taxonomy.actionTypes.length > 0 && (
+        <details className="border-t-[3px] border-brand-border group/section">
+          <summary className="flex items-center justify-between cursor-pointer px-4 py-3 hover:bg-brand-bg/50 transition-colors select-none">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">{t('wayfinder.action_types') || 'Action Types'}</span>
+            <ChevronDown size={12} className="text-brand-muted transition-transform group-open/section:rotate-180" />
+          </summary>
+          <div className="px-4 pb-3">
+            <div className="flex flex-wrap gap-1">
+              {data.taxonomy.actionTypes.map(function (at) {
+                return (
+                  <Link key={at.action_type_id} href={'/search?action_type=' + encodeURIComponent(at.action_type_id) + '&label=' + encodeURIComponent(at.action_type_name)}
+                    className="px-1.5 py-0.5 rounded bg-brand-bg text-brand-accent text-xs hover:underline">
+                    {at.action_type_name}
+                  </Link>
+                )
+              })}
+            </div>
+          </div>
+        </details>
+      )}
+
+      {/* Time Commitment */}
+      {data.taxonomy?.timeCommitment && (
+        <details className="border-t-[3px] border-brand-border group/section">
+          <summary className="flex items-center justify-between cursor-pointer px-4 py-3 hover:bg-brand-bg/50 transition-colors select-none">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">{t('wayfinder.time_commitment') || 'Time Commitment'}</span>
+            <ChevronDown size={12} className="text-brand-muted transition-transform group-open/section:rotate-180" />
+          </summary>
+          <div className="px-4 pb-3">
+            <Link href={'/search?time=' + encodeURIComponent(data.taxonomy.timeCommitment.time_id) + '&label=' + encodeURIComponent(data.taxonomy.timeCommitment.time_name)} className="text-xs text-brand-accent hover:underline">
+              {data.taxonomy.timeCommitment.time_name}
+            </Link>
+          </div>
+        </details>
+      )}
+
+      {/* NTEE / AIRS (admin only) */}
+      {(userRole === 'admin' || userRole === 'partner') && data.taxonomy && (data.taxonomy.ntee_codes.length > 0 || data.taxonomy.airs_codes.length > 0) && (
+        <details className="border-t-[3px] border-brand-border group/section">
+          <summary className="flex items-center justify-between cursor-pointer px-4 py-3 hover:bg-brand-bg/50 transition-colors select-none">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">Classification Codes</span>
+            <ChevronDown size={12} className="text-brand-muted transition-transform group-open/section:rotate-180" />
+          </summary>
+          <div className="px-4 pb-3 space-y-2">
+            {data.taxonomy.ntee_codes.length > 0 && (
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">NTEE</span>
+                <p className="text-xs text-brand-text mt-0.5 font-mono">{data.taxonomy.ntee_codes.join(', ')}</p>
+              </div>
+            )}
+            {data.taxonomy.airs_codes.length > 0 && (
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">AIRS</span>
+                <p className="text-xs text-brand-text mt-0.5 font-mono">{data.taxonomy.airs_codes.join(', ')}</p>
+              </div>
+            )}
+          </div>
         </details>
       )}
 

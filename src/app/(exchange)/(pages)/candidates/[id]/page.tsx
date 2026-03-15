@@ -172,7 +172,7 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
               {showAbout && (
                 <section className="mb-8">
                   <h2 className="font-display text-xl font-bold mb-2" style={{ color: INK }}>About</h2>
-                  <div className="h-px mb-3" style={{ background: `${themeColor}30` }} />
+                  <div className="h-[3px] mb-3" style={{ background: `${themeColor}30` }} />
                   <p className="text-[0.95rem] leading-relaxed" style={{ color: DIM }}>{c.bio_summary}</p>
                 </section>
               )}
@@ -181,7 +181,7 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
               {(c.policy_positions || c.endorsements) && (
                 <section className="mb-8">
                   <h2 className="font-display text-xl font-bold mb-2" style={{ color: INK }}>Positions & Endorsements</h2>
-                  <div className="h-px mb-3" style={{ background: `${themeColor}30` }} />
+                  <div className="h-[3px] mb-3" style={{ background: `${themeColor}30` }} />
                   {c.policy_positions && (
                     <p className="text-[0.95rem] leading-relaxed" style={{ color: DIM }}>{c.policy_positions}</p>
                   )}
@@ -192,7 +192,7 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
               )}
 
               {/* Sidebar extras — below main content on mobile */}
-              <div className="lg:hidden space-y-6 mt-8 pt-8" style={{ borderTop: `1px solid ${RULE}` }}>
+              <div className="lg:hidden space-y-6 mt-8 pt-8" style={{ borderTop: `3px solid ${RULE}` }}>
                 <FeaturedPromo variant="card" />
               </div>
             </div>
@@ -210,7 +210,7 @@ export default async function CandidateDetailPage({ params }: { params: Promise<
       </section>
 
       {/* ── FOOTER CODA ── */}
-      <section style={{ background: SIDEBAR_BG, borderTop: `1px solid ${RULE}` }}>
+      <section style={{ background: SIDEBAR_BG, borderTop: `3px solid ${RULE}` }}>
         <div className="max-w-[820px] mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
           <Link
             href="/candidates"

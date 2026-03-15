@@ -161,7 +161,7 @@ export default async function AgencyDetailPage({ params }: { params: Promise<{ i
               {displayDesc && displayDesc.length > 200 && (
                 <section className="mb-8">
                   <h2 className="font-display text-xl font-bold mb-2" style={{ color: INK }}>About</h2>
-                  <div className="h-px mb-3" style={{ background: `${themeColor}30` }} />
+                  <div className="h-[3px] mb-3" style={{ background: `${themeColor}30` }} />
                   <p className="text-[0.95rem] leading-relaxed" style={{ color: DIM }}>{displayDesc}</p>
                 </section>
               )}
@@ -173,7 +173,7 @@ export default async function AgencyDetailPage({ params }: { params: Promise<{ i
                     <h2 className="font-display text-xl font-bold" style={{ color: INK }}>Services Provided</h2>
                     <span className="font-mono text-[0.6rem] uppercase tracking-wider" style={{ color: DIM }}>{services.length}</span>
                   </div>
-                  <div className="h-px mb-3" style={{ background: `${themeColor}30` }} />
+                  <div className="h-[3px] mb-3" style={{ background: `${themeColor}30` }} />
                   <div className="space-y-0">
                     {services.map(function (s: any) {
                       return (
@@ -181,7 +181,7 @@ export default async function AgencyDetailPage({ params }: { params: Promise<{ i
                           key={s.id}
                           href={`/municipal-services/${s.id}`}
                           className="flex items-start gap-3 py-2.5 hover:underline"
-                          style={{ borderBottom: `1px solid ${RULE}` }}
+                          style={{ borderBottom: `3px solid ${RULE}` }}
                         >
                           <span className="mt-2 flex-shrink-0 inline-block w-1.5 h-1.5 rounded-full" style={{ background: themeColor }} />
                           <div className="min-w-0">
@@ -198,7 +198,7 @@ export default async function AgencyDetailPage({ params }: { params: Promise<{ i
               )}
 
               {/* Sidebar extras — below main content on mobile */}
-              <div className="lg:hidden space-y-6 mt-8 pt-8" style={{ borderTop: `1px solid ${RULE}` }}>
+              <div className="lg:hidden space-y-6 mt-8 pt-8" style={{ borderTop: `3px solid ${RULE}` }}>
                 <FeaturedPromo variant="card" />
               </div>
             </div>
@@ -223,7 +223,7 @@ export default async function AgencyDetailPage({ params }: { params: Promise<{ i
       </section>
 
       {/* ── FOOTER CODA ── */}
-      <section style={{ background: SIDEBAR_BG, borderTop: `1px solid ${RULE}` }}>
+      <section style={{ background: SIDEBAR_BG, borderTop: `3px solid ${RULE}` }}>
         <div className="max-w-[820px] mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
           <Link
             href="/agencies"
