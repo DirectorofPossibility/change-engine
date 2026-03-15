@@ -7,29 +7,47 @@ import { LanguageSwitcher } from './LanguageSwitcher'
 import { useTranslation } from '@/lib/use-translation'
 import { filterNavItems } from '@/lib/feature-flags'
 import { useSiteConfig } from '@/lib/contexts/SiteConfigContext'
+import { THEMES } from '@/lib/constants'
+
+const PATHWAY_LIST = Object.entries(THEMES).map(function ([id, t]) {
+  return { id, name: (t as any).name, color: (t as any).color, slug: (t as any).slug }
+})
 
 export function D2Footer() {
   const { t } = useTranslation()
   const showSocials = useSiteConfig('footer_social_links')
 
-  const FIND_HELP = filterNavItems([
-    { label: 'What\'s available', href: '/help' },
-    { label: 'Find on the map', href: '/geography' },
-    { label: 'Volunteer', href: '/opportunities' },
+  const COMMUNITY = filterNavItems([
+    { label: 'Neighborhoods', href: '/neighborhoods' },
+    { label: 'Organizations', href: '/organizations' },
+    { label: 'Foundations', href: '/foundations' },
+    { label: 'Events calendar', href: '/calendar' },
     { label: 'Three Good Things', href: '/goodthings' },
+    { label: 'Teen Hub', href: '/teens' },
   ])
 
-  const STAY_INFORMED = filterNavItems([
+  const LEARN = filterNavItems([
     { label: 'News', href: '/news' },
     { label: 'Library', href: '/library' },
+    { label: 'Bookshelf', href: '/bookshelf' },
     { label: 'Topics', href: '/pathways' },
     { label: 'Civic Compass', href: '/compass' },
+    { label: 'Ask Chance', href: '/chat' },
+  ])
+
+  const FIND_HELP = filterNavItems([
+    { label: 'What\u2019s available', href: '/help' },
+    { label: 'Volunteer', href: '/opportunities' },
+    { label: 'Find on the map', href: '/geography' },
+    { label: 'Services', href: '/services' },
   ])
 
   const GET_INVOLVED = filterNavItems([
-    { label: 'Contact your reps', href: '/call-your-senators' },
     { label: 'Elections', href: '/elections' },
+    { label: 'Contact your reps', href: '/call-your-senators' },
     { label: 'Where to vote', href: '/polling-places' },
+    { label: 'Governance', href: '/governance' },
+    { label: 'Policies', href: '/policies' },
     { label: 'Live dashboard', href: '/dashboard-live' },
   ])
 
@@ -37,13 +55,15 @@ export function D2Footer() {
     { label: 'About us', href: '/about' },
     { label: 'Contact', href: '/contact' },
     { label: 'User manual', href: '/manual' },
-    { label: 'Accessibility', href: '/accessibility' },
-    { label: 'Privacy', href: '/privacy' },
+    { label: 'Search', href: '/search' },
+    { label: 'My account', href: '/me' },
   ]
+
+  const linkClass = 'block py-0.5 text-sm text-white/50 hover:text-white transition-colors'
 
   return (
     <>
-      {/* Spectrum bar — 7 pathway colors */}
+      {/* Spectrum bar */}
       <div className="flex h-[3px]">
         <div className="flex-1 bg-health" />
         <div className="flex-1 bg-families" />
@@ -55,15 +75,15 @@ export function D2Footer() {
       </div>
 
       <footer className="bg-ink text-white/60 relative overflow-hidden">
-        {/* Subtle texture — FOL watermark */}
         <div className="absolute top-8 right-[-60px] opacity-[0.03] pointer-events-none" aria-hidden="true">
           <FlowerOfLife color="#ffffff" size={300} />
         </div>
 
         <div className="relative z-10 max-w-[1080px] mx-auto px-6 py-10">
-          <div className="grid grid-cols-1 md:grid-cols-6 gap-8">
+          {/* Top row: brand + 5 nav columns */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-8">
             {/* Brand */}
-            <div className="md:col-span-2">
+            <div className="col-span-2 sm:col-span-3 md:col-span-1">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-10 h-10 flex items-center justify-center bg-white/10">
                   <FlowerOfLife color="#ffffff" size={28} />
@@ -79,9 +99,6 @@ export function D2Footer() {
               </div>
               <p className="text-sm text-white/50 mb-2">
                 Your neighbor&apos;s guide to Houston — everything free, everything local.
-              </p>
-              <p className="text-sm leading-relaxed text-white/40">
-                We connect people with the resources, organizations, and opportunities that make our city stronger.
               </p>
               {showSocials && <div className="flex items-center gap-3 mt-3">
                 <a href="https://www.facebook.com/TheChangeLabInc/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-white/30 hover:text-white/70 transition-colors">
@@ -99,96 +116,78 @@ export function D2Footer() {
               </div>}
             </div>
 
-            {/* Find Help */}
+            {/* Community */}
             <div>
-              <p className="text-xs uppercase tracking-wider text-white/40 mb-3">
-                Find Help
-              </p>
+              <p className="text-xs uppercase tracking-wider text-white/40 mb-3">Community</p>
               <div className="space-y-1">
-                {FIND_HELP.map(function (item) {
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className="block py-0.5 text-sm text-white/50 hover:text-white transition-colors"
-                    >
-                      {item.label}
-                    </Link>
-                  )
+                {COMMUNITY.map(function (item) {
+                  return <Link key={item.href} href={item.href} className={linkClass}>{item.label}</Link>
                 })}
               </div>
             </div>
 
-            {/* Stay Informed */}
+            {/* Learn */}
             <div>
-              <p className="text-xs uppercase tracking-wider text-white/40 mb-3">
-                Stay Informed
-              </p>
+              <p className="text-xs uppercase tracking-wider text-white/40 mb-3">Learn</p>
               <div className="space-y-1">
-                {STAY_INFORMED.map(function (item) {
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className="block py-0.5 text-sm text-white/50 hover:text-white transition-colors"
-                    >
-                      {item.label}
-                    </Link>
-                  )
+                {LEARN.map(function (item) {
+                  return <Link key={item.href} href={item.href} className={linkClass}>{item.label}</Link>
+                })}
+              </div>
+            </div>
+
+            {/* Find Help */}
+            <div>
+              <p className="text-xs uppercase tracking-wider text-white/40 mb-3">Find Help</p>
+              <div className="space-y-1">
+                {FIND_HELP.map(function (item) {
+                  return <Link key={item.href} href={item.href} className={linkClass}>{item.label}</Link>
                 })}
               </div>
             </div>
 
             {/* Get Involved */}
             <div>
-              <p className="text-xs uppercase tracking-wider text-white/40 mb-3">
-                Get Involved
-              </p>
+              <p className="text-xs uppercase tracking-wider text-white/40 mb-3">Get Involved</p>
               <div className="space-y-1">
                 {GET_INVOLVED.map(function (item) {
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className="block py-0.5 text-sm text-white/50 hover:text-white transition-colors"
-                    >
-                      {item.label}
-                    </Link>
-                  )
+                  return <Link key={item.href} href={item.href} className={linkClass}>{item.label}</Link>
                 })}
               </div>
             </div>
 
             {/* About */}
             <div>
-              <p className="text-xs uppercase tracking-wider text-white/40 mb-3">
-                About
-              </p>
+              <p className="text-xs uppercase tracking-wider text-white/40 mb-3">About</p>
               <div className="space-y-1">
                 {ABOUT.map(function (item) {
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className="block py-0.5 text-sm text-white/50 hover:text-white transition-colors"
-                    >
-                      {item.label}
-                    </Link>
-                  )
+                  return <Link key={item.href} href={item.href} className={linkClass}>{item.label}</Link>
                 })}
               </div>
             </div>
           </div>
 
-          {/* Mission */}
+          {/* Pathways row */}
           <div className="mt-8 pt-6 border-t border-white/10">
-            <p className="text-sm text-white/40 text-center max-w-2xl mx-auto">
-              Built with love in Houston, Texas. Everything here is free, always.
-            </p>
+            <p className="text-xs uppercase tracking-wider text-white/40 mb-3">Pathways</p>
+            <div className="flex flex-wrap gap-3">
+              {PATHWAY_LIST.map(function (pw) {
+                return (
+                  <Link
+                    key={pw.id}
+                    href={'/pathways/' + pw.slug}
+                    className="flex items-center gap-2 text-sm text-white/50 hover:text-white transition-colors"
+                  >
+                    <span className="w-2 h-2 flex-shrink-0" style={{ background: pw.color }} />
+                    {pw.name}
+                  </Link>
+                )
+              })}
+            </div>
           </div>
 
           {/* Bottom bar */}
-          <div className="mt-4 pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-4 text-xs uppercase tracking-wide text-white/25">
+          <div className="mt-6 pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-4 text-xs text-white/25">
             <p>&copy; {new Date().getFullYear()} The Change Lab &middot; Houston, TX</p>
             <div className="flex items-center gap-4">
               <Link href="/privacy" className="hover:text-white/50 transition-colors">Privacy</Link>
@@ -199,7 +198,7 @@ export function D2Footer() {
             </div>
           </div>
 
-          {/* Crisis numbers — always visible, warm language */}
+          {/* Crisis numbers */}
           <div className="mt-3 pt-3 border-t border-white/10 flex justify-center gap-4 flex-wrap text-xs text-white/30">
             <span>Need help now? <strong className="text-white/60">988</strong></span>
             <span>City help: <strong className="text-white/60">311</strong></span>
