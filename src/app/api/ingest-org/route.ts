@@ -227,6 +227,63 @@ function discoverPages(html: string, baseUrl: string): string[] {
   return pages
 }
 
+// ── Extract action URLs (donate, volunteer, newsletter) ──────────────
+
+function extractActionUrls(html: string, baseUrl: string): { donate_url: string | null; volunteer_url: string | null; newsletter_url: string | null } {
+  const parsed = new URL(baseUrl)
+  const baseDomain = parsed.hostname
+
+  function resolveHref(href: string): string | null {
+    try {
+      if (href.startsWith('/')) return `${parsed.protocol}//${baseDomain}${href}`
+      if (href.startsWith('http')) return href
+    } catch {}
+    return null
+  }
+
+  // Match all anchor tags with href + surrounding text/class/aria
+  const anchorRegex = /<a\s[^>]*href=["']([^"'#]+)["'][^>]*>([\s\S]*?)<\/a>/gi
+  let donate_url: string | null = null
+  let volunteer_url: string | null = null
+  let newsletter_url: string | null = null
+
+  const DONATE_PATTERNS = /donat|give|support.*us|contribut|fundrais|make.*gift/i
+  const VOLUNTEER_PATTERNS = /volunteer|get.*involved|join.*us|take.*action|sign.*up.*help/i
+  const NEWSLETTER_PATTERNS = /newsletter|subscribe|mailing.*list|email.*list|stay.*connected|sign.*up.*update/i
+
+  let match
+  while ((match = anchorRegex.exec(html)) !== null) {
+    const href = match[1]
+    const innerText = match[2].replace(/<[^>]+>/g, '').trim()
+    const fullTag = match[0].toLowerCase()
+
+    // Check href path + link text + class/aria attributes
+    const signal = (href + ' ' + innerText + ' ' + fullTag).toLowerCase()
+    const resolved = resolveHref(href)
+    if (!resolved) continue
+
+    if (!donate_url && DONATE_PATTERNS.test(signal)) {
+      donate_url = resolved
+    }
+    if (!volunteer_url && VOLUNTEER_PATTERNS.test(signal)) {
+      volunteer_url = resolved
+    }
+    if (!newsletter_url && NEWSLETTER_PATTERNS.test(signal)) {
+      newsletter_url = resolved
+    }
+
+    if (donate_url && volunteer_url && newsletter_url) break
+  }
+
+  // Also check for common external donation platforms in all hrefs
+  if (!donate_url) {
+    const platformMatch = html.match(/href=["'](https?:\/\/(?:www\.)?(?:donorbox\.org|givebutter\.com|gofundme\.com|paypal\.com\/donate|every-action\.com|actionnetwork\.org\/fundraising|classy\.org|givingfuel\.com)[^"']*?)["']/i)
+    if (platformMatch) donate_url = platformMatch[1]
+  }
+
+  return { donate_url, volunteer_url, newsletter_url }
+}
+
 // ── Entity type classification ───────────────────────────────────────
 
 type EntityType = 'service' | 'event' | 'opportunity' | 'campaign' | 'benefit' | 'content' | 'skip'
@@ -528,6 +585,9 @@ export async function POST(req: NextRequest) {
   const orgId = 'ORG_' + domain.replace(/[^a-zA-Z0-9]/g, '_').substring(0, 30).toUpperCase()
   const orgName = orgNameHint || homepage.meta.title.split('|')[0].split('-')[0].trim() || domain
 
+  // Extract donate, volunteer, newsletter URLs from homepage links
+  const actionUrls = extractActionUrls(homepage.html, orgUrl)
+
   await supaRest('POST', `organizations?on_conflict=org_id`, {
     org_id: orgId,
     org_name: orgName,
@@ -535,6 +595,9 @@ export async function POST(req: NextRequest) {
     description_5th_grade: homepage.meta.description || null,
     description_full: homepage.text.substring(0, 2000),
     hero_image_url: homepage.meta.image || null,
+    donate_url: actionUrls.donate_url,
+    volunteer_url: actionUrls.volunteer_url,
+    newsletter_url: actionUrls.newsletter_url,
     data_source: 'org_crawl',
     last_updated: new Date().toISOString(),
     crawl_status: 'active',

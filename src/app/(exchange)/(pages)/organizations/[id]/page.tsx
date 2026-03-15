@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
-import { Phone, Globe, MapPin, Clock, ExternalLink, ArrowRight } from 'lucide-react'
+import { Phone, Globe, MapPin, Clock, ExternalLink, ArrowRight, Gift, Heart } from 'lucide-react'
 import { getLangId, fetchTranslationsForTable, getWayfinderContext, getRandomQuote } from '@/lib/data/exchange'
 import { getUserProfile } from '@/lib/auth/roles'
 import { getUIStrings } from '@/lib/i18n'
@@ -190,8 +190,8 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
                 </p>
               )}
 
-              {/* CTA + Bookmark */}
-              <div className="flex items-center gap-4 mb-5">
+              {/* CTA row: Website + Donate + Volunteer + Newsletter + Bookmark */}
+              <div className="flex flex-wrap items-center gap-3 mb-5">
                 {org.website && (
                   <a
                     href={org.website}
@@ -203,6 +203,36 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
                     Visit Website <ExternalLink size={16} />
                   </a>
                 )}
+                {(org as any).donate_url && (
+                  <a
+                    href={(org as any).donate_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm border border-white/30 text-white px-5 py-3 rounded-lg font-bold text-sm shadow-lg transition-all hover:-translate-y-0.5 hover:bg-white/30"
+                  >
+                    <Gift size={15} /> Donate
+                  </a>
+                )}
+                {(org as any).volunteer_url && (
+                  <a
+                    href={(org as any).volunteer_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm border border-white/30 text-white px-5 py-3 rounded-lg font-bold text-sm shadow-lg transition-all hover:-translate-y-0.5 hover:bg-white/30"
+                  >
+                    <Heart size={15} /> Volunteer
+                  </a>
+                )}
+                {(org as any).newsletter_url && (
+                  <a
+                    href={(org as any).newsletter_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm border border-white/30 text-white px-5 py-3 rounded-lg font-bold text-sm shadow-lg transition-all hover:-translate-y-0.5 hover:bg-white/30"
+                  >
+                    <Globe size={15} /> Subscribe
+                  </a>
+                )}
                 <BookmarkButton
                   contentType="organization"
                   contentId={id}
@@ -211,16 +241,11 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
                 />
               </div>
 
-              {/* Contact links — readable size, no email */}
+              {/* Contact links — phone, directions, socials (no redundant website) */}
               <div className="flex flex-wrap items-center gap-4">
                 {org.phone && (
                   <a href={'tel:' + org.phone} className="inline-flex items-center gap-2 text-white/80 hover:text-white text-sm transition-colors">
                     <Phone size={15} /> {org.phone}
-                  </a>
-                )}
-                {org.website && (
-                  <a href={org.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-white/80 hover:text-white text-sm transition-colors">
-                    <Globe size={15} /> Website
                   </a>
                 )}
                 {org.map_link && (
@@ -555,24 +580,6 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
             <aside className="w-full lg:w-[340px] flex-shrink-0">
               <div className="lg:sticky lg:top-4 space-y-4">
 
-                {/* CTA Box */}
-                {org.website && (
-                  <div className="rounded-xl p-6 text-center" style={{ background: `linear-gradient(135deg, ${themeColor}, ${themeColor}cc)` }}>
-                    <p className="text-white font-bold text-lg mb-4">
-                      Connect with {displayOrgName.length > 30 ? 'this organization' : displayOrgName}
-                    </p>
-                    <a
-                      href={org.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block bg-white rounded-lg px-6 py-3 font-bold text-base transition-transform hover:-translate-y-0.5 shadow-lg"
-                      style={{ color: themeColor }}
-                    >
-                      Visit Website <ExternalLink size={14} className="inline ml-1" />
-                    </a>
-                  </div>
-                )}
-
                 {/* Wayfinder */}
                 <DetailWayfinder
                   data={wayfinderData}
@@ -623,6 +630,9 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
           { key: 'zip_code', label: 'ZIP Code', type: 'text', value: org.zip_code },
           { key: 'logo_url', label: 'Logo URL', type: 'url', value: org.logo_url },
           { key: 'hero_image_url', label: 'Hero Image URL', type: 'url', value: org.hero_image_url },
+          { key: 'donate_url', label: 'Donate URL', type: 'url', value: (org as any).donate_url },
+          { key: 'volunteer_url', label: 'Volunteer URL', type: 'url', value: (org as any).volunteer_url },
+          { key: 'newsletter_url', label: 'Newsletter URL', type: 'url', value: (org as any).newsletter_url },
           { key: 'map_link', label: 'Map Link', type: 'url', value: org.map_link },
           { key: 'service_area', label: 'Service Area', type: 'text', value: org.service_area },
           { key: 'people_served', label: 'People Served', type: 'text', value: org.people_served },

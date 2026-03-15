@@ -1,5 +1,5 @@
 /**
- * @fileoverview Homepage — Magazine-style editorial layout for Houston.
+ * @fileoverview Homepage — Magazine-style editorial layout.
  *
  * Inspired by Greater Good Berkeley: hero content grid, two-column feeds,
  * pathway topic cards, video shelf, quote of the day.
@@ -12,12 +12,13 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
+import { cookies } from 'next/headers'
 import { getExchangeStats } from '@/lib/data/exchange'
 import { getNewsFeed, getLatestContent } from '@/lib/data/content'
 import { getRandomQuote, getActivePromotions } from '@/lib/data/homepage'
 import { getUpcomingEvents } from '@/lib/data/events'
 import { getPathwayCounts as getEntityPathwayCounts } from '@/lib/data/entity-graph'
-import { THEMES } from '@/lib/constants'
+import { THEMES, MAP_CENTERS } from '@/lib/constants'
 import { FlowerOfLife } from '@/components/geo/sacred'
 import { FolFallback } from '@/components/ui/FolFallback'
 import { HeroSearch } from '@/components/exchange/home/HeroSearch'
@@ -33,20 +34,30 @@ const ACCENT = '#C75B2A'
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'The Change Engine — Your neighbor\u2019s guide to Houston',
-  description: 'Discover 5,000+ organizations doing incredible work across Houston. Find services, get involved, and connect with your community.',
+  title: 'The Change Engine — Your neighborhood field guide',
+  description: 'Discover thousands of organizations doing incredible work in your community. Find services, get involved, and connect.',
+}
+
+const CITY_NAMES: Record<string, string> = {
+  houston: 'Houston',
+  'san-francisco': 'San Francisco',
+  berkeley: 'Berkeley',
 }
 
 const THEME_LIST = Object.entries(THEMES).map(function ([id, t]) { return { id, ...t } })
 
-function getGreeting(): string {
+function getGreeting(cityName: string): string {
   const hour = new Date().getUTCHours() - 6
-  if (hour < 12) return 'Good morning, Houston'
-  if (hour < 17) return 'Good afternoon, Houston'
-  return 'Good evening, Houston'
+  if (hour < 12) return `Good morning, ${cityName}`
+  if (hour < 17) return `Good afternoon, ${cityName}`
+  return `Good evening, ${cityName}`
 }
 
 export default async function ExchangeHomePage() {
+  const cookieStore = await cookies()
+  const citySlug = cookieStore.get('ce_city')?.value || 'houston'
+  const cityName = CITY_NAMES[citySlug] || 'Houston'
+
   const [stats, newsFeed, latestContent, videos, upcomingEvents, quote, promotions, entityPathwayCounts] = await Promise.all([
     getExchangeStats(),
     getNewsFeed(undefined, 10),
@@ -64,7 +75,7 @@ export default async function ExchangeHomePage() {
   }
 
   const totalResources = (stats.resources || 0) + (stats.services || 0) + (stats.officials || 0) + (stats.policies || 0) + (stats.organizations || 0)
-  const greeting = getGreeting()
+  const greeting = getGreeting(cityName)
 
   // Sort content: items with images first, then without
   const allNews = (newsFeed || []) as any[]
@@ -110,22 +121,22 @@ export default async function ExchangeHomePage() {
           HERO — Houston skyline with search
          ══════════════════════════════════════════════════════════════════ */}
       <section className="relative overflow-hidden" style={{ minHeight: 420 }}>
-        <Image src="/images/hero/houston-skyline.jpg" alt="Houston skyline" fill className="object-cover" priority />
+        <Image src="/images/hero/houston-skyline.jpg" alt="City skyline" fill className="object-cover" priority />
         <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
 
         <div className="relative z-10 max-w-[1200px] mx-auto px-6 py-16 md:py-24 flex flex-col justify-end" style={{ minHeight: 420 }}>
-          <p className="font-mono text-xs uppercase tracking-[0.12em] text-white/70 mb-4">The Change Engine</p>
+          <p className="font-mono text-sm uppercase tracking-[0.12em] text-white/70 mb-4">The Change Engine</p>
           <h1 className="font-display font-black text-white leading-[1.1] tracking-[-0.02em] mb-4"
             style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)' }}
           >
             {greeting}.
           </h1>
-          <p className="text-2xl text-white/90 mb-2 max-w-xl leading-relaxed font-display">
-            <span className="text-white font-bold">{(stats.organizations || 0).toLocaleString()} organizations</span> are already building the Houston you want to live in.
+          <p className="text-xl text-white/95 mb-2 max-w-xl leading-relaxed">
+            We got tired of doomscrolling and binge-watching while the world felt overwhelming. So we did something about it — we got involved with our community.
           </p>
-          <p className="text-base text-white/70 mb-6 max-w-xl leading-relaxed">
-            This is your guide to what they do, how to connect, and where you fit in.
+          <p className="text-base text-white/80 mb-6 max-w-xl leading-relaxed">
+            We built this tool to share that opportunity with you. Inside you&apos;ll find events, webinars, DIY toolkits, videos, and ways to connect with people doing real work in {cityName}. Get involved from your couch or out in the neighborhood.
           </p>
 
           <div className="max-w-lg">
@@ -133,11 +144,9 @@ export default async function ExchangeHomePage() {
           </div>
 
           <div className="flex items-center gap-4 mt-4 flex-wrap">
-            <span className="text-sm font-mono text-white/60">{totalResources.toLocaleString()} resources</span>
-            <span className="text-white/30">&middot;</span>
-            <span className="text-sm font-mono text-white/60">3 languages</span>
-            <span className="text-white/30">&middot;</span>
             <span className="text-sm font-mono text-white/60">Free forever</span>
+            <span className="text-white/30">&middot;</span>
+            <span className="text-sm font-mono text-white/60">EN &middot; ES &middot; VI</span>
           </div>
         </div>
 
@@ -171,7 +180,7 @@ export default async function ExchangeHomePage() {
                   {(() => {
                     const t = THEME_LIST.find(function (th) { return th.id === heroMain.pathway_primary })
                     return t ? (
-                      <span className="inline-block px-3 py-1 rounded-sm font-mono text-xs uppercase tracking-[0.1em] font-bold text-white mb-3"
+                      <span className="inline-block px-3 py-1 rounded-sm font-mono text-sm uppercase tracking-[0.1em] font-bold text-white mb-3"
                         style={{ background: t.color }}
                       >
                         {t.name}
@@ -207,7 +216,7 @@ export default async function ExchangeHomePage() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                     <div className="absolute bottom-0 left-0 right-0 p-4">
                       {t && (
-                        <span className="inline-block px-2 py-0.5 rounded-sm font-mono text-xs uppercase tracking-[0.08em] font-bold text-white mb-1.5"
+                        <span className="inline-block px-2 py-0.5 rounded-sm font-mono text-sm uppercase tracking-[0.08em] font-bold text-white mb-1.5"
                           style={{ background: t.color }}
                         >
                           {t.name}
@@ -287,7 +296,7 @@ export default async function ExchangeHomePage() {
                     </div>
                     <div className="flex-1 min-w-0">
                       {t && (
-                        <span className="font-mono text-xs uppercase tracking-wide font-bold" style={{ color: t.color }}>{t.name}</span>
+                        <span className="font-mono text-sm uppercase tracking-wide font-bold" style={{ color: t.color }}>{t.name}</span>
                       )}
                       <h4 className="text-base font-bold leading-snug line-clamp-2 group-hover:underline" style={{ color: INK }}>
                         {item.title_6th_grade}
@@ -327,7 +336,7 @@ export default async function ExchangeHomePage() {
                     </div>
                     <div className="flex-1 min-w-0">
                       {t && (
-                        <span className="font-mono text-xs uppercase tracking-wide font-bold" style={{ color: t.color }}>{t.name}</span>
+                        <span className="font-mono text-sm uppercase tracking-wide font-bold" style={{ color: t.color }}>{t.name}</span>
                       )}
                       <h4 className="text-base font-bold leading-snug line-clamp-2 group-hover:underline" style={{ color: INK }}>
                         {item.title_6th_grade || item.title}
@@ -352,7 +361,7 @@ export default async function ExchangeHomePage() {
           <div className="text-center mb-8">
             <h2 className="font-display text-3xl font-black" style={{ color: INK }}>Explore by Pathway</h2>
             <p className="text-base mt-2 max-w-lg mx-auto" style={{ color: DIM }}>
-              Seven lenses into the work Houston organizations are doing. Each pathway connects you to services, news, officials, and ways to get involved.
+              Seven lenses into the work community organizations are doing. Each pathway connects you to services, news, officials, and ways to get involved.
             </p>
           </div>
 
@@ -372,7 +381,7 @@ export default async function ExchangeHomePage() {
                       <FlowerOfLife color="#ffffff" size={120} />
                     </div>
                     <div className="absolute bottom-3 left-4">
-                      <span className="font-mono text-xs uppercase tracking-wide text-white/70">{count.toLocaleString()} resources</span>
+                      <span className="font-mono text-sm uppercase tracking-wide text-white/70">{count.toLocaleString()} resources</span>
                     </div>
                   </div>
                   <div className="p-5">
@@ -425,7 +434,7 @@ export default async function ExchangeHomePage() {
                     </div>
                   </div>
                   {t && (
-                    <span className="font-mono text-xs uppercase tracking-wide font-bold" style={{ color: t.color }}>{t.name}</span>
+                    <span className="font-mono text-sm uppercase tracking-wide font-bold" style={{ color: t.color }}>{t.name}</span>
                   )}
                   <h4 className="text-base font-bold leading-snug line-clamp-2 group-hover:underline mt-1" style={{ color: INK }}>
                     {item.title_6th_grade}
@@ -468,7 +477,7 @@ export default async function ExchangeHomePage() {
                   >
                     <div className="flex items-center gap-2 mb-2">
                       <div className="w-12 h-12 rounded-lg flex flex-col items-center justify-center" style={{ background: SIDEBAR_BG }}>
-                        <span className="font-mono text-xs uppercase tracking-wider font-bold" style={{ color: DIM }}>{month}</span>
+                        <span className="font-mono text-sm uppercase tracking-wider font-bold" style={{ color: DIM }}>{month}</span>
                         <span className="font-display text-lg font-black leading-none" style={{ color: INK }}>{day}</span>
                       </div>
                       <span className="text-sm font-mono" style={{ color: DIM }}>{weekday}</span>
@@ -494,7 +503,7 @@ export default async function ExchangeHomePage() {
       {quote && (
         <section style={{ background: SIDEBAR_BG, borderTop: `1px solid ${RULE}` }}>
           <div className="max-w-[700px] mx-auto px-6 py-12 text-center">
-            <p className="font-mono text-xs uppercase tracking-[0.2em] mb-4" style={{ color: DIM }}>Quote of the Day</p>
+            <p className="font-mono text-sm uppercase tracking-[0.2em] mb-4" style={{ color: DIM }}>Quote of the Day</p>
             <blockquote className="font-display text-2xl md:text-3xl leading-relaxed italic mb-3" style={{ color: INK }}>
               &ldquo;{quote.quote_text}&rdquo;
             </blockquote>

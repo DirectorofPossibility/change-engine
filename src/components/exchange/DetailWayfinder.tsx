@@ -5,7 +5,7 @@ import { cookies } from 'next/headers'
 import {
   BookOpen, Heart, Scale, ChevronDown, ChevronRight,
   Phone, Globe, Gift, Users, Calendar, MapPin,
-  FileText, Compass, ArrowRight, Sparkles,
+  FileText, Compass, ArrowRight, Sparkles, ExternalLink,
 } from 'lucide-react'
 import type { WayfinderData } from '@/lib/types/exchange'
 import { getNeighborhoodByZip } from '@/lib/data/exchange'
@@ -32,49 +32,62 @@ const TOOLKIT_MUTED = '#6b6560'
 const TOOLKIT_ACCENT = '#C75B2A'
 
 /* ── Compact resource card ─────────────────────────────────────────── */
-function ResourceCard({ href, title, image, pathway, summary, type }: {
+function ResourceCard({ href, title, image, pathway, summary, sourceUrl }: {
   href: string
   title: string
   image?: string | null
   pathway?: string | null
   summary?: string | null
-  type?: 'content' | 'library' | 'service' | 'opportunity' | 'official' | 'policy'
+  sourceUrl?: string | null
 }) {
-  const themeKey = pathway as keyof typeof THEMES | null
-  const color = themeKey ? THEMES[themeKey]?.color : TOOLKIT_ACCENT
   return (
-    <Link
-      href={href}
-      className="group block rounded-lg overflow-hidden transition-all hover:-translate-y-0.5 hover:shadow-md"
+    <div
+      className="group rounded-lg overflow-hidden transition-all hover:-translate-y-0.5 hover:shadow-md"
       style={{ border: `1px solid ${TOOLKIT_BORDER}`, background: '#fff' }}
     >
-      {/* Image or colored fallback */}
-      <div className="relative h-[72px] overflow-hidden">
-        {image ? (
-          <Image
-            src={image}
-            alt=""
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-300"
-          />
-        ) : (
-          <div className="w-full h-full overflow-hidden">
-            <FolFallback pathway={pathway} height="h-full" />
-          </div>
-        )}
-        {/* Subtle gradient overlay for readability */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-      </div>
-      {/* Title */}
-      <div className="p-2.5">
-        <span
-          className="text-xs font-semibold leading-tight line-clamp-2 group-hover:text-[#C75B2A] transition-colors"
-          style={{ color: TOOLKIT_TEXT }}
-        >
-          {title}
-        </span>
-      </div>
-    </Link>
+      <Link href={href} className="block">
+        {/* Image or colored fallback */}
+        <div className="relative h-[72px] overflow-hidden">
+          {image ? (
+            <Image
+              src={image}
+              alt=""
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-300"
+            />
+          ) : (
+            <div className="w-full h-full overflow-hidden">
+              <FolFallback pathway={pathway} height="h-full" />
+            </div>
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+        </div>
+        {/* Title */}
+        <div className="px-2.5 pt-2.5 pb-1">
+          <span
+            className="text-xs font-semibold leading-tight line-clamp-2 group-hover:text-[#C75B2A] transition-colors"
+            style={{ color: TOOLKIT_TEXT }}
+          >
+            {title}
+          </span>
+        </div>
+      </Link>
+      {/* Source link */}
+      {sourceUrl && (
+        <div className="px-2.5 pb-2">
+          <a
+            href={sourceUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-[10px] hover:underline"
+            style={{ color: TOOLKIT_MUTED }}
+          >
+            <ExternalLink size={9} /> Source
+          </a>
+        </div>
+      )}
+      {!sourceUrl && <div className="pb-1.5" />}
+    </div>
   )
 }
 
@@ -305,6 +318,7 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole, 
                     image={c.image_url}
                     pathway={c.pathway_primary}
                     summary={c.summary_6th_grade}
+                    sourceUrl={c.source_url}
                   />
                 )
               })}
@@ -509,25 +523,54 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole, 
               {data.taxonomy.actionTypes.length > 0 && (
                 <div>
                   <span className="font-bold text-xs uppercase tracking-wider">Action Types: </span>
-                  {data.taxonomy.actionTypes.map(at => at.action_type_name).join(', ')}
+                  {data.taxonomy.actionTypes.map(function (at, i) {
+                    return (
+                      <span key={at.action_type_id}>
+                        {i > 0 && ', '}
+                        <Link href={'/search?action_type=' + encodeURIComponent(at.action_type_id) + '&label=' + encodeURIComponent(at.action_type_name)} className="text-brand-accent hover:underline">
+                          {at.action_type_name}
+                        </Link>
+                      </span>
+                    )
+                  })}
                 </div>
               )}
               {data.taxonomy.timeCommitment && (
                 <div>
                   <span className="font-bold text-xs uppercase tracking-wider">Time: </span>
-                  {data.taxonomy.timeCommitment.time_name}
+                  <Link href={'/search?time=' + encodeURIComponent(data.taxonomy.timeCommitment.time_id) + '&label=' + encodeURIComponent(data.taxonomy.timeCommitment.time_name)} className="text-brand-accent hover:underline">
+                    {data.taxonomy.timeCommitment.time_name}
+                  </Link>
                 </div>
               )}
               {data.taxonomy.ntee_codes.length > 0 && (
                 <div>
                   <span className="font-bold text-xs uppercase tracking-wider">NTEE: </span>
-                  <span className="font-mono">{data.taxonomy.ntee_codes.join(', ')}</span>
+                  {data.taxonomy.ntee_codes.map(function (code, i) {
+                    return (
+                      <span key={code} className="font-mono">
+                        {i > 0 && ', '}
+                        <Link href={'/search?ntee=' + encodeURIComponent(code)} className="text-brand-accent hover:underline">
+                          {code}
+                        </Link>
+                      </span>
+                    )
+                  })}
                 </div>
               )}
               {data.taxonomy.airs_codes.length > 0 && (
                 <div>
                   <span className="font-bold text-xs uppercase tracking-wider">AIRS: </span>
-                  <span className="font-mono">{data.taxonomy.airs_codes.join(', ')}</span>
+                  {data.taxonomy.airs_codes.map(function (code, i) {
+                    return (
+                      <span key={code} className="font-mono">
+                        {i > 0 && ', '}
+                        <Link href={'/search?airs=' + encodeURIComponent(code)} className="text-brand-accent hover:underline">
+                          {code}
+                        </Link>
+                      </span>
+                    )
+                  })}
                 </div>
               )}
             </div>
