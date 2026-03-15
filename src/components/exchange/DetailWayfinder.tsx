@@ -231,116 +231,138 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole }
 
       {userZip && <GeoContext zip={userZip} nearLabel={t('wayfinder.near')} />}
 
-      {!designV1 && data.themes.length > 0 && (
-        <div className="border-b border-brand-border relative">
-          <CompactCircleGraph
-            activePathways={data.themes}
-            accentColor={data.themes.length > 0 ? (THEMES as any)[data.themes[0]]?.color : undefined}
-          />
-          <WayfinderTooltipPos tipKey="fol_key" position="left" />
-        </div>
-      )}
-
-      {/* Organization anchors */}
+      {/* Organization anchors — always open */}
       {data.organizations.length > 0 && (
-        <div className="p-4 border-b border-brand-border space-y-3">
-          {data.organizations.map(function (org) {
-            return (
-              <div key={org.org_id} className="space-y-2">
-                <Link href={'/organizations/' + org.org_id} className="flex items-center gap-2 group">
-                  {org.logo_url ? (
-                    <Image src={org.logo_url} alt="" className="w-8 h-8 rounded object-contain bg-brand-bg flex-shrink-0" width={48} height={32} />
-                  ) : (
-                    <div className="w-8 h-8 rounded bg-brand-bg flex items-center justify-center flex-shrink-0">
-                      <Users size={14} className="text-brand-muted" />
-                    </div>
-                  )}
-                  <span className="text-sm font-medium text-brand-text group-hover:text-brand-accent transition-colors line-clamp-1">
-                    {org.org_name}
-                  </span>
-                </Link>
-                <div className="flex flex-wrap gap-1.5 pl-10">
-                  {org.donate_url && (
-                    <a href={org.donate_url} target="_blank" rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-xs px-2 py-1 bg-green-50 text-green-700 hover:bg-green-100 transition-colors">
-                      <Gift size={11} /> {t('wayfinder.donate')}
-                    </a>
-                  )}
-                  {org.volunteer_url && (
-                    <a href={org.volunteer_url} target="_blank" rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-xs px-2 py-1 bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors">
-                      <Heart size={11} /> {t('wayfinder.volunteer')}
-                    </a>
-                  )}
-                  {org.newsletter_url && (
-                    <a href={org.newsletter_url} target="_blank" rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-xs px-2 py-1 bg-purple-50 text-purple-700 hover:bg-purple-100 transition-colors">
-                      <FileText size={11} /> {t('wayfinder.subscribe')}
-                    </a>
-                  )}
-                  {org.phone && (
-                    <a href={'tel:' + org.phone}
-                      className="inline-flex items-center gap-1 text-xs px-2 py-1 bg-orange-50 text-orange-700 hover:bg-orange-100 transition-colors">
-                      <Phone size={11} /> {t('wayfinder.call')}
-                    </a>
-                  )}
-                  {org.website && (
-                    <a href={org.website} target="_blank" rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-xs px-2 py-1 bg-gray-50 text-gray-700 hover:bg-gray-100 transition-colors">
-                      <Globe size={11} /> {t('wayfinder.visit')}
-                    </a>
-                  )}
+        <details open className="border-t border-brand-border group/section">
+          <summary className="flex items-center justify-between cursor-pointer px-4 py-3 hover:bg-brand-bg/50 transition-colors select-none">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">{t('wayfinder.organizations') || 'Organizations'}</span>
+            <ChevronDown size={12} className="text-brand-muted transition-transform group-open/section:rotate-180" />
+          </summary>
+          <div className="px-4 pb-4 space-y-3">
+            {data.organizations.map(function (org) {
+              return (
+                <div key={org.org_id} className="space-y-2">
+                  <Link href={'/organizations/' + org.org_id} className="flex items-center gap-2 group">
+                    {org.logo_url ? (
+                      <Image src={org.logo_url} alt="" className="w-8 h-8 rounded object-contain bg-brand-bg flex-shrink-0" width={48} height={32} />
+                    ) : (
+                      <div className="w-8 h-8 rounded bg-brand-bg flex items-center justify-center flex-shrink-0">
+                        <Users size={14} className="text-brand-muted" />
+                      </div>
+                    )}
+                    <span className="text-sm font-medium text-brand-text group-hover:text-brand-accent transition-colors line-clamp-1">
+                      {org.org_name}
+                    </span>
+                  </Link>
+                  <div className="flex flex-wrap gap-1.5 pl-10">
+                    {org.donate_url && (
+                      <a href={org.donate_url} target="_blank" rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-xs px-2 py-1 bg-green-50 text-green-700 hover:bg-green-100 transition-colors">
+                        <Gift size={11} /> {t('wayfinder.donate')}
+                      </a>
+                    )}
+                    {org.volunteer_url && (
+                      <a href={org.volunteer_url} target="_blank" rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-xs px-2 py-1 bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors">
+                        <Heart size={11} /> {t('wayfinder.volunteer')}
+                      </a>
+                    )}
+                    {org.newsletter_url && (
+                      <a href={org.newsletter_url} target="_blank" rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-xs px-2 py-1 bg-purple-50 text-purple-700 hover:bg-purple-100 transition-colors">
+                        <FileText size={11} /> {t('wayfinder.subscribe')}
+                      </a>
+                    )}
+                    {org.phone && (
+                      <a href={'tel:' + org.phone}
+                        className="inline-flex items-center gap-1 text-xs px-2 py-1 bg-orange-50 text-orange-700 hover:bg-orange-100 transition-colors">
+                        <Phone size={11} /> {t('wayfinder.call')}
+                      </a>
+                    )}
+                    {org.website && (
+                      <a href={org.website} target="_blank" rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-xs px-2 py-1 bg-gray-50 text-gray-700 hover:bg-gray-100 transition-colors">
+                        <Globe size={11} /> {t('wayfinder.visit')}
+                      </a>
+                    )}
+                  </div>
                 </div>
-              </div>
-            )
-          })}
-        </div>
+              )
+            })}
+          </div>
+        </details>
       )}
 
-      {/* Focus area dots */}
+      {/* Flower of Life graph — collapsible, closed */}
+      {!designV1 && data.themes.length > 0 && (
+        <details className="border-t border-brand-border group/section">
+          <summary className="flex items-center justify-between cursor-pointer px-4 py-3 hover:bg-brand-bg/50 transition-colors select-none">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">{t('wayfinder.topics')}</span>
+            <ChevronDown size={12} className="text-brand-muted transition-transform group-open/section:rotate-180" />
+          </summary>
+          <div className="relative border-t border-brand-border">
+            <CompactCircleGraph
+              activePathways={data.themes}
+              accentColor={data.themes.length > 0 ? (THEMES as any)[data.themes[0]]?.color : undefined}
+            />
+            <WayfinderTooltipPos tipKey="fol_key" position="left" />
+          </div>
+          {/* Theme pills */}
+          <div className="px-4 pb-3">
+            <div className="flex flex-wrap gap-1.5">
+              {data.themes.map(function (themeId) {
+                const theme = THEMES[themeId as keyof typeof THEMES]
+                if (!theme) return null
+                return (
+                  <Link key={themeId} href={'/pathways/' + theme.slug}
+                    className="inline-flex items-center gap-1.5 text-xs px-2 py-1 hover:opacity-80 transition-opacity"
+                    style={{ backgroundColor: theme.color + '15', color: theme.color }}>
+                    <span className="w-1.5 h-4 rounded-sm" style={{ backgroundColor: theme.color }} />
+                    {theme.name}
+                  </Link>
+                )
+              })}
+            </div>
+          </div>
+        </details>
+      )}
+
+      {/* Focus area dots — collapsible, closed */}
       {data.focusAreas.length > 0 && (
-        <div className="px-4 py-3 border-b border-brand-border relative">
-          <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1.5">{t('wayfinder.focus_areas')}</div>
-          <WayfinderTooltipPos tipKey="focus_area_dots" position="bottom" />
-          <div className="flex flex-wrap gap-1.5">
-            {data.focusAreas.map(function (fa) {
-              const themeKey = fa.theme_id as keyof typeof THEMES | null
-              const color = themeKey ? THEMES[themeKey]?.color : '#6B6560'
-              return (
-                <Link key={fa.focus_id} href={'/explore/focus/' + fa.focus_id}
-                  className="inline-flex items-center gap-1 text-xs text-brand-muted hover:text-brand-accent transition-colors">
-                  <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: color || '#6B6560' }} />
-                  {fa.focus_area_name}
-                </Link>
-              )
-            })}
+        <details className="border-t border-brand-border group/section">
+          <summary className="flex items-center justify-between cursor-pointer px-4 py-3 hover:bg-brand-bg/50 transition-colors select-none relative">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">{t('wayfinder.focus_areas')}</span>
+            <WayfinderTooltipPos tipKey="focus_area_dots" position="bottom" />
+            <ChevronDown size={12} className="text-brand-muted transition-transform group-open/section:rotate-180" />
+          </summary>
+          <div className="px-4 pb-3">
+            <div className="flex flex-wrap gap-1.5">
+              {data.focusAreas.map(function (fa) {
+                const themeKey = fa.theme_id as keyof typeof THEMES | null
+                const color = themeKey ? THEMES[themeKey]?.color : '#6B6560'
+                return (
+                  <Link key={fa.focus_id} href={'/explore/focus/' + fa.focus_id}
+                    className="inline-flex items-center gap-1 text-xs text-brand-muted hover:text-brand-accent transition-colors">
+                    <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: color || '#6B6560' }} />
+                    {fa.focus_area_name}
+                  </Link>
+                )
+              })}
+            </div>
           </div>
-        </div>
+        </details>
       )}
 
-      {/* Theme pills */}
-      {data.themes.length > 0 && (
-        <div className="px-4 py-3 border-b border-brand-border">
-          <div className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1.5">{t('wayfinder.topics')}</div>
-          <div className="flex flex-wrap gap-1.5">
-            {data.themes.map(function (themeId) {
-              const theme = THEMES[themeId as keyof typeof THEMES]
-              if (!theme) return null
-              return (
-                <Link key={themeId} href={'/pathways/' + theme.slug}
-                  className="inline-flex items-center gap-1.5 text-xs px-2 py-1 hover:opacity-80 transition-opacity"
-                  style={{ backgroundColor: theme.color + '15', color: theme.color }}>
-                  <span className="w-1.5 h-4 rounded-sm" style={{ backgroundColor: theme.color }} />
-                  {theme.name}
-                </Link>
-              )
-            })}
-          </div>
-        </div>
+      {/* Taxonomy — collapsible, closed */}
+      {data.taxonomy && (
+        <details className="border-t border-brand-border group/section">
+          <summary className="flex items-center justify-between cursor-pointer px-4 py-3 hover:bg-brand-bg/50 transition-colors select-none">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">{t('wayfinder.taxonomy') || 'Classification'}</span>
+            <ChevronDown size={12} className="text-brand-muted transition-transform group-open/section:rotate-180" />
+          </summary>
+          <TaxonomyPanel taxonomy={data.taxonomy} userRole={userRole} t={t} />
+        </details>
       )}
-
-      {/* Taxonomy */}
-      {data.taxonomy && <TaxonomyPanel taxonomy={data.taxonomy} userRole={userRole} t={t} />}
 
       {/* Tier: What's Happening */}
       <WayfinderTier
