@@ -20,7 +20,6 @@ import { getPathwayCounts as getEntityPathwayCounts } from '@/lib/data/entity-gr
 import { THEMES } from '@/lib/constants'
 import { FlowerOfLife } from '@/components/geo/sacred'
 import { FolFallback } from '@/components/ui/FolFallback'
-import { InteractiveFOL } from '@/components/exchange/home/InteractiveFOL'
 import { HeroSearch } from '@/components/exchange/home/HeroSearch'
 import { ArrowRight, Calendar, MapPin, Megaphone, HandHeart, Scale, UserCheck, Users, Play } from 'lucide-react'
 
@@ -102,50 +101,40 @@ export default async function ExchangeHomePage() {
       )}
 
       {/* ══════════════════════════════════════════════════════════════════
-          HERO — Dark banner with FOL + search
+          HERO — Houston skyline with search
          ══════════════════════════════════════════════════════════════════ */}
-      <section className="relative overflow-hidden">
-        <Image src="/images/hero/houston-skyline.jpg" alt="" fill className="object-cover opacity-[0.10]" priority />
-        <div className="absolute inset-0 bg-black" style={{ zIndex: -1 }} />
-        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }} />
+      <section className="relative overflow-hidden" style={{ minHeight: 400 }}>
+        <Image src="/images/hero/houston-skyline.jpg" alt="Houston skyline" fill className="object-cover" priority />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/10" />
 
-        <div className="relative z-10 max-w-[1200px] mx-auto px-6 py-12 md:py-16">
-          <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr] gap-6 items-center">
-            <div>
-              <p className="font-mono text-[0.65rem] uppercase tracking-[0.12em] text-white/40 mb-4">The Change Engine</p>
-              <h1 className="font-display font-black text-white leading-[1.1] tracking-[-0.02em] mb-4"
-                style={{ fontSize: 'clamp(1.8rem, 4.5vw, 2.8rem)' }}
-              >
-                {greeting}.
-              </h1>
-              <p className="text-xl text-white/80 mb-2 max-w-lg leading-relaxed font-display">
-                <span className="text-white font-bold">{(stats.organizations || 0).toLocaleString()} organizations</span> are already building the Houston you want to live in.
-              </p>
-              <p className="text-sm text-white/50 mb-6 max-w-lg leading-relaxed">
-                This is your guide to what they do, how to connect, and where you fit in.
-              </p>
+        <div className="relative z-10 max-w-[1200px] mx-auto px-6 py-16 md:py-24 flex flex-col justify-end" style={{ minHeight: 400 }}>
+          <p className="font-mono text-[0.65rem] uppercase tracking-[0.12em] text-white/60 mb-4">The Change Engine</p>
+          <h1 className="font-display font-black text-white leading-[1.1] tracking-[-0.02em] mb-4"
+            style={{ fontSize: 'clamp(2rem, 5vw, 3.2rem)' }}
+          >
+            {greeting}.
+          </h1>
+          <p className="text-xl text-white/90 mb-2 max-w-xl leading-relaxed font-display">
+            <span className="text-white font-bold">{(stats.organizations || 0).toLocaleString()} organizations</span> are already building the Houston you want to live in.
+          </p>
+          <p className="text-sm text-white/60 mb-6 max-w-xl leading-relaxed">
+            This is your guide to what they do, how to connect, and where you fit in.
+          </p>
 
-              <HeroSearch />
-
-              <div className="flex items-center gap-4 mt-4 flex-wrap">
-                <span className="text-xs font-mono text-white/30">{totalResources.toLocaleString()} resources</span>
-                <span className="text-white/15">&middot;</span>
-                <span className="text-xs font-mono text-white/30">3 languages</span>
-                <span className="text-white/15">&middot;</span>
-                <span className="text-xs font-mono text-white/30">Free forever</span>
-              </div>
-            </div>
-
-            <div className="hidden md:block">
-              <InteractiveFOL pathwayCounts={pathwayCounts} />
-            </div>
+          <div className="max-w-lg">
+            <HeroSearch />
           </div>
-          <div className="md:hidden mt-6">
-            <InteractiveFOL pathwayCounts={pathwayCounts} />
+
+          <div className="flex items-center gap-4 mt-4 flex-wrap">
+            <span className="text-xs font-mono text-white/50">{totalResources.toLocaleString()} resources</span>
+            <span className="text-white/25">&middot;</span>
+            <span className="text-xs font-mono text-white/50">3 languages</span>
+            <span className="text-white/25">&middot;</span>
+            <span className="text-xs font-mono text-white/50">Free forever</span>
           </div>
         </div>
 
-        <div className="relative z-10 flex h-[3px]">
+        <div className="absolute bottom-0 left-0 right-0 z-10 flex h-[3px]">
           {THEME_LIST.map(function (t) {
             return <div key={t.id} className="flex-1" style={{ background: t.color }} />
           })}
