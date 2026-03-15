@@ -129,7 +129,7 @@ export function InteractiveFOL({ pathwayCounts = {} }: InteractiveFOLProps) {
           fill="none"
         />
 
-        {/* Outer ring — 12 decorative circles (Flower of Life layer 2) */}
+        {/* Outer ring — 12 decorative circles (lines only, no fill) */}
         {OUTER_RING_ANGLES.map(function (angle, i) {
           const [px, py] = circleAt(angle, OUTER_RING_DIST)
           return (
@@ -137,48 +137,33 @@ export function InteractiveFOL({ pathwayCounts = {} }: InteractiveFOLProps) {
               key={'outer-' + i}
               cx={px} cy={py} r={R}
               stroke="rgba(255,255,255,0.06)"
-              strokeWidth="1.5"
-              fill="rgba(255,255,255,0.015)"
+              strokeWidth="1"
+              fill="none"
             />
           )
         })}
 
-        {/* Inner ring — 6 Seed of Life circles with overlap fill */}
+        {/* Inner ring — 6 Seed of Life circles (lines only) */}
         {OUTER_ANGLES.map(function (angle, i) {
           const [px, py] = circleAt(angle, R)
           return (
             <circle
               key={'geo-' + i}
               cx={px} cy={py} r={R}
-              stroke="rgba(255,255,255,0.12)"
-              strokeWidth="2"
-              fill="rgba(255,255,255,0.03)"
+              stroke="rgba(255,255,255,0.08)"
+              strokeWidth="1"
+              fill="none"
             />
           )
         })}
 
-        {/* Center geometry circle with overlap fill */}
+        {/* Center geometry circle (line only) */}
         <circle
           cx={CX} cy={CY} r={R}
-          stroke="rgba(255,255,255,0.12)"
-          strokeWidth="2"
-          fill="rgba(255,255,255,0.03)"
+          stroke="rgba(255,255,255,0.08)"
+          strokeWidth="1"
+          fill="none"
         />
-
-        {/* Intermediate ring — 6 circles offset 30deg (adds density) */}
-        {OUTER_ANGLES.map(function (angle, i) {
-          const offsetAngle = angle + 30
-          const [px, py] = circleAt(offsetAngle, R * 1.15)
-          return (
-            <circle
-              key={'mid-' + i}
-              cx={px} cy={py} r={R * 0.7}
-              stroke="rgba(255,255,255,0.05)"
-              strokeWidth="1.2"
-              fill="rgba(255,255,255,0.02)"
-            />
-          )
-        })}
 
         {/* 6 outer petals — clickable, positioned closer to center for overlap */}
         {PETAL_MAP.map(function ({ themeId, angle }) {
