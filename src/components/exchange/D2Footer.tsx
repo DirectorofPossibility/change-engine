@@ -19,6 +19,8 @@ export function D2Footer() {
 
   const COMMUNITY = filterNavItems([
     { label: 'Neighborhoods', href: '/neighborhoods' },
+    { label: 'My neighborhood', href: '/my-neighborhood' },
+    { label: 'My area', href: '/my-area' },
     { label: 'Super neighborhoods', href: '/super-neighborhoods' },
     { label: 'Organizations', href: '/organizations' },
     { label: 'Foundations', href: '/foundations' },
