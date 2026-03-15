@@ -120,11 +120,11 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
     }
   }
 
-  // Focus areas
+  // Focus areas — junction table uses inbox_id as content_id
   const { data: focusJunctions } = await supabase
     .from('content_focus_areas')
     .select('focus_id')
-    .eq('content_id', item.id)
+    .eq('content_id', item.inbox_id)
   const focusAreaIds = (focusJunctions ?? []).map((j: any) => j.focus_id)
   const focusAreas = focusAreaIds.length > 0 ? await getFocusAreasByIds(focusAreaIds) : []
 
