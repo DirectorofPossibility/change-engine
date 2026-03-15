@@ -1,0 +1,1463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Change Engine — Redesign Mockup v3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════
+   DESIGN TOKENS
+   ══════════════════════════════════════════════ */
+:root {
+  --gradient: linear-gradient(135deg, #FF3B57 0%, #F59E0B 50%, #7C3AED 100%);
+  --gradient-dark: linear-gradient(135deg, #c4293f 0%, #d48a09 50%, #6429c7 100%);
+  --ink: #0A0E27;
+  --paper: #f5f2eb;
+  --newsprint: #d8d3c5;
+  --red: #c43c4c;
+  --red-light: #FF3B57;
+  --amber: #F59E0B;
+  --purple: #7C3AED;
+  --green: #22C55E;
+  --text: #1a1a1a;
+  --text-secondary: #4a4a4a;
+  --text-muted: #888;
+  --border: rgba(0,0,0,.08);
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 24px;
+  --radius-pill: 50px;
+  --shadow-card: 0 2px 12px rgba(0,0,0,.06);
+  --shadow-hover: 0 12px 40px rgba(0,0,0,.08);
+  --max-w: 1100px;
+  --font-display: 'Bebas Neue', Impact, sans-serif;
+  --font-body: 'DM Sans', -apple-system, sans-serif;
+  --font-mono: 'Space Mono', monospace;
+  --transition: .25s ease;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: var(--font-body);
+  color: var(--text);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* ══════════════════════════════════════════════
+   HEADER
+   ══════════════════════════════════════════════ */
+.header {
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 32px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-family: var(--font-display);
+  font-size: 28px;
+  letter-spacing: 1px;
+  color: var(--ink);
+}
+
+.logo span {
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.nav { display: flex; align-items: center; gap: 32px; }
+
+.nav a {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-secondary);
+  transition: color var(--transition);
+}
+
+.nav a:hover { color: var(--red); }
+
+.nav-cta {
+  background: var(--gradient) !important;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  padding: 8px 20px;
+  border-radius: var(--radius-pill);
+  font-size: 11px !important;
+}
+
+/* ══════════════════════════════════════════════
+   HERO — THE CHANGE ENGINE
+   ══════════════════════════════════════════════ */
+.hero {
+  background: var(--gradient);
+  padding: 48px 32px 56px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 30% 50%, rgba(255,255,255,.12) 0%, transparent 60%);
+}
+
+.hero-inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(48px, 8vw, 96px);
+  color: #fff;
+  letter-spacing: 2px;
+  line-height: .9;
+  margin-bottom: 8px;
+  text-shadow: 0 0 60px rgba(255,255,255,.15);
+}
+
+.hero-subtitle {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: rgba(255,255,255,.7);
+  margin-bottom: 36px;
+}
+
+/* Flower of Life watermark behind hero */
+.hero-fol {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  opacity: .06;
+}
+
+.hero-fol circle {
+  stroke: #fff;
+  stroke-width: 1.5;
+  fill: none;
+}
+
+/* Search + Filters */
+.engine-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.search-input {
+  flex: 1;
+  min-width: 280px;
+  padding: 16px 20px 16px 48px;
+  border: none;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 4px 20px rgba(0,0,0,.15);
+  outline: none;
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E") 16px center no-repeat;
+}
+
+.search-input::placeholder { color: #aaa; }
+.search-input:focus { box-shadow: 0 4px 24px rgba(0,0,0,.2); }
+
+.filter-btn {
+  padding: 14px 24px;
+  border-radius: var(--radius-pill);
+  background: rgba(255,255,255,.2);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border: 1px solid rgba(255,255,255,.25);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.filter-btn:hover {
+  background: rgba(255,255,255,.35);
+  transform: translateY(-1px);
+}
+
+/* ══════════════════════════════════════════════
+   LIVE STATUS BAR
+   ══════════════════════════════════════════════ */
+.status-bar {
+  background: var(--ink);
+  padding: 12px 32px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  overflow-x: auto;
+}
+
+.status-bar-inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.live-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--green);
+  white-space: nowrap;
+}
+
+.live-dot {
+  width: 7px;
+  height: 7px;
+  background: var(--green);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(34,197,94,.5); }
+  70% { box-shadow: 0 0 0 8px rgba(34,197,94,0); }
+  100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
+}
+
+.condition-card {
+  background: rgba(255,255,255,.08);
+  border-radius: var(--radius-sm);
+  padding: 8px 16px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.condition-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: rgba(255,255,255,.5);
+}
+
+.condition-value {
+  font-family: var(--font-display);
+  font-size: 20px;
+  color: #fff;
+  letter-spacing: .5px;
+}
+
+.condition-value.good { color: var(--green); }
+.condition-value.moderate { color: var(--amber); }
+
+/* ══════════════════════════════════════════════
+   TRUST STRIP
+   ══════════════════════════════════════════════ */
+.trust-strip {
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+  padding: 16px 32px;
+}
+
+.trust-inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.stat-row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.stat-item {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.stat-num {
+  font-family: var(--font-display);
+  font-size: 28px;
+  color: var(--ink);
+}
+
+.stat-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+
+.stat-sep {
+  width: 1px;
+  height: 24px;
+  background: var(--border);
+}
+
+.updated-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--green);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ══════════════════════════════════════════════
+   TAB NAVIGATION
+   ══════════════════════════════════════════════ */
+.tabs {
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  overflow-x: auto;
+}
+
+.tabs-inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  display: flex;
+  gap: 4px;
+  padding: 8px 0;
+}
+
+.tab {
+  padding: 10px 20px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--transition);
+}
+
+.tab:hover { background: rgba(0,0,0,.04); color: var(--text); }
+
+.tab.active {
+  background: var(--gradient);
+  color: #fff;
+}
+
+/* ══════════════════════════════════════════════
+   SECTION LAYOUT
+   ══════════════════════════════════════════════ */
+.section {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 48px 32px;
+}
+
+.section-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 42px);
+  color: var(--ink);
+  letter-spacing: 1px;
+}
+
+.section-number {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.section-subtitle {
+  font-size: 15px;
+  color: var(--text-secondary);
+  max-width: 600px;
+  line-height: 1.7;
+}
+
+.section-link {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--red);
+  transition: color var(--transition);
+}
+
+.section-link:hover { color: var(--red-light); }
+
+/* ══════════════════════════════════════════════
+   THREE CENTERS
+   ══════════════════════════════════════════════ */
+.centers-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.center-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 0;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all var(--transition);
+  position: relative;
+}
+
+.center-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-hover);
+}
+
+.center-top {
+  height: 4px;
+}
+
+.center-body {
+  padding: 28px 24px;
+}
+
+.center-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  font-size: 20px;
+}
+
+.center-name {
+  font-family: var(--font-display);
+  font-size: 26px;
+  letter-spacing: .5px;
+  margin-bottom: 4px;
+}
+
+.center-tagline {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-style: italic;
+  margin-bottom: 12px;
+}
+
+.center-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  margin-bottom: 16px;
+}
+
+.center-count {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+}
+
+.center-enter {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+
+.center-card:hover .center-enter { opacity: 1; }
+
+/* ══════════════════════════════════════════════
+   CONTENT CARDS
+   ══════════════════════════════════════════════ */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-hover);
+}
+
+.card-image {
+  height: 200px;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-image-bg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-image-gradient {
+  width: 100%;
+  height: 100%;
+}
+
+.card-image::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: linear-gradient(to top, rgba(0,0,0,.3), transparent);
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.card-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.tag-news { background: #FEE2E2; color: #991B1B; }
+.tag-research { background: #DBEAFE; color: #1E40AF; }
+.tag-event { background: #FEF3C7; color: #92400E; }
+.tag-policy { background: #FCE7F3; color: #9D174D; }
+.tag-civic { background: #FDE68A; color: #78350F; }
+.tag-volunteer { background: #D1FAE5; color: #065F46; }
+.tag-social { background: #EDE9FE; color: #5B21B6; }
+
+.card-date {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: .5px;
+  margin-bottom: 8px;
+}
+
+.card-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  letter-spacing: .5px;
+  line-height: 1.15;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.card-excerpt {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.card-source {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.card-source-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.card-source-name {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+
+/* ══════════════════════════════════════════════
+   FEATURED / MAGAZINE LAYOUT
+   ══════════════════════════════════════════════ */
+.magazine-grid {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 24px;
+}
+
+.featured-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.featured-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-hover);
+}
+
+.featured-image {
+  height: 280px;
+  position: relative;
+  overflow: hidden;
+}
+
+.featured-image::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: linear-gradient(to top, rgba(0,0,0,.4), transparent);
+}
+
+.featured-body {
+  padding: 24px;
+}
+
+.featured-title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  letter-spacing: .5px;
+  line-height: 1.1;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+
+.side-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.side-card {
+  display: flex;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.side-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+.side-card-image {
+  width: 120px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.side-card-body {
+  padding: 16px;
+  flex: 1;
+  min-width: 0;
+}
+
+.side-card-title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  letter-spacing: .3px;
+  line-height: 1.15;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+/* ══════════════════════════════════════════════
+   SEVEN PATHWAYS
+   ══════════════════════════════════════════════ */
+.pathways-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 8px;
+}
+
+.pathway-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.pathway-row:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-card);
+  border-left: 3px solid var(--red);
+}
+
+.pathway-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.pathway-name {
+  font-family: var(--font-display);
+  font-size: 18px;
+  letter-spacing: .3px;
+  flex: 1;
+}
+
+.pathway-count {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+/* ══════════════════════════════════════════════
+   ACTION BAR
+   ══════════════════════════════════════════════ */
+.action-bar {
+  background: var(--ink);
+  padding: 32px;
+}
+
+.action-bar-inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 48px;
+  flex-wrap: wrap;
+}
+
+.action-item {
+  font-family: var(--font-display);
+  font-size: 24px;
+  color: #fff;
+  letter-spacing: 1px;
+  cursor: pointer;
+  position: relative;
+  transition: color var(--transition);
+}
+
+.action-item::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--red);
+  transform: scaleX(0);
+  transition: transform var(--transition);
+}
+
+.action-item:hover { color: var(--red-light); }
+.action-item:hover::after { transform: scaleX(1); }
+
+/* ══════════════════════════════════════════════
+   CRISIS BAR
+   ══════════════════════════════════════════════ */
+.crisis-bar {
+  background: var(--paper);
+  border-top: 1px solid var(--border);
+  padding: 14px 32px;
+}
+
+.crisis-inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.crisis-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--red);
+}
+
+.crisis-items {
+  display: flex;
+  gap: 24px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.crisis-items strong { color: var(--text); }
+
+/* ══════════════════════════════════════════════
+   FOOTER
+   ══════════════════════════════════════════════ */
+.footer {
+  background: var(--ink);
+  color: rgba(255,255,255,.6);
+  padding: 48px 32px 32px;
+}
+
+.footer-inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 32px;
+  margin-bottom: 32px;
+}
+
+.footer-brand {
+  font-family: var(--font-display);
+  font-size: 32px;
+  color: #fff;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+
+.footer-tagline {
+  font-size: 13px;
+  line-height: 1.6;
+  color: rgba(255,255,255,.5);
+}
+
+.footer-heading {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: rgba(255,255,255,.4);
+  margin-bottom: 16px;
+}
+
+.footer-links { list-style: none; }
+
+.footer-links li {
+  margin-bottom: 8px;
+}
+
+.footer-links a {
+  font-size: 13px;
+  color: rgba(255,255,255,.6);
+  transition: color var(--transition);
+}
+
+.footer-links a:hover { color: #fff; }
+
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,.1);
+  padding-top: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.footer-copy {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .5px;
+  color: rgba(255,255,255,.3);
+}
+
+/* ══════════════════════════════════════════════
+   DIVIDERS & UTILITIES
+   ══════════════════════════════════════════════ */
+.divider {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+.divider-line {
+  height: 1px;
+  background: linear-gradient(to right, var(--border), rgba(0,0,0,.02));
+}
+
+.gradient-text {
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.bg-newsprint { background: var(--newsprint); }
+
+/* Gradient spectrum bar */
+.spectrum-bar {
+  display: flex;
+  height: 3px;
+}
+.spectrum-bar div { flex: 1; }
+
+/* placeholder images */
+.placeholder-1 { background: linear-gradient(135deg, #FF3B57, #F59E0B); }
+.placeholder-2 { background: linear-gradient(135deg, #F59E0B, #7C3AED); }
+.placeholder-3 { background: linear-gradient(135deg, #7C3AED, #FF3B57); }
+.placeholder-4 { background: linear-gradient(135deg, #1E40AF, #22C55E); }
+.placeholder-5 { background: linear-gradient(135deg, #c43c4c, #F59E0B); }
+.placeholder-6 { background: linear-gradient(135deg, #22C55E, #7C3AED); }
+
+/* ══════════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .centers-grid { grid-template-columns: 1fr; }
+  .magazine-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .action-bar-inner { gap: 24px; }
+  .action-item { font-size: 18px; }
+  .stat-sep { display: none; }
+  .hero { padding: 32px 16px 40px; }
+  .engine-controls { flex-direction: column; }
+  .search-input { min-width: 100%; }
+}
+
+@media (max-width: 480px) {
+  .card-grid { grid-template-columns: 1fr; }
+  .pathways-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .side-card { flex-direction: column; }
+  .side-card-image { width: 100%; height: 140px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     HEADER
+     ══════════════════════════════════════════════ -->
+<header class="header">
+  <div class="header-inner">
+    <div class="logo">THE CHANGE <span>ENGINE</span></div>
+    <nav class="nav">
+      <a href="#">Learning</a>
+      <a href="#">Action</a>
+      <a href="#">Resources</a>
+      <a href="#">Guides</a>
+      <a href="#">About</a>
+      <a href="#" class="nav-cta">Donate</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════
+     HERO — THE CHANGE ENGINE
+     ══════════════════════════════════════════════ -->
+<section class="hero">
+  <!-- FOL watermark -->
+  <svg class="hero-fol" viewBox="0 0 400 400">
+    <circle cx="200" cy="200" r="58"/>
+    <circle cx="200" cy="142" r="58"/>
+    <circle cx="200" cy="258" r="58"/>
+    <circle cx="250" cy="171" r="58"/>
+    <circle cx="250" cy="229" r="58"/>
+    <circle cx="150" cy="171" r="58"/>
+    <circle cx="150" cy="229" r="58"/>
+    <circle cx="200" cy="84" r="58"/>
+    <circle cx="200" cy="316" r="58"/>
+    <circle cx="300" cy="142" r="58"/>
+    <circle cx="300" cy="258" r="58"/>
+    <circle cx="100" cy="142" r="58"/>
+    <circle cx="100" cy="258" r="58"/>
+    <circle cx="200" cy="200" r="170" stroke-width="1"/>
+  </svg>
+
+  <div class="hero-inner">
+    <h1 class="hero-title">THE CHANGE ENGINE</h1>
+    <p class="hero-subtitle">Houston's Civic Infrastructure &middot; 7 Pathways &middot; 312 Focus Areas</p>
+
+    <div class="engine-controls">
+      <input type="text" class="search-input" placeholder="Search resources, services, officials, policies...">
+      <button class="filter-btn">Pathways &#9662;</button>
+      <button class="filter-btn">Focus Areas &#9662;</button>
+      <button class="filter-btn">Activities &#9662;</button>
+    </div>
+  </div>
+</section>
+
+<!-- Spectrum bar -->
+<div class="spectrum-bar">
+  <div style="background:#E85D75"></div>
+  <div style="background:#F59E0B"></div>
+  <div style="background:#22C55E"></div>
+  <div style="background:#3B82F6"></div>
+  <div style="background:#7C3AED"></div>
+  <div style="background:#1b5e8a"></div>
+  <div style="background:#c43c4c"></div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     LIVE STATUS BAR
+     ══════════════════════════════════════════════ -->
+<div class="status-bar">
+  <div class="status-bar-inner">
+    <div class="live-badge">
+      <div class="live-dot"></div>
+      LIVE
+    </div>
+    <div class="condition-card">
+      <div class="condition-label">Temperature</div>
+      <div class="condition-value">76&deg;F</div>
+    </div>
+    <div class="condition-card">
+      <div class="condition-label">Air Quality</div>
+      <div class="condition-value moderate">85 AQI</div>
+    </div>
+    <div class="condition-card">
+      <div class="condition-label">NWS Alerts</div>
+      <div class="condition-value good">None</div>
+    </div>
+    <div class="condition-card">
+      <div class="condition-label">Bayou Levels</div>
+      <div class="condition-value good">Normal</div>
+    </div>
+    <div class="condition-card">
+      <div class="condition-label">Resources</div>
+      <div class="condition-value">4,218</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TRUST STRIP
+     ══════════════════════════════════════════════ -->
+<div class="trust-strip">
+  <div class="trust-inner">
+    <div class="stat-row">
+      <div class="stat-item"><span class="stat-num">4,218</span><span class="stat-label">resources</span></div>
+      <div class="stat-sep"></div>
+      <div class="stat-item"><span class="stat-num">186</span><span class="stat-label">officials</span></div>
+      <div class="stat-sep"></div>
+      <div class="stat-item"><span class="stat-num">412</span><span class="stat-label">organizations</span></div>
+      <div class="stat-sep"></div>
+      <div class="stat-item"><span class="stat-num">7</span><span class="stat-label">pathways</span></div>
+    </div>
+    <div class="updated-badge">
+      <div class="live-dot"></div>
+      Updated daily
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TAB NAVIGATION
+     ══════════════════════════════════════════════ -->
+<div class="tabs">
+  <div class="tabs-inner">
+    <button class="tab active">All</button>
+    <button class="tab">News</button>
+    <button class="tab">Air Quality</button>
+    <button class="tab">Weather</button>
+    <button class="tab">Bayous</button>
+    <button class="tab">Equity</button>
+    <button class="tab">Organizations</button>
+    <button class="tab">Events</button>
+    <button class="tab">Civic</button>
+    <button class="tab">Guides</button>
+    <button class="tab">Podcasts</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     THREE CENTERS
+     ══════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div>
+      <div class="section-number">Three Doorways</div>
+      <h2 class="section-title">THREE CENTERS</h2>
+      <p class="section-subtitle">Every pathway leads to one of these doorways</p>
+    </div>
+  </div>
+
+  <div class="centers-grid">
+    <!-- Learning -->
+    <div class="center-card">
+      <div class="center-top" style="background:#2563eb"></div>
+      <div class="center-body">
+        <div class="center-icon" style="background:#2563eb15; color:#2563eb">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        </div>
+        <h3 class="center-name" style="color:#2563eb">LEARNING CENTER</h3>
+        <p class="center-tagline" style="color:#2563eb">Know your city like you live here</p>
+        <p class="center-desc">News, research, guides, e-courses, and videos across all seven pathways. Everything you need to understand Houston.</p>
+        <div style="display:flex; justify-content:space-between; align-items:center">
+          <span class="center-count">1,240 resources</span>
+          <span class="center-enter" style="color:#2563eb">Enter &rarr;</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action -->
+    <div class="center-card">
+      <div class="center-top" style="background:#dc2626"></div>
+      <div class="center-body">
+        <div class="center-icon" style="background:#dc262615; color:#dc2626">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3 class="center-name" style="color:#dc2626">ACTION CENTER</h3>
+        <p class="center-tagline" style="color:#dc2626">Your government, organized</p>
+        <p class="center-desc">Every elected official, every policy, every election — tracked from City Hall to Congress. Know who represents you.</p>
+        <div style="display:flex; justify-content:space-between; align-items:center">
+          <span class="center-count">186 officials &middot; 94 policies</span>
+          <span class="center-enter" style="color:#dc2626">Enter &rarr;</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resource -->
+    <div class="center-card">
+      <div class="center-top" style="background:#16a34a"></div>
+      <div class="center-body">
+        <div class="center-icon" style="background:#16a34a15; color:#16a34a">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+        <h3 class="center-name" style="color:#16a34a">RESOURCE CENTER</h3>
+        <p class="center-tagline" style="color:#16a34a">What's available to you</p>
+        <p class="center-desc">Services, organizations, opportunities, and support systems already in place across Houston. We made it findable.</p>
+        <div style="display:flex; justify-content:space-between; align-items:center">
+          <span class="center-count">2,800 services</span>
+          <span class="center-enter" style="color:#16a34a">Enter &rarr;</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><div class="divider-line"></div></div>
+
+<!-- ══════════════════════════════════════════════
+     WHAT'S NEW — MAGAZINE LAYOUT
+     ══════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div>
+      <h2 class="section-title">WHAT'S NEW</h2>
+      <p class="section-subtitle">Recently published for the Houston community</p>
+    </div>
+    <a href="#" class="section-link">See all &rarr;</a>
+  </div>
+
+  <div class="magazine-grid">
+    <div class="featured-card">
+      <div class="featured-image placeholder-1"></div>
+      <div class="featured-body">
+        <span class="card-tag tag-news">News</span>
+        <span class="card-tag tag-civic" style="margin-left:6px">Civic</span>
+        <h3 class="featured-title">HOUSTON CITY COUNCIL APPROVES NEW COMMUNITY INVESTMENT PLAN FOR THIRD WARD</h3>
+        <p class="card-excerpt">The Houston City Council voted unanimously to approve a $45 million community investment plan targeting infrastructure improvements, affordable housing, and small business support in the historic Third Ward neighborhood.</p>
+        <div class="card-source">
+          <div class="card-source-dot" style="background:#E85D75"></div>
+          <span class="card-source-name">Houston Chronicle</span>
+          <span style="margin-left:auto" class="card-source-name">Mar 12, 2026</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-stack">
+      <div class="side-card">
+        <div class="side-card-image placeholder-2"></div>
+        <div class="side-card-body">
+          <span class="card-tag tag-research">Research</span>
+          <h4 class="side-card-title">KINDER INSTITUTE RELEASES 2026 STATE OF HOUSING REPORT</h4>
+          <p class="card-excerpt" style="font-size:12px">New data on affordability, displacement, and housing access across the Greater Houston region.</p>
+        </div>
+      </div>
+      <div class="side-card">
+        <div class="side-card-image placeholder-3"></div>
+        <div class="side-card-body">
+          <span class="card-tag tag-event">Event</span>
+          <h4 class="side-card-title">NEIGHBORHOOD ACTION GROUP MEETING — MONTROSE</h4>
+          <p class="card-excerpt" style="font-size:12px">Monthly gathering to discuss local issues and coordinate volunteer efforts.</p>
+        </div>
+      </div>
+      <div class="side-card">
+        <div class="side-card-image placeholder-4"></div>
+        <div class="side-card-body">
+          <span class="card-tag tag-policy">Policy</span>
+          <h4 class="side-card-title">TEXAS SB 1247: WHAT THE NEW HOUSING BILL MEANS FOR HOUSTON</h4>
+          <p class="card-excerpt" style="font-size:12px">Plain-language breakdown of the bill's impact on renters and homeowners.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     ACTION BAR
+     ══════════════════════════════════════════════ -->
+<div class="action-bar">
+  <div class="action-bar-inner">
+    <span class="action-item">LEARN</span>
+    <span class="action-item">MEET</span>
+    <span class="action-item">VOLUNTEER</span>
+    <span class="action-item">GET TRAINED</span>
+    <span class="action-item">TAKE ACTION</span>
+  </div>
+</div>
+
+<div class="divider"><div class="divider-line"></div></div>
+
+<!-- ══════════════════════════════════════════════
+     CONTENT CARD GRID
+     ══════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div>
+      <div class="section-number">Dashboard</div>
+      <h2 class="section-title">LATEST FROM HOUSTON</h2>
+    </div>
+    <a href="#" class="section-link">Filter &amp; explore &rarr;</a>
+  </div>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-image"><div class="card-image-gradient placeholder-5"></div></div>
+      <div class="card-body">
+        <span class="card-tag tag-volunteer">Volunteer</span>
+        <div class="card-date">Mar 10, 2026</div>
+        <h3 class="card-title">SPRING CREEK GREENWAY CLEANUP DAY</h3>
+        <p class="card-excerpt">Join fellow Houstonians for a morning of trail restoration and community building along the Spring Creek Greenway.</p>
+        <div class="card-source">
+          <div class="card-source-dot" style="background:#22C55E"></div>
+          <span class="card-source-name">Bayou Preservation</span>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-image"><div class="card-image-gradient placeholder-6"></div></div>
+      <div class="card-body">
+        <span class="card-tag tag-social">Social</span>
+        <div class="card-date">Mar 9, 2026</div>
+        <h3 class="card-title">FREE LEGAL AID CLINIC EXPANDED TO FIVE NEW LOCATIONS</h3>
+        <p class="card-excerpt">Houston Volunteer Lawyers expands free legal aid clinics to five additional community centers across Harris County.</p>
+        <div class="card-source">
+          <div class="card-source-dot" style="background:#7C3AED"></div>
+          <span class="card-source-name">HVL</span>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-image"><div class="card-image-gradient placeholder-1"></div></div>
+      <div class="card-body">
+        <span class="card-tag tag-civic">Civic</span>
+        <div class="card-date">Mar 8, 2026</div>
+        <h3 class="card-title">VOTER REGISTRATION DEADLINE APPROACHING FOR MAY ELECTION</h3>
+        <p class="card-excerpt">Harris County residents have until April 7 to register for the May municipal and school board elections.</p>
+        <div class="card-source">
+          <div class="card-source-dot" style="background:#F59E0B"></div>
+          <span class="card-source-name">Harris County</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><div class="divider-line"></div></div>
+
+<!-- ══════════════════════════════════════════════
+     SEVEN PATHWAYS
+     ══════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-header">
+    <div>
+      <h2 class="section-title">SEVEN PATHWAYS</h2>
+      <p class="section-subtitle">Every issue connects to a pathway. Pick one to start exploring.</p>
+    </div>
+    <a href="#" class="section-link">Use the Compass &rarr;</a>
+  </div>
+
+  <div class="pathways-grid">
+    <div class="pathway-row">
+      <div class="pathway-dot" style="background:#E85D75"></div>
+      <span class="pathway-name">OUR HEALTH</span>
+      <span class="pathway-count">482</span>
+    </div>
+    <div class="pathway-row">
+      <div class="pathway-dot" style="background:#F59E0B"></div>
+      <span class="pathway-name">OUR FAMILIES</span>
+      <span class="pathway-count">318</span>
+    </div>
+    <div class="pathway-row">
+      <div class="pathway-dot" style="background:#22C55E"></div>
+      <span class="pathway-name">OUR NEIGHBORHOOD</span>
+      <span class="pathway-count">445</span>
+    </div>
+    <div class="pathway-row">
+      <div class="pathway-dot" style="background:#3B82F6"></div>
+      <span class="pathway-name">OUR VOICE</span>
+      <span class="pathway-count">267</span>
+    </div>
+    <div class="pathway-row">
+      <div class="pathway-dot" style="background:#7C3AED"></div>
+      <span class="pathway-name">OUR MONEY</span>
+      <span class="pathway-count">198</span>
+    </div>
+    <div class="pathway-row">
+      <div class="pathway-dot" style="background:#1b5e8a"></div>
+      <span class="pathway-name">OUR PLANET</span>
+      <span class="pathway-count">312</span>
+    </div>
+    <div class="pathway-row">
+      <div class="pathway-dot" style="background:#c43c4c"></div>
+      <span class="pathway-name">THE BIGGER WE</span>
+      <span class="pathway-count">156</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     CRISIS BAR
+     ══════════════════════════════════════════════ -->
+<div class="crisis-bar">
+  <div class="crisis-inner">
+    <span class="crisis-label">Always Available</span>
+    <div class="crisis-items">
+      <span>Crisis: <strong>988</strong></span>
+      <span>City: <strong>311</strong></span>
+      <span>Social: <strong>211</strong></span>
+      <span>DV: <strong>713-528-2121</strong></span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     FOOTER
+     ══════════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">THE CHANGE ENGINE</div>
+        <p class="footer-tagline">Houston's civic infrastructure. Seven pathways into the resources, services, and civic power that make Houston stronger.</p>
+      </div>
+      <div>
+        <div class="footer-heading">Centers</div>
+        <ul class="footer-links">
+          <li><a href="#">Learning Center</a></li>
+          <li><a href="#">Action Center</a></li>
+          <li><a href="#">Resource Center</a></li>
+          <li><a href="#">Bookshelf</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-heading">Civic</div>
+        <ul class="footer-links">
+          <li><a href="#">Officials</a></li>
+          <li><a href="#">Policies</a></li>
+          <li><a href="#">Elections</a></li>
+          <li><a href="#">Governance</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-heading">About</div>
+        <ul class="footer-links">
+          <li><a href="#">About</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Privacy</a></li>
+          <li><a href="#">Donate</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">&copy; 2026 The Change Lab. All rights reserved.</span>
+      <span class="footer-copy">Houston, Texas &middot; Zero ads &middot; Free forever</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

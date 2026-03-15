@@ -10,7 +10,8 @@ import {
   PanelLeftOpen, PanelLeftClose,
 } from 'lucide-react'
 import { useTranslation } from '@/lib/use-translation'
-import { GEO_LAYERS, THEMES } from '@/lib/constants'
+import { GEO_LAYERS, THEMES, getGeoLayers } from '@/lib/constants'
+import { useCity } from '@/lib/contexts/CityContext'
 import { OfficialCard } from '@/components/exchange/OfficialCard'
 import { MapEntityDrawer } from '@/components/maps/MapEntityDrawer'
 import type { MarkerData } from '@/components/maps/MapMarker'
@@ -127,6 +128,7 @@ export function GeographyClient({
   initialSuperNeighborhood,
 }: GeographyClientProps) {
   const { t } = useTranslation()
+  const { citySlug } = useCity()
   const router = useRouter()
 
   // Panel visibility
@@ -151,9 +153,11 @@ export function GeographyClient({
   const [showFilters, setShowFilters] = useState(true)
   const [showResults, setShowResults] = useState(true)
 
+  const cityGeoLayers = useMemo(function () { return getGeoLayers(citySlug) }, [citySlug])
+
   const layers: GeoLayerConfig[] = useMemo(function () {
-    return Object.values(GEO_LAYERS)
-  }, [])
+    return Object.values(cityGeoLayers)
+  }, [cityGeoLayers])
 
   const loadContent = useCallback(async function (type: string, id: string, label: string, pathway?: string | null) {
     setSelectedRegion({ type, id, label })
@@ -308,7 +312,7 @@ export function GeographyClient({
             {showLayers && (
               <div className="px-4 pb-3 grid grid-cols-2 gap-1.5">
                 {BOUNDARY_LAYERS.map(function (bl) {
-                  const cfg = GEO_LAYERS[bl.id]
+                  const cfg = cityGeoLayers[bl.id]
                   if (!cfg) return null
                   return (
                     <div
@@ -579,9 +583,10 @@ export function GeographyClient({
         <InteractiveMap
           markers={markers}
           layers={layers}
-          defaultVisibleLayers={['superNeighborhoods']}
+          defaultVisibleLayers={[Object.keys(cityGeoLayers)[0] || 'superNeighborhoods']}
           className="w-full h-[700px]"
           showLegend={false}
+          citySlug={citySlug}
           onFeatureClick={handleFeatureClick}
           onMarkerClick={handleMarkerClick}
         />

@@ -17,8 +17,9 @@ export const metadata: Metadata = {
 export default async function OrganizationsPage() {
   const cookieStore = await cookies()
   const userZip = cookieStore.get('zip')?.value || ''
+  const citySlug = cookieStore.get('ce_city')?.value || 'houston'
 
-  const organizations = await getOrganizations({ limit: 200 })
+  const organizations = await getOrganizations({ limit: 200, citySlug })
 
   return (
     <div className="bg-paper min-h-screen">

@@ -23,6 +23,7 @@ interface InteractiveMapProps {
   highlightFeatureId?: string
   zoom?: number
   center?: { lat: number; lng: number }
+  citySlug?: string
   onFeatureClick?: (layerConfig: GeoLayerConfig, properties: GeoFeatureProperties) => void
   onMarkerClick?: (marker: MarkerData) => void
 }
@@ -122,6 +123,7 @@ function InteractiveMapInner({
   highlightFeatureId,
   zoom: initialZoom,
   center,
+  citySlug,
   onFeatureClick,
   onMarkerClick,
 }: InteractiveMapProps) {
@@ -203,6 +205,7 @@ function InteractiveMapInner({
           className={className || 'w-full h-[450px]'}
           zoom={initialZoom}
           center={center}
+          citySlug={citySlug}
         >
           <ZoomReporter onZoomChange={handleZoom} />
           {filteredMarkers.length > 0 && <FitBounds markers={filteredMarkers} />}

@@ -9,12 +9,14 @@
 
 import { MapContainer, TileLayer, ZoomControl } from 'react-leaflet'
 import type { LatLngExpression } from 'leaflet'
+import { MAP_CENTERS } from '@/lib/constants'
 
 interface BaseMapProps {
   children?: React.ReactNode
   className?: string
   zoom?: number
   center?: { lat: number; lng: number }
+  citySlug?: string
 }
 
 const DEFAULT_CENTER: LatLngExpression = [29.76, -95.37] // Houston fallback
@@ -30,17 +32,22 @@ const DEFAULT_CENTER: LatLngExpression = [29.76, -95.37] // Houston fallback
 export function BaseMap({
   children,
   className = 'w-full h-[400px]',
-  zoom = 10,
+  zoom,
   center,
+  citySlug,
 }: BaseMapProps) {
+  const cityConfig = citySlug ? MAP_CENTERS[citySlug] : null
   const mapCenter: LatLngExpression = center
     ? [center.lat, center.lng]
-    : DEFAULT_CENTER
+    : cityConfig
+      ? [cityConfig.lat, cityConfig.lng]
+      : DEFAULT_CENTER
+  const mapZoom = zoom ?? cityConfig?.zoom ?? 10
 
   return (
     <MapContainer
       center={mapCenter}
-      zoom={zoom}
+      zoom={mapZoom}
       scrollWheelZoom
       zoomControl={false}
       className={className}

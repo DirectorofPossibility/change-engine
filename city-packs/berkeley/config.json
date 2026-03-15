@@ -1,0 +1,37 @@
+{
+  "city_slug": "berkeley",
+  "city_name": "Berkeley",
+  "state_code": "CA",
+  "county_id": "COUNTY_ALAMEDA",
+  "metro_area": "Bay Area",
+  "lat": 37.8716,
+  "lng": -122.2727,
+  "default_zoom": 13,
+  "bbox": "-122.3400,37.8450,-122.2350,37.9150",
+  "legistar_client": null,
+  "agenda_system": "granicus",
+  "agenda_rss_url": "https://berkeley.granicus.com/ViewPublisher.php?view_id=5",
+  "open_states_jurisdiction": "california",
+  "council_structure": {
+    "districts": 8,
+    "at_large": 0,
+    "mayor": true
+  },
+  "languages": ["en", "es", "zh"],
+  "data_sources": {
+    "officials": "berkeleyca.gov (manual seed, periodic check)",
+    "agendas": "Granicus RSS",
+    "records": "OnBase (records.cityofberkeley.info)",
+    "geo": "data.cityofberkeley.info (Socrata — Shapefile export)",
+    "state_officials": "Open States (california)",
+    "federal_officials": "Congress.gov + Google Civic"
+  },
+  "districts": {
+    "congressional": ["CA-12"],
+    "state_senate": ["SD-9"],
+    "state_assembly": ["AD-15"]
+  },
+  "zip_codes": [94701, 94702, 94703, 94704, 94705, 94706, 94707, 94708, 94709, 94710, 94712, 94720],
+  "next_election": "2026-11-03",
+  "seats_up_2026": ["District 1", "District 4", "District 7", "District 8"]
+}

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
+import { cookies } from 'next/headers'
 import { getSuperNeighborhoodsList } from '@/lib/data/exchange'
 import { requirePageEnabled } from '@/lib/data/page-gate'
 import { GeographyClient } from './GeographyClient'
@@ -22,7 +23,9 @@ export default async function GeographyPage({
   await requirePageEnabled('page_geography')
 
   const params = await searchParams
-  const superNeighborhoods = await getSuperNeighborhoodsList()
+  const cookieStore = await cookies()
+  const citySlug = cookieStore.get('ce_city')?.value || 'houston'
+  const superNeighborhoods = await getSuperNeighborhoodsList(citySlug)
 
   return (
     <div className="bg-paper min-h-screen">

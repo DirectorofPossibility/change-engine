@@ -10,6 +10,7 @@
  */
 
 import { NextResponse } from 'next/server'
+import { cookies } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
 import {
   getServicesWithCoords,
@@ -174,6 +175,8 @@ export async function GET(req: Request) {
   const type = searchParams.get('type') as RegionType | null
   const id = searchParams.get('id')
   const pathway = searchParams.get('pathway')
+  const cookieStore = await cookies()
+  const citySlug = searchParams.get('city') || cookieStore.get('ce_city')?.value || 'houston'
 
   if (!type || !id || !VALID_TYPES.includes(type)) {
     return NextResponse.json(
@@ -217,7 +220,7 @@ export async function GET(req: Request) {
         zipData.congressional_district,
         zipData.state_senate_district,
         zipData.state_house_district,
-        'TX',
+        zipData.state_code || 'TX',
       ].filter(Boolean)
 
       // Look up council district from neighborhoods
@@ -248,7 +251,7 @@ export async function GET(req: Request) {
 
   // 4. Fetch orgs + voting per-ZIP in parallel
   const orgResults = await Promise.all(
-    zips.slice(0, 10).map(function (z) { return getOrganizationsWithCoords(z) })
+    zips.slice(0, 10).map(function (z) { return getOrganizationsWithCoords(z, citySlug) })
   )
   const votingResults = await Promise.all(
     zips.slice(0, 10).map(function (z) { return getVotingLocationsWithCoords(z) })

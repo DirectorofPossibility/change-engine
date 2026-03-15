@@ -203,7 +203,7 @@ const en: Record<string, string> = {
 
   // Pathways page
   'pathways.title': 'Seven Sections',
-  'pathways.subtitle': 'How we organized community life in Houston.',
+  'pathways.subtitle': 'How we organized community life in your city.',
   'pathway.centers_title': 'Four Ways In',
   'pathway.focus_areas_title': 'Topics',
   'pathway.content_title': 'Stories & Resources',
@@ -274,7 +274,7 @@ const en: Record<string, string> = {
   'neighborhood.invalid_zip': 'Enter a 5-digit ZIP code',
 
   // Map
-  'map.houston_glance': 'Houston at a Glance',
+  'map.houston_glance': 'Your City at a Glance',
 
   // ZIP input
   'zip.enter': 'Enter ZIP',
@@ -312,7 +312,7 @@ const en: Record<string, string> = {
   'wayfinder.start_journey': 'Start Here',
   'wayfinder.explore': 'Explore',
   'wayfinder.browse_all': 'All sections',
-  'wayfinder.explore_houston': 'Explore Houston',
+  'wayfinder.explore_houston': 'Explore Your City',
   'wayfinder.whats_new': "Just In",
   'wayfinder.this_week': 'this week',
   'wayfinder.connected_to': 'Also in',
@@ -332,7 +332,7 @@ const en: Record<string, string> = {
   'sidebar.edition': 'Edition',
   'sidebar.change': 'change',
   'sidebar.go': 'Go',
-  'sidebar.explore_houston': 'Explore Houston',
+  'sidebar.explore_houston': 'Explore Your City',
   'sidebar.your_guide': 'The Guide',
   'sidebar.your_journey': 'Your Trip',
   'sidebar.discover': 'Discover',
@@ -353,7 +353,7 @@ const en: Record<string, string> = {
   'chat.title': 'Ask Chance',
   'chat.subtitle': 'Your neighborhood guide',
   'chat.welcome_title': 'Meet Chance',
-  'chat.placeholder': 'Ask anything about Houston...',
+  'chat.placeholder': 'Ask anything about your community...',
 
   // Your Guide links
   'discover.guide': 'The Guide',
@@ -381,7 +381,7 @@ const en: Record<string, string> = {
   'guide.neighborhood_prompt': 'Drop your ZIP to see what\u2019s local',
   'guide.learn_grow': 'Learn & Grow',
   'guide.learn_subtitle': 'Self-guided paths to understand your city better',
-  'guide.life_houston': 'Life in Houston',
+  'guide.life_houston': 'Life in Your City',
   'guide.life_subtitle': 'A field guide for real situations',
   'guide.bigger_picture': 'The Bigger Picture',
   'guide.sdg_heading': 'Sustainable Development Goals',
@@ -430,7 +430,7 @@ const en: Record<string, string> = {
 
   // Super neighborhoods
   'superNeighborhoods.title': 'Neighborhoods',
-  'superNeighborhoods.subtitle': 'Houston has 88 super neighborhoods. Pick yours and see what\u2019s there.',
+  'superNeighborhoods.subtitle': 'Explore the neighborhoods in your city. Pick yours and see what\u2019s there.',
   'superNeighborhoods.intro': 'Click a boundary on the map or a card below to explore what\u2019s in each super neighborhood — services, demographics, and who represents it.',
   'superNeighborhoods.all_heading': 'All Super Neighborhoods',
   'superNeighborhoods.population': 'Population',
@@ -461,7 +461,7 @@ const en: Record<string, string> = {
 
   // Learning paths
   'learn.title': 'Learning Paths',
-  'learn.subtitle': 'Free self-guided tours through civic life — understand the systems, the people, and the issues that shape Houston.',
+  'learn.subtitle': 'Free self-guided tours through civic life — understand the systems, the people, and the issues that shape your community.',
   'learn.paths': 'paths',
   'learn.modules': 'modules',
   'learn.min_content': 'min of content',
@@ -556,7 +556,7 @@ const en: Record<string, string> = {
   // Compass
   'compass.title': 'The Compass',
   'compass.subtitle': 'Where am I, and what\'s around me?',
-  'compass.tagline': 'Made in Houston. For everyone.',
+  'compass.tagline': 'Made for community. For everyone.',
   'compass.show_all': 'Show me everything',
   'compass.understand': 'I want to understand something',
   'compass.help': 'I want to help',
@@ -640,7 +640,7 @@ const en: Record<string, string> = {
 
   // Community Guide (homepage)
   'guide.label': 'Change Engine',
-  'guide.houston': 'Houston, Texas',
+  'guide.houston': 'Your City',
   'guide.title': 'Hey neighbor. Need anything?',
   'guide.subtitle': 'Services, officials, events, resources \u2014 we put it all in one place so you don\u2019t have to chase it down. Just tell us what you\u2019re looking for.',
   'guide.search_placeholder': 'Search the guide...',
@@ -673,7 +673,7 @@ const en: Record<string, string> = {
   'guide.active_policies': 'policies tracked',
   'guide.elections_voting': 'Elections & Voting',
   'guide.involved_title': 'Ready to show up?',
-  'guide.involved_description': 'Food bank shifts, town halls, neighborhood cleanups, public hearings \u2014 pick one and go. Houston doesn\u2019t have a participation problem, just a visibility one.',
+  'guide.involved_description': 'Food bank shifts, town halls, neighborhood cleanups, public hearings \u2014 pick one and go. Your community doesn\u2019t have a participation problem, just a visibility one.',
   'guide.volunteer': 'Volunteer',
   'guide.volunteer_desc': 'Opportunities to help in your neighborhood',
   'guide.attend': 'Events & Town Halls',
@@ -834,7 +834,7 @@ const en: Record<string, string> = {
   'gt.entries': 'Entries',
   'gt.communities': 'Communities',
   'gt.reasons_to_smile': 'Reasons to Smile',
-  'gt.intro_1': 'Every day in Houston, people are showing up. Nonprofits are solving hard problems. Neighbors are helping neighbors. Civic leaders are fighting for something.',
+  'gt.intro_1': 'Every day in your community, people are showing up. Nonprofits are solving hard problems. Neighbors are helping neighbors. Civic leaders are fighting for something.',
   'gt.intro_2': 'Three Good Things is three of those stories \u2014 every day.',
   'gt.intro_3': 'We\u2019re not ignoring the hard stuff. We\u2019re making sure the good stuff gets seen too.',
   'gt.form_title': 'Share Your Three Good Things',
@@ -872,7 +872,7 @@ const en: Record<string, string> = {
 
   // Footer
   'footer.community_exchange': 'Change Engine',
-  'footer.description': 'Your neighborhood field guide to Houston — connecting residents with the services, officials, and opportunities that already exist in their community.',
+  'footer.description': 'Your neighborhood field guide — connecting residents with the services, officials, and opportunities that already exist in their community.',
   'footer.navigate': 'Navigate',
   'footer.connect': 'Connect',
   'footer.compass': 'Compass',
@@ -917,13 +917,13 @@ const en: Record<string, string> = {
 
   // Splash page
   'splash.title': 'Change Engine',
-  'splash.subtitle': 'Connecting Houston Neighbors',
+  'splash.subtitle': 'Connecting Neighbors',
   'splash.coming_soon': 'Coming Soon',
   'splash.three_good_things': 'Three Good Things',
   'splash.program_label': 'A Change Engine Activity',
   'splash.shared_by_neighbors': 'shared by neighbors',
   'splash.coming_soon_vision': 'Every community has what it needs to thrive.',
-  'splash.coming_soon_desc': 'We\u2019re building a civic platform that connects Houston residents with the resources, services, and opportunities already around them.',
+  'splash.coming_soon_desc': 'We\u2019re building a civic platform that connects residents with the resources, services, and opportunities already around them.',
   'splash.what_to_expect': 'What to expect',
   'splash.expect_1': 'Know exactly who represents you at every level of government \u2014 and how to reach them',
   'splash.expect_2': 'Find every service, benefit, and resource available in your ZIP code \u2014 in one place',
@@ -977,7 +977,7 @@ const en: Record<string, string> = {
   'tip.pathway_cards': 'Each pathway is a theme \u2014 like housing or health. Tap to explore everything connected to it.',
   'tip.stats_bar': 'Live numbers from our database. Updated every morning from public data sources.',
   'tip.zip_lookup': 'Your ZIP overlaps multiple districts. We find all of them \u2014 city, county, state, federal \u2014 and show you every person who represents you.',
-  'tip.level_badges': 'Federal = Washington, D.C.  State = Austin.  County = Harris County.  City = Houston.',
+  'tip.level_badges': 'Federal = Washington, D.C.  State = your state capital.  County = your county seat.  City = your city hall.',
   'tip.party_label': 'The political party this official belongs to.',
   'tip.badge_211': '211 is Texas\u2019s free help line for health and human services. Call 2-1-1 any time \u2014 real people answer and help you find what you need.',
   'tip.map_view_toggle': 'Switch between a list and a map. The map shows where services are near you.',
@@ -993,7 +993,7 @@ const en: Record<string, string> = {
   'tip.quiz_indicator': 'A short check at the end. Not graded \u2014 just to help it stick.',
   'tip.module_media_pills': 'Resources from trusted sources \u2014 TED, PBS, community organizations. We link to them. We don\u2019t replace them.',
   'tip.ai_summary_badge': 'AI wrote this summary to make the content easier to read. The original source is linked below \u2014 we didn\u2019t replace it.',
-  'tip.chat_with_chance': 'Chance is an AI assistant built on Houston community data. Ask anything \u2014 officials, services, policies, how things work.',
+  'tip.chat_with_chance': 'Chance is an AI assistant built on local community data. Ask anything \u2014 officials, services, policies, how things work.',
   'tip.source_attribution': 'This content was created by this organization. We summarized it. Click through to read the original.',
   'tip.org_action_buttons': 'Direct links to this organization\u2019s volunteer page, donation page, or event calendar \u2014 wherever they want you to go next.',
   'tip.foundation_galaxy': 'Each dot is a foundation. Bigger = more funding. Color = primary theme. Click any dot to learn more.',
@@ -1003,9 +1003,9 @@ const en: Record<string, string> = {
   'tip.time_commitment': 'How much of your time this takes \u2014 one-time, weekly, monthly, or ongoing. No surprises.',
   'tip.virtual_badge': 'You can do this from home. No travel needed.',
   'tip.spots_available': 'How many openings are left. First come, first served.',
-  'tip.super_neighborhood_number': 'Houston has 88 super neighborhoods. Each one has a council that gives input to City Hall on local decisions.',
+  'tip.super_neighborhood_number': 'Your city is divided into neighborhoods. Each one has unique characteristics and local resources.',
   'tip.population_income': 'U.S. Census data \u2014 used to understand what communities need and how resources get distributed.',
-  'tip.geojson_boundaries': 'Map boundaries from the City of Houston Planning Department. Updated when official boundaries change.',
+  'tip.geojson_boundaries': 'Map boundaries from official city open data. Updated when official boundaries change.',
   'tip.wayfinder_panel': 'Everything connected to what you\u2019re looking at \u2014 officials, services, organizations, policies, and news that share the same focus areas.',
   'tip.focus_area_dots': 'Focus areas are specific topics inside a pathway. Tap any dot to explore everything tagged with it.',
   'tip.engagement_tiers': 'Understand: learn what\u2019s happening.  Get Involved: take action.  Go Deeper: follow the systems that shape it.',
@@ -1025,7 +1025,7 @@ const en: Record<string, string> = {
   'home.chart_course': 'Chart Your Course',
   'home.chart_course_sub': 'Explore your community through civic data.',
   'home.ask_chance': 'Ask Chance',
-  'home.ask_chance_sub': 'Get answers from Houston civic data.',
+  'home.ask_chance_sub': 'Get answers from local civic data.',
   'home.gap_responsible': 'feel responsible to help their community',
   'home.gap_dont_know': 'don\u2019t know where to start',
   'home.gap_volunteer': 'actually volunteer',
@@ -1114,7 +1114,7 @@ const en: Record<string, string> = {
   'nav.routes': 'Routes',
   'nav.find_my_way': 'Find my way',
   'nav.change_engine': 'Change Engine',
-  'nav.edition': 'Houston · 2026',
+  'nav.edition': '2026 Edition',
 
   // Reskin — homepage / guide additions
   'guide.pathways_label': '7 ways in \u00b7 Where do you want to start?',
@@ -1125,9 +1125,9 @@ const en: Record<string, string> = {
   'guide.dv_hotline_desc': 'National Domestic Violence Hotline',
 
   // Reskin — pathway page
-  'pathway.edition_label': 'Houston, TX',
+  'pathway.edition_label': 'Your City',
   'pathway.edition_suffix': '2026 Edition',
-  'pathway.state_of': 'The state of {name} in Houston',
+  'pathway.state_of': 'The state of {name} in your community',
   'pathway.destinations_label': 'Destinations · Pick where to go',
   'pathway.explore_prefix': 'Explore ',
   'pathway.connected': 'Connected pathways',
@@ -1201,7 +1201,7 @@ const es: Record<string, string> = {
 
   // Homepage
   'home.location': 'Tu Ciudad',
-  'home.subtitle': 'Cada houstoniano debe saber que su comunidad importa.',
+  'home.subtitle': 'Cada vecino debe saber que su comunidad importa.',
   'home.cta_pathways': 'Explorar Caminos',
   'home.cta_help': 'Recursos Disponibles',
   'home.cta_officials': 'Encuentre a Sus Representantes',
@@ -1977,7 +1977,7 @@ const es: Record<string, string> = {
   'gt.entries': 'Entradas',
   'gt.communities': 'Comunidades',
   'gt.reasons_to_smile': 'Razones para Sonre\u00edr',
-  'gt.intro_1': 'Cada d\u00eda en Houston, la gente se presenta. Las organizaciones resuelven problemas dif\u00edciles. Los vecinos ayudan a vecinos. Los l\u00edderes c\u00edvicos luchan por algo.',
+  'gt.intro_1': 'Cada d\u00eda en tu comunidad, la gente se presenta. Las organizaciones resuelven problemas dif\u00edciles. Los vecinos ayudan a vecinos. Los l\u00edderes c\u00edvicos luchan por algo.',
   'gt.intro_2': 'Tres Cosas Buenas son tres de esas historias \u2014 cada d\u00eda.',
   'gt.intro_3': 'No estamos ignorando lo dif\u00edcil. Nos aseguramos de que lo bueno tambi\u00e9n se vea.',
   'gt.form_title': 'Comparte Tus Tres Cosas Buenas',
@@ -2120,7 +2120,7 @@ const es: Record<string, string> = {
   'tip.pathway_cards': 'Cada camino es un tema — como vivienda o salud. Toque para explorar todo lo conectado.',
   'tip.stats_bar': 'Números en vivo de nuestra base de datos. Actualizados cada mañana con datos públicos.',
   'tip.zip_lookup': 'Su código postal cruza varios distritos. Encontramos todos — ciudad, condado, estado, federal — y le mostramos a cada persona que lo representa.',
-  'tip.level_badges': 'Federal = Washington, D.C.  Estatal = Austin.  Condado = Condado Harris.  Ciudad = Houston.',
+  'tip.level_badges': 'Federal = Washington, D.C.  Estatal = capital de su estado.  Condado = sede del condado.  Ciudad = su ayuntamiento.',
   'tip.party_label': 'El partido político al que pertenece este funcionario.',
   'tip.badge_211': '211 es la línea de ayuda gratuita de Texas para servicios de salud y humanos. Llame al 2-1-1 en cualquier momento — personas reales contestan y le ayudan a encontrar lo que necesita.',
   'tip.map_view_toggle': 'Cambie entre lista y mapa. El mapa muestra dónde están los servicios cerca de usted.',
@@ -3120,7 +3120,7 @@ const vi: Record<string, string> = {
   'gt.entries': 'Mục',
   'gt.communities': 'Cộng Đồng',
   'gt.reasons_to_smile': 'Lý Do Để Mỉm Cười',
-  'gt.intro_1': 'Mỗi ngày tại Houston, mọi người đều xuất hiện. Các tổ chức phi lợi nhuận giải quyết vấn đề khó. Cư dân giúp đỡ cư dân. Lãnh đạo dân sự đấu tranh vì điều gì đó.',
+  'gt.intro_1': 'Mỗi ngày trong cộng đồng của bạn, mọi người đều xuất hiện. Các tổ chức phi lợi nhuận giải quyết vấn đề khó. Cư dân giúp đỡ cư dân. Lãnh đạo dân sự đấu tranh vì điều gì đó.',
   'gt.intro_2': 'Ba Điều Tốt Đẹp là ba trong số những câu chuyện đó — mỗi ngày.',
   'gt.intro_3': 'Chúng tôi không phớt lờ những điều khó khăn. Chúng tôi đảm bảo những điều tốt đẹp cũng được nhìn thấy.',
   'gt.form_title': 'Chia Sẻ Ba Điều Tốt Đẹp Của Bạn',
@@ -3263,7 +3263,7 @@ const vi: Record<string, string> = {
   'tip.pathway_cards': 'Mỗi con đường là một chủ đề — như nhà ở hoặc sức khỏe. Nhấn để khám phá mọi thứ kết nối.',
   'tip.stats_bar': 'Số liệu trực tiếp từ cơ sở dữ liệu. Cập nhật mỗi sáng từ nguồn dữ liệu công khai.',
   'tip.zip_lookup': 'Mã bưu điện của bạn chồng lấn nhiều khu vực. Chúng tôi tìm tất cả — thành phố, quận, tiểu bang, liên bang — và hiển thị mọi người đại diện cho bạn.',
-  'tip.level_badges': 'Liên bang = Washington, D.C.  Tiểu bang = Austin.  Quận = Quận Harris.  Thành phố = Houston.',
+  'tip.level_badges': 'Liên bang = Washington, D.C.  Tiểu bang = thủ phủ tiểu bang.  Quận = trụ sở quận.  Thành phố = tòa thị chính.',
   'tip.party_label': 'Đảng chính trị mà quan chức này thuộc về.',
   'tip.badge_211': '211 là đường dây trợ giúp miễn phí của Texas cho dịch vụ y tế và nhân sinh. Gọi 2-1-1 bất cứ lúc nào — người thật trả lời và giúp bạn tìm những gì cần.',
   'tip.map_view_toggle': 'Chuyển đổi giữa danh sách và bản đồ. Bản đồ hiển thị dịch vụ gần bạn ở đâu.',

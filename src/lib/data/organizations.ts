@@ -1,19 +1,25 @@
 import { createClient } from '@/lib/supabase/server'
-/** All organizations — nonprofits, agencies, foundations, etc. */
-export async function getOrganizations({ limit = 200, offset = 0 }: { limit?: number; offset?: number } = {}) {
+/** All organizations — nonprofits, agencies, foundations, etc. Optionally filtered by city_slug. */
+export async function getOrganizations({ limit = 200, offset = 0, citySlug }: { limit?: number; offset?: number; citySlug?: string } = {}) {
   const supabase = await createClient()
-  const { data } = await supabase
+  let query = supabase
     .from('organizations')
     .select('org_id, org_name, description_5th_grade, website, phone, address, city, state, zip_code, logo_url, org_type, mission_statement, service_area, focus_area_ids, ntee_code, is_verified, city_slug')
     .order('org_name')
     .range(offset, offset + limit - 1)
+
+  if (citySlug) {
+    query = query.eq('city_slug', citySlug)
+  }
+
+  const { data } = await query
   return data ?? []
 }
 
 /** All elected officials with their government levels and LinkedIn profiles. */
 
-/** Organizations with coordinates, optionally filtered by ZIP code. Selects only marker-needed fields. */
-export async function getOrganizationsWithCoords(zipCode?: string) {
+/** Organizations with coordinates, optionally filtered by ZIP code and/or city_slug. Selects only marker-needed fields. */
+export async function getOrganizationsWithCoords(zipCode?: string, citySlug?: string) {
   const supabase = await createClient()
   let query = supabase
     .from('organizations')
@@ -23,6 +29,9 @@ export async function getOrganizationsWithCoords(zipCode?: string) {
 
   if (zipCode) {
     query = query.eq('zip_code', zipCode)
+  }
+  if (citySlug) {
+    query = query.eq('city_slug', citySlug)
   }
 
   const { data } = await query.limit(200)

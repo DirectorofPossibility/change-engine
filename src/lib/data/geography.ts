@@ -36,12 +36,16 @@ export async function getSuperNeighborhoods(): Promise<SuperNeighborhood[]> {
 /** Lightweight super neighborhoods list for dropdowns (id + name only). */
 
 /** Lightweight super neighborhoods list for dropdowns (id + name only). */
-export async function getSuperNeighborhoodsList(): Promise<Array<{ sn_id: string; sn_name: string }>> {
+export async function getSuperNeighborhoodsList(citySlug?: string): Promise<Array<{ sn_id: string; sn_name: string }>> {
   const supabase = await createClient()
-  const { data } = await supabase
+  let query = supabase
     .from('super_neighborhoods')
     .select('sn_id, sn_name')
     .order('sn_name')
+  if (citySlug) {
+    query = query.eq('city_slug', citySlug)
+  }
+  const { data } = await query
   return data ?? []
 }
 
@@ -252,7 +256,7 @@ export async function getGeographyData(zip?: string, superNeighborhoodId?: strin
         zipData.congressional_district,
         zipData.state_senate_district,
         zipData.state_house_district,
-        'TX',
+        zipData.state_code || 'TX',
       ].filter(Boolean)
 
       // Look up council district from neighborhoods
