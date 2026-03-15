@@ -64,6 +64,7 @@ export function D2Footer() {
     { label: 'Contact your reps', href: '/call-your-senators' },
     { label: 'Where to vote', href: '/polling-places' },
     { label: 'Districts', href: '/districts' },
+    { label: 'Explore geography', href: '/geography' },
     { label: 'Governance', href: '/governance' },
     { label: 'Policies', href: '/policies' },
     { label: 'Campaigns', href: '/campaigns' },
