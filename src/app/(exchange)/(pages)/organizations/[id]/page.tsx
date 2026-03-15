@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
-import { Phone, Mail, Globe, MapPin, Clock, ExternalLink, ArrowRight } from 'lucide-react'
+import { Phone, Globe, MapPin, Clock, ExternalLink, ArrowRight } from 'lucide-react'
 import { getLangId, fetchTranslationsForTable, getWayfinderContext, getRandomQuote } from '@/lib/data/exchange'
 import { getUserProfile } from '@/lib/auth/roles'
 import { getUIStrings } from '@/lib/i18n'
@@ -21,10 +21,11 @@ import { THEMES } from '@/lib/constants'
 import { FlowerOfLife } from '@/components/geo/sacred'
 
 /* ── Design Tokens ── */
-const RULE = '#dde1e8'
-const DIM = '#5c6474'
-const INK = '#0d1117'
-const SIDEBAR_BG = '#f4f5f7'
+const RULE = '#e5e7eb'
+const DIM = '#6b7280'
+const INK = '#1a1a1a'
+const BODY = '#374151'
+const CARD_BG = '#f9fafb'
 
 export const revalidate = 86400
 
@@ -103,7 +104,6 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
   const displayOrgName = orgTranslation?.title || org.org_name
   const displayOrgDesc = orgTranslation?.summary || org.description_5th_grade
   const heroText = org.mission_statement || displayOrgDesc || ''
-  // Only show About section if description differs from hero text
   const showAbout = displayOrgDesc && org.mission_statement && displayOrgDesc !== org.mission_statement
 
   const userProfile = await getUserProfile()
@@ -121,13 +121,25 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
 
   const childCount = (services?.length || 0) + (content?.length || 0) + (opportunities?.length || 0)
 
-  // Stats for At a Glance bar
+  /* ── Split content into News vs Resources ── */
+  const newsItems = (content || []).filter(function (c: any) { return c.center !== 'resource' && c.center !== 'library' })
+  const resourceItems = (content || []).filter(function (c: any) { return c.center === 'resource' || c.center === 'library' })
+
+  /* ── Numeric stats for the stats grid ── */
   const stats: Array<{ label: string; value: string }> = []
   if (org.people_served) stats.push({ label: 'People Served', value: String(org.people_served) })
   if (org.partner_count != null) stats.push({ label: 'Partners', value: String(org.partner_count) })
-  if (org.annual_budget != null) stats.push({ label: 'Annual Budget', value: '$' + org.annual_budget.toLocaleString() })
+  if (org.annual_budget != null) stats.push({ label: 'Annual Budget', value: '$' + Number(org.annual_budget).toLocaleString() })
 
-  const hasDetails = hoursList.length > 0 || (org.tags && org.tags.length > 0)
+  /* ── Org detail cards ── */
+  const orgDetails = [
+    org.org_type && org.org_type.length > 1 ? { label: 'Organization Type', value: org.org_type } : null,
+    org.year_founded ? { label: 'Founded', value: String(org.year_founded) } : null,
+    fullAddress ? { label: 'Location', value: fullAddress } : null,
+    org.service_area ? { label: 'Service Area', value: org.service_area } : null,
+  ].filter((d): d is { label: string; value: string } => d !== null)
+
+  const hasDetails = hoursList.length > 0 || (org.tags && org.tags.length > 0) || orgDetails.length > 0
 
   return (
     <>
@@ -141,7 +153,7 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
       )}
 
       {/* ══════════════════════════════════════════════════════════════════
-          GRADIENT HERO
+          HERO
          ══════════════════════════════════════════════════════════════════ */}
       <section
         className="relative overflow-hidden"
@@ -152,78 +164,74 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
         <div className="absolute bottom-[-20%] left-[-5%] opacity-[0.06] pointer-events-none" aria-hidden="true">
           <FlowerOfLife color="#ffffff" size={400} />
         </div>
-        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'6\' height=\'6\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M0 6L6 0M-1 1L1-1M5 7L7 5\' stroke=\'%23fff\' stroke-width=\'.5\'/%3E%3C/svg%3E")', backgroundSize: '6px 6px' }} />
-        <div className="absolute inset-0 bg-gradient-radial from-white/5 via-transparent to-transparent" />
 
-        <div className="max-w-[1080px] mx-auto px-6 py-6 sm:py-10 relative z-10">
-          <div className="flex flex-col lg:flex-row gap-8 items-center">
+        <div className="max-w-[1200px] mx-auto px-6 py-8 sm:py-12 relative z-10">
+          <div className="flex flex-col lg:flex-row gap-10 items-center">
             <div className="flex-1 min-w-0">
-              {/* Breadcrumb + type in one line */}
-              <nav className="text-xs uppercase tracking-wider text-white/60 mb-4 flex items-center gap-2">
+              {/* Breadcrumb */}
+              <nav className="text-sm text-white/70 mb-4 flex items-center gap-2">
                 <Link href="/" className="hover:text-white transition-colors">Home</Link>
                 <span>&rsaquo;</span>
                 <Link href="/organizations" className="hover:text-white transition-colors">Organizations</Link>
-                {org.org_type && org.org_type !== 'Organization' && (
-                  <>
-                    <span>&rsaquo;</span>
-                    <span className="text-white/40">{org.org_type}</span>
-                  </>
-                )}
               </nav>
 
               {/* Title */}
-              <h1 className="font-display font-black text-white leading-[1.1] tracking-[-0.02em] mb-4"
-                style={{ fontSize: 'clamp(26px, 3.5vw, 40px)' }}
+              <h1
+                className="font-display font-black text-white leading-tight tracking-tight mb-5"
+                style={{ fontSize: 'clamp(28px, 3.5vw, 42px)' }}
               >
                 {displayOrgName}
               </h1>
 
               {/* Mission / Description */}
               {heroText && (
-                <p className="text-white/90 leading-relaxed mb-5 max-w-[560px]" style={{ fontSize: '1.1rem' }}>
-                  {heroText.length > 200 ? heroText.slice(0, 200) + '...' : heroText}
+                <p className="text-lg text-white/90 leading-relaxed mb-6 max-w-[600px]">
+                  {heroText.length > 280 ? heroText.slice(0, 280) + '...' : heroText}
                 </p>
               )}
 
-              {/* Bookmark + meta inline */}
-              <div className="flex items-center gap-4">
+              {/* CTA + Bookmark */}
+              <div className="flex items-center gap-4 mb-5">
+                {org.website && (
+                  <a
+                    href={org.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 bg-white px-6 py-3 rounded-lg font-bold text-base shadow-lg transition-transform hover:-translate-y-0.5"
+                    style={{ color: themeColor }}
+                  >
+                    Visit Website <ExternalLink size={16} />
+                  </a>
+                )}
                 <BookmarkButton
                   contentType="organization"
                   contentId={id}
                   title={displayOrgName}
                   imageUrl={org.logo_url}
                 />
-                <span className="text-xs text-white/40">
-                  {[fullAddress, org.year_founded ? `Est. ${org.year_founded}` : null].filter(Boolean).join(' \u00b7 ')}
-                </span>
               </div>
 
-              {/* Contact links row — absorbed from Contact section */}
-              <div className="flex flex-wrap items-center gap-3 mt-4">
+              {/* Contact links — readable size, no email */}
+              <div className="flex flex-wrap items-center gap-4">
                 {org.phone && (
-                  <a href={'tel:' + org.phone} className="inline-flex items-center gap-1.5 text-white/80 hover:text-white text-xs transition-colors">
-                    <Phone size={12} /> {org.phone}
-                  </a>
-                )}
-                {org.email && (
-                  <a href={'mailto:' + org.email} className="inline-flex items-center gap-1.5 text-white/80 hover:text-white text-xs transition-colors">
-                    <Mail size={12} /> {org.email}
+                  <a href={'tel:' + org.phone} className="inline-flex items-center gap-2 text-white/80 hover:text-white text-sm transition-colors">
+                    <Phone size={15} /> {org.phone}
                   </a>
                 )}
                 {org.website && (
-                  <a href={org.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-white/80 hover:text-white text-xs transition-colors">
-                    <Globe size={12} /> Website <ExternalLink size={9} className="opacity-60" />
+                  <a href={org.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-white/80 hover:text-white text-sm transition-colors">
+                    <Globe size={15} /> Website
                   </a>
                 )}
                 {org.map_link && (
-                  <a href={org.map_link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-white/80 hover:text-white text-xs transition-colors">
-                    <MapPin size={12} /> Directions <ExternalLink size={9} className="opacity-60" />
+                  <a href={org.map_link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-white/80 hover:text-white text-sm transition-colors">
+                    <MapPin size={15} /> Directions
                   </a>
                 )}
                 {socialLinks.map(function (link) {
                   return (
                     <a key={link.platform} href={link.url} target="_blank" rel="noopener noreferrer"
-                      className="capitalize text-white/60 hover:text-white text-xs font-mono uppercase tracking-wider transition-colors"
+                      className="capitalize text-white/70 hover:text-white text-sm transition-colors"
                     >
                       {link.platform}
                     </a>
@@ -232,129 +240,207 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
               </div>
             </div>
 
-            {/* Hero image — logo or hero_image_url */}
-            {(org.hero_image_url || org.logo_url) && (
-              <div className="w-full lg:w-[380px] flex-shrink-0 rounded-2xl overflow-hidden shadow-2xl border-[3px] border-white/30 bg-white/10 flex items-center justify-center p-6">
-                <Image
-                  src={(org.hero_image_url || org.logo_url) as string}
-                  alt={org.org_name}
-                  className="max-w-full max-h-[240px] w-auto h-auto object-contain"
-                  width={380}
-                  height={240}
-                />
-              </div>
-            )}
+            {/* Hero image with fallback */}
+            <div className="w-full lg:w-[380px] flex-shrink-0">
+              {org.hero_image_url ? (
+                <div className="rounded-2xl overflow-hidden shadow-2xl border-[3px] border-white/30">
+                  <Image
+                    src={org.hero_image_url}
+                    alt={org.org_name}
+                    className="w-full h-auto object-cover"
+                    width={380}
+                    height={240}
+                  />
+                </div>
+              ) : org.logo_url ? (
+                <div className="rounded-2xl overflow-hidden shadow-2xl border-[3px] border-white/30 bg-white/10 flex items-center justify-center p-8">
+                  <Image
+                    src={org.logo_url}
+                    alt={org.org_name}
+                    className="max-w-full max-h-[200px] w-auto h-auto object-contain"
+                    width={380}
+                    height={200}
+                  />
+                </div>
+              ) : (
+                <div className="rounded-2xl overflow-hidden shadow-2xl border-[3px] border-white/20 bg-white/10 h-[240px] flex items-center justify-center">
+                  <FlowerOfLife color="#ffffff" size={180} />
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── Stats Bar — At a Glance ── */}
+      {/* ── Stats Grid ── */}
       {stats.length > 0 && (
-        <div style={{ background: SIDEBAR_BG, borderBottom: `3px solid ${RULE}` }}>
-          <div className="max-w-[1200px] mx-auto px-6">
-            <div className="flex flex-wrap divide-x" style={{ borderColor: RULE }}>
+        <section className="bg-white" style={{ borderBottom: `2px solid ${RULE}` }}>
+          <div className="max-w-[1200px] mx-auto px-6 py-6">
+            <div className={`grid gap-4 ${stats.length >= 3 ? 'grid-cols-1 sm:grid-cols-3' : stats.length === 2 ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1 max-w-sm'}`}>
               {stats.map(function (s) {
                 return (
-                  <div key={s.label} className="flex-1 min-w-[120px] py-4 px-5">
-                    <span className="block text-lg font-bold" style={{ color: INK }}>{s.value}</span>
-                    <span className="block font-mono text-[0.6rem] uppercase tracking-wider" style={{ color: DIM }}>{s.label}</span>
+                  <div key={s.label} className="text-center py-5 px-6 rounded-xl" style={{ background: `${themeColor}08`, border: `2px solid ${themeColor}20` }}>
+                    <span className="block text-2xl font-extrabold mb-1" style={{ color: themeColor }}>{s.value}</span>
+                    <span className="block text-sm font-medium" style={{ color: DIM }}>{s.label}</span>
                   </div>
                 )
               })}
             </div>
           </div>
-        </div>
+        </section>
       )}
 
       {/* ══════════════════════════════════════════════════════════════════
-          TWO-COLUMN LAYOUT — Content + Wayfinder Sidebar
+          TWO-COLUMN LAYOUT
          ══════════════════════════════════════════════════════════════════ */}
       <section className="bg-white">
-        <div className="max-w-[1200px] mx-auto px-6 py-8 sm:py-10">
+        <div className="max-w-[1200px] mx-auto px-6 py-10">
           <div className="flex flex-col lg:flex-row gap-10">
 
             {/* ── LEFT: Main Content ── */}
             <div className="flex-1 min-w-0">
 
-              {/* About — only if description differs from hero mission text */}
+              {/* About */}
               {showAbout && (
-                <section className="mb-8">
-                  <h2 className="font-display text-xl font-bold mb-2" style={{ color: INK }}>{t('detail.about')}</h2>
-                  <div className="h-[3px] mb-3" style={{ background: `${themeColor}30` }} />
-                  <p className="text-[0.95rem] leading-relaxed" style={{ color: DIM }}>{displayOrgDesc}</p>
+                <section className="mb-10">
+                  <h2 className="font-display text-2xl font-bold mb-4" style={{ color: INK }}>{t('detail.about')}</h2>
+                  <p className="text-base leading-relaxed" style={{ color: BODY }}>{displayOrgDesc}</p>
                 </section>
               )}
 
               {/* Services */}
               {services && services.length > 0 && (
-                <section className="mb-8">
-                  <div className="flex items-baseline justify-between">
-                    <h2 className="font-display text-xl font-bold" style={{ color: INK }}>Services</h2>
-                    <span className="font-mono text-[0.6rem] uppercase tracking-wider" style={{ color: DIM }}>{services.length}</span>
+                <section className="mb-10">
+                  <div className="flex items-baseline justify-between mb-4">
+                    <h2 className="font-display text-2xl font-bold" style={{ color: INK }}>Services</h2>
+                    <span className="text-sm font-medium" style={{ color: DIM }}>{services.length} available</span>
                   </div>
-                  <div className="h-[3px] mb-3" style={{ background: `${themeColor}30` }} />
-                  {services.slice(0, 4).map(function (svc) {
-                    const st = serviceTranslations[svc.service_id]
-                    const svcName = st?.title || svc.service_name
-                    const svcDesc = st?.summary || svc.description_5th_grade
-                    return (
-                      <Link key={svc.service_id} href={'/services/' + svc.service_id} className="flex items-start gap-3 py-2.5 hover:underline" style={{ borderBottom: `3px solid ${RULE}` }}>
-                        <span className="mt-2 flex-shrink-0 inline-block w-1.5 h-1.5 rounded-full" style={{ background: themeColor }} />
-                        <div className="min-w-0">
-                          <span className="block font-semibold text-[0.9rem]" style={{ color: INK }}>{svcName}</span>
-                          {svcDesc && <span className="block line-clamp-1 mt-0.5 text-sm" style={{ color: DIM }}>{svcDesc}</span>}
-                        </div>
-                      </Link>
-                    )
-                  })}
-                  {services.length > 4 && (
-                    <details className="mt-2">
-                      <summary className="italic text-sm cursor-pointer" style={{ color: themeColor }}>
-                        {services.length - 4} more services
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {services.slice(0, 6).map(function (svc) {
+                      const st = serviceTranslations[svc.service_id]
+                      const svcName = st?.title || svc.service_name
+                      const svcDesc = st?.summary || svc.description_5th_grade
+                      return (
+                        <Link
+                          key={svc.service_id}
+                          href={'/services/' + svc.service_id}
+                          className="block p-5 rounded-xl border-2 transition-all hover:-translate-y-1 hover:shadow-md"
+                          style={{ borderColor: `${themeColor}25`, background: `${themeColor}05` }}
+                        >
+                          <span className="block font-bold text-base mb-1" style={{ color: INK }}>{svcName}</span>
+                          {svcDesc && <span className="block text-sm line-clamp-2" style={{ color: DIM }}>{svcDesc}</span>}
+                        </Link>
+                      )
+                    })}
+                  </div>
+                  {services.length > 6 && (
+                    <details className="mt-4">
+                      <summary className="text-sm font-semibold cursor-pointer" style={{ color: themeColor }}>
+                        Show {services.length - 6} more services
                       </summary>
-                      {services.slice(4).map(function (svc) {
-                        const st = serviceTranslations[svc.service_id]
-                        const svcName = st?.title || svc.service_name
-                        return (
-                          <Link key={svc.service_id} href={'/services/' + svc.service_id} className="flex items-start gap-3 py-2.5 hover:underline" style={{ borderBottom: `3px solid ${RULE}` }}>
-                            <span className="mt-2 flex-shrink-0 inline-block w-1.5 h-1.5 rounded-full" style={{ background: themeColor }} />
-                            <span className="font-semibold text-[0.9rem]" style={{ color: INK }}>{svcName}</span>
-                          </Link>
-                        )
-                      })}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                        {services.slice(6).map(function (svc) {
+                          const st = serviceTranslations[svc.service_id]
+                          const svcName = st?.title || svc.service_name
+                          const svcDesc = st?.summary || svc.description_5th_grade
+                          return (
+                            <Link
+                              key={svc.service_id}
+                              href={'/services/' + svc.service_id}
+                              className="block p-5 rounded-xl border-2 transition-all hover:-translate-y-1 hover:shadow-md"
+                              style={{ borderColor: `${themeColor}25`, background: `${themeColor}05` }}
+                            >
+                              <span className="block font-bold text-base mb-1" style={{ color: INK }}>{svcName}</span>
+                              {svcDesc && <span className="block text-sm line-clamp-2" style={{ color: DIM }}>{svcDesc}</span>}
+                            </Link>
+                          )
+                        })}
+                      </div>
                     </details>
                   )}
                 </section>
               )}
 
-              {/* News & Resources — compact thumbnail + title */}
-              {content && content.length > 0 && (
-                <section className="mb-8">
-                  <div className="flex items-baseline justify-between">
-                    <h2 className="font-display text-xl font-bold" style={{ color: INK }}>News & Resources</h2>
-                    <span className="font-mono text-[0.6rem] uppercase tracking-wider" style={{ color: DIM }}>{content.length}</span>
+              {/* News */}
+              {newsItems.length > 0 && (
+                <section className="mb-10">
+                  <h2 className="font-display text-2xl font-bold mb-4" style={{ color: INK }}>Latest</h2>
+                  <div className="space-y-3">
+                    {newsItems.map(function (item: any) {
+                      const ct = item.inbox_id ? contentTranslations[item.inbox_id] : undefined
+                      const displayTitle = ct?.title || item.title_6th_grade
+                      const displaySummary = ct?.summary || item.summary_6th_grade
+                      return (
+                        <Link
+                          key={item.id}
+                          href={'/content/' + item.id}
+                          className="flex items-start gap-4 group p-4 rounded-xl border-2 transition-all hover:-translate-y-0.5 hover:shadow-md"
+                          style={{ borderColor: RULE }}
+                        >
+                          {item.image_url ? (
+                            <Image
+                              src={item.image_url}
+                              alt={displayTitle}
+                              width={96}
+                              height={72}
+                              className="w-24 h-[72px] rounded-lg object-cover flex-shrink-0 bg-gray-100"
+                            />
+                          ) : (
+                            <div className="w-24 h-[72px] rounded-lg flex-shrink-0 overflow-hidden">
+                              <FolFallback pathway={item.pathway_primary} height="h-full" />
+                            </div>
+                          )}
+                          <div className="min-w-0">
+                            <span className="block font-bold text-base group-hover:underline mb-1" style={{ color: INK }}>
+                              {displayTitle}
+                            </span>
+                            {displaySummary && (
+                              <span className="block text-sm line-clamp-2 mb-1" style={{ color: DIM }}>
+                                {displaySummary}
+                              </span>
+                            )}
+                            {item.published_at && (
+                              <span className="text-sm" style={{ color: DIM }}>
+                                {new Date(item.published_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                              </span>
+                            )}
+                          </div>
+                        </Link>
+                      )
+                    })}
                   </div>
-                  <div className="h-[3px] mb-3" style={{ background: `${themeColor}30` }} />
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {content.map(function (item: any) {
+                </section>
+              )}
+
+              {/* Resources */}
+              {resourceItems.length > 0 && (
+                <section className="mb-10">
+                  <h2 className="font-display text-2xl font-bold mb-4" style={{ color: INK }}>Resources</h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {resourceItems.map(function (item: any) {
                       const ct = item.inbox_id ? contentTranslations[item.inbox_id] : undefined
                       const displayTitle = ct?.title || item.title_6th_grade
                       return (
-                        <Link key={item.id} href={'/content/' + item.id} className="flex items-center gap-3 group">
+                        <Link
+                          key={item.id}
+                          href={'/content/' + item.id}
+                          className="flex items-center gap-3 p-4 rounded-xl border-2 transition-all hover:-translate-y-0.5 hover:shadow-md group"
+                          style={{ borderColor: RULE }}
+                        >
                           {item.image_url ? (
                             <Image
                               src={item.image_url}
                               alt={displayTitle}
                               width={64}
                               height={48}
-                              className="w-16 h-12 rounded object-cover flex-shrink-0 bg-gray-100"
+                              className="w-16 h-12 rounded-lg object-cover flex-shrink-0 bg-gray-100"
                             />
                           ) : (
-                            <div className="w-16 h-12 rounded flex-shrink-0 overflow-hidden">
+                            <div className="w-16 h-12 rounded-lg flex-shrink-0 overflow-hidden">
                               <FolFallback pathway={item.pathway_primary} height="h-full" />
                             </div>
                           )}
-                          <span className="text-sm font-medium line-clamp-2 group-hover:underline" style={{ color: INK }}>
+                          <span className="text-sm font-semibold line-clamp-2 group-hover:underline" style={{ color: INK }}>
                             {displayTitle}
                           </span>
                         </Link>
@@ -366,125 +452,139 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
 
               {/* Opportunities */}
               {opportunities && opportunities.length > 0 && (
-                <section className="mb-8">
-                  <div className="flex items-baseline justify-between">
-                    <h2 className="font-display text-xl font-bold" style={{ color: INK }}>Opportunities</h2>
-                    <span className="font-mono text-[0.6rem] uppercase tracking-wider" style={{ color: DIM }}>{opportunities.length}</span>
-                  </div>
-                  <div className="h-[3px] mb-3" style={{ background: `${themeColor}30` }} />
-                  {opportunities.map(function (opp: any) {
-                    return (
-                      <Link key={opp.opportunity_id} href={'/opportunities/' + opp.opportunity_id} className="flex items-start gap-3 py-2.5 hover:underline" style={{ borderBottom: `3px solid ${RULE}` }}>
-                        <span className="mt-2 flex-shrink-0 inline-block w-1.5 h-1.5 rounded-full" style={{ background: themeColor }} />
-                        <div className="min-w-0">
-                          <span className="block font-semibold text-[0.9rem]" style={{ color: INK }}>{opp.opportunity_name}</span>
-                          {opp.description_5th_grade && <span className="block line-clamp-1 mt-0.5 text-sm" style={{ color: DIM }}>{opp.description_5th_grade}</span>}
-                          <div className="flex items-center gap-2 flex-wrap mt-0.5">
+                <section className="mb-10">
+                  <h2 className="font-display text-2xl font-bold mb-4" style={{ color: INK }}>Opportunities</h2>
+                  <div className="space-y-3">
+                    {opportunities.map(function (opp: any) {
+                      return (
+                        <Link
+                          key={opp.opportunity_id}
+                          href={'/opportunities/' + opp.opportunity_id}
+                          className="block p-5 rounded-xl border-2 transition-all hover:-translate-y-1 hover:shadow-md"
+                          style={{ borderColor: RULE }}
+                        >
+                          <span className="block font-bold text-base mb-1" style={{ color: INK }}>{opp.opportunity_name}</span>
+                          {opp.description_5th_grade && (
+                            <span className="block text-sm line-clamp-2 mb-2" style={{ color: DIM }}>{opp.description_5th_grade}</span>
+                          )}
+                          <div className="flex items-center gap-3">
                             {opp.time_commitment && (
-                              <span className="font-mono text-[0.6rem] uppercase tracking-wider" style={{ color: DIM }}>{opp.time_commitment}</span>
+                              <span className="text-sm font-medium px-3 py-1 rounded-full" style={{ color: themeColor, background: `${themeColor}10` }}>
+                                {opp.time_commitment}
+                              </span>
                             )}
                             {opp.is_virtual === 'Yes' && (
-                              <span className="font-mono text-[0.6rem] uppercase tracking-wider px-1.5 py-px" style={{ color: themeColor, border: `1px solid ${themeColor}` }}>Virtual</span>
+                              <span className="text-sm font-medium px-3 py-1 rounded-full" style={{ color: themeColor, border: `1px solid ${themeColor}` }}>
+                                Virtual
+                              </span>
                             )}
                           </div>
-                        </div>
-                      </Link>
-                    )
-                  })}
+                        </Link>
+                      )
+                    })}
+                  </div>
                 </section>
               )}
 
               {/* Empty state */}
               {childCount === 0 && (
-                <div className="text-center py-12" style={{ border: `1px dashed ${RULE}` }}>
-                  <p style={{ color: DIM }}>No services, content, or opportunities have been linked to this organization yet.</p>
+                <div className="text-center py-12 rounded-xl" style={{ border: `2px dashed ${RULE}` }}>
+                  <p className="text-base" style={{ color: DIM }}>No services, content, or opportunities have been linked to this organization yet.</p>
                 </div>
               )}
 
-              {/* Details accordion — Hours + Tags */}
+              {/* Organization Details */}
               {hasDetails && (
-                <details className="mb-8 group">
-                  <summary className="flex items-center justify-between cursor-pointer py-3" style={{ borderBottom: `3px solid ${RULE}` }}>
-                    <span className="font-mono text-[0.65rem] font-bold uppercase tracking-[0.1em]" style={{ color: DIM }}>Details</span>
-                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none" className="transition-transform group-open:rotate-180">
-                      <path d="M5 7.5L10 12.5L15 7.5" stroke={DIM} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </summary>
-                  <div className="pt-4 space-y-6">
-                    {hoursList.length > 0 && (
-                      <div>
-                        <h3 className="flex items-center gap-2 font-mono text-[0.65rem] font-bold uppercase tracking-[0.1em] mb-2" style={{ color: DIM }}>
-                          <Clock size={13} /> Hours of Operation
-                        </h3>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-0.5">
-                          {hoursList.map(function (h) {
-                            return (
-                              <div key={h.day} className="flex justify-between py-1" style={{ borderBottom: `3px solid ${RULE}` }}>
-                                <span className="text-sm font-medium" style={{ color: INK }}>{h.day}</span>
-                                <span className="text-sm" style={{ color: DIM }}>{h.time}</span>
-                              </div>
-                            )
-                          })}
-                        </div>
-                      </div>
-                    )}
-                    {org.tags && org.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5">
-                        {org.tags.map(function (tag: string) {
-                          return <span key={tag} className="font-mono text-xs uppercase tracking-wider px-2 py-0.5" style={{ color: DIM, border: `1px solid ${RULE}` }}>{tag}</span>
+                <section className="mb-10">
+                  <h2 className="font-display text-2xl font-bold mb-4" style={{ color: INK }}>Organization Details</h2>
+
+                  {orgDetails.length > 0 && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                      {orgDetails.map(function (d) {
+                        return (
+                          <div key={d.label} className="p-4 rounded-xl" style={{ background: CARD_BG, border: `1px solid ${RULE}` }}>
+                            <span className="block text-sm font-bold mb-1" style={{ color: DIM }}>{d.label}</span>
+                            <span className="block text-base font-medium" style={{ color: INK }}>{d.value}</span>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  )}
+
+                  {hoursList.length > 0 && (
+                    <div className="mb-6">
+                      <h3 className="flex items-center gap-2 text-sm font-bold mb-3" style={{ color: DIM }}>
+                        <Clock size={16} /> Hours of Operation
+                      </h3>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-1">
+                        {hoursList.map(function (h) {
+                          return (
+                            <div key={h.day} className="flex justify-between py-2" style={{ borderBottom: `1px solid ${RULE}` }}>
+                              <span className="text-sm font-medium" style={{ color: INK }}>{h.day}</span>
+                              <span className="text-sm" style={{ color: DIM }}>{h.time}</span>
+                            </div>
+                          )
                         })}
                       </div>
-                    )}
-                  </div>
-                </details>
+                    </div>
+                  )}
+
+                  {org.tags && org.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {org.tags.map(function (tag: string) {
+                        return (
+                          <span key={tag} className="text-sm px-3 py-1 rounded-full" style={{ color: DIM, background: CARD_BG, border: `1px solid ${RULE}` }}>
+                            {tag}
+                          </span>
+                        )
+                      })}
+                    </div>
+                  )}
+                </section>
               )}
 
               {/* Sidebar extras — below main content on mobile */}
-              <div className="lg:hidden space-y-6 mt-8 pt-8" style={{ borderTop: `3px solid ${RULE}` }}>
+              <div className="lg:hidden space-y-6 mt-8 pt-8" style={{ borderTop: `2px solid ${RULE}` }}>
                 <FeaturedPromo variant="card" />
-                {quote && <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={themeColor} />}
               </div>
             </div>
 
             {/* ══════════════════════════════════════════════════════════════════
-                RIGHT: WAYFINDER SIDEBAR
+                RIGHT: SIDEBAR
                ══════════════════════════════════════════════════════════════════ */}
             <aside className="w-full lg:w-[340px] flex-shrink-0">
               <div className="lg:sticky lg:top-4 space-y-4">
-                <div>
-                  <DetailWayfinder
-                    data={wayfinderData}
-                    currentType="organization"
-                    currentId={id}
-                    userRole={userProfile?.role ?? undefined}
-                  />
 
-                  {/* Org-specific wayfinder extras — inside the wayfinder border */}
-                  <div className="bg-white border border-t-0 border-brand-border">
-                    {org.service_area && (
-                      <div className="px-4 py-3 border-t-[3px] border-brand-border">
-                        <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: DIM }}>Service Area</span>
-                        <p className="text-xs mt-1 font-medium" style={{ color: INK }}>{org.service_area}</p>
-                      </div>
-                    )}
-                    {org.org_type && (
-                      <div className="px-4 py-3 border-t-[3px] border-brand-border">
-                        <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: DIM }}>Organization Type</span>
-                        <p className="text-xs mt-1 font-medium" style={{ color: INK }}>{org.org_type}</p>
-                      </div>
-                    )}
-                    {fullAddress && (
-                      <div className="px-4 py-3 border-t-[3px] border-brand-border">
-                        <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: DIM }}>Location</span>
-                        <p className="text-xs mt-1 font-medium" style={{ color: INK }}>{fullAddress}</p>
-                      </div>
-                    )}
+                {/* CTA Box */}
+                {org.website && (
+                  <div className="rounded-xl p-6 text-center" style={{ background: `linear-gradient(135deg, ${themeColor}, ${themeColor}cc)` }}>
+                    <p className="text-white font-bold text-lg mb-4">
+                      Connect with {displayOrgName.length > 30 ? 'this organization' : displayOrgName}
+                    </p>
+                    <a
+                      href={org.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block bg-white rounded-lg px-6 py-3 font-bold text-base transition-transform hover:-translate-y-0.5 shadow-lg"
+                      style={{ color: themeColor }}
+                    >
+                      Visit Website <ExternalLink size={14} className="inline ml-1" />
+                    </a>
                   </div>
-                </div>
+                )}
+
+                {/* Wayfinder */}
+                <DetailWayfinder
+                  data={wayfinderData}
+                  currentType="organization"
+                  currentId={id}
+                  userRole={userProfile?.role ?? undefined}
+                  quote={quote ? { text: quote.quote_text, attribution: quote.attribution } : undefined}
+                  accentColor={themeColor}
+                />
 
                 <div className="hidden lg:block space-y-4">
                   <FeaturedPromo variant="card" />
-                  {quote && <QuoteCard text={quote.quote_text} attribution={quote.attribution} accentColor={themeColor} />}
                 </div>
               </div>
             </aside>
@@ -493,14 +593,14 @@ export default async function OrganizationDetailPage({ params }: { params: Promi
       </section>
 
       {/* ── FOOTER CODA ── */}
-      <section style={{ background: SIDEBAR_BG, borderTop: `3px solid ${RULE}` }}>
-        <div className="max-w-[820px] mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
+      <section style={{ background: CARD_BG, borderTop: `2px solid ${RULE}` }}>
+        <div className="max-w-[820px] mx-auto px-6 py-8 text-center">
           <Link
             href="/organizations"
-            className="inline-flex items-center gap-2 transition-colors hover:text-[#1b5e8a]"
-            style={{ fontSize: '0.7rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: DIM }}
+            className="inline-flex items-center gap-2 text-sm font-semibold transition-colors hover:text-[#1b5e8a]"
+            style={{ color: DIM }}
           >
-            <ArrowRight size={14} className="rotate-180" /> Back to Organizations
+            <ArrowRight size={16} className="rotate-180" /> Back to Organizations
           </Link>
         </div>
       </section>
