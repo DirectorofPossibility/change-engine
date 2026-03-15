@@ -1,572 +1,360 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { cookies } from 'next/headers'
-import { THEMES } from '@/lib/constants'
-import {
-  getPathwaysHubData,
-  getExchangeStats,
-  getPathwayBridges,
-  getRandomQuote,
-} from '@/lib/data/exchange'
-import { getLibraryNuggets } from '@/lib/data/library'
-import { getUIStrings } from '@/lib/i18n'
 import Image from 'next/image'
+import { THEMES } from '@/lib/constants'
+import { getPathwaysHubData, getRandomQuote } from '@/lib/data/exchange'
+import { ScrollReveal, ParallaxSection } from './ScrollReveal'
+import { InteractiveFOL } from '@/components/exchange/home/InteractiveFOL'
 
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'Seven Pathways Into Community Life',
-  description: 'Explore health, families, neighborhood, voice, money, planet, and bridging divides across services, content, officials, policies, and learning paths.',
+  title: 'Seven Doorways Into Community Life | The Change Engine',
+  description:
+    'Your life is not one thing — it is at least seven. Health, family, neighborhood, voice, money, planet, and the bigger we. Pick a door.',
 }
 
-const CONTENT_TYPE_LABELS: Record<string, string> = {
-  article: 'Articles',
-  report: 'Reports',
-  video: 'Videos',
-  event: 'Events',
-  tool: 'Tools',
-  course: 'Courses',
-  guide: 'Guides',
-  campaign: 'Campaigns',
-  opportunity: 'Opportunities',
+/* ── Evocative copy for each pathway ── */
+const PATHWAY_SOUL: Record<string, { tagline: string; invite: string; verb: string }> = {
+  THEME_01: {
+    tagline: 'Your body. Your mind. Your whole self.',
+    invite:
+      'Free clinics, mental health support, nutrition programs, insurance navigators — your guide to feeling good and getting the care you deserve.',
+    verb: 'Take care',
+  },
+  THEME_02: {
+    tagline: 'The people who shape everything.',
+    invite:
+      'Schools worth knowing about. Childcare you can actually find. Youth programs, safety nets, and everything that helps Houston families grow stronger.',
+    verb: 'Grow together',
+  },
+  THEME_03: {
+    tagline: 'The places we call home.',
+    invite:
+      'Parks, libraries, housing, local projects — what\'s happening on your block and what your neighbors are building next.',
+    verb: 'Explore nearby',
+  },
+  THEME_04: {
+    tagline: 'Your power, out loud.',
+    invite:
+      'Voting deadlines, town halls, who represents you, how to organize — the tools and moments where your voice actually shapes what happens.',
+    verb: 'Speak up',
+  },
+  THEME_05: {
+    tagline: 'What you earn. What you build.',
+    invite:
+      'Jobs, benefits, credit-building, small business support — real paths to financial strength and opportunity.',
+    verb: 'Build wealth',
+  },
+  THEME_06: {
+    tagline: 'The ground beneath all of us.',
+    invite:
+      'Air quality, flooding, energy programs, green spaces — how Houston is facing the climate crisis and what you can do about it.',
+    verb: 'Protect it',
+  },
+  THEME_07: {
+    tagline: 'Across every line that divides us.',
+    invite:
+      'Bridging, dialogue, inclusion, trust — the hard and beautiful work of building one community out of many.',
+    verb: 'Come together',
+  },
 }
-
-const ENTITY_ICONS: Record<string, { label: string; href: string }> = {
-  services: { label: 'Services', href: '/services' },
-  officials: { label: 'Officials', href: '/officials' },
-  policies: { label: 'Policies', href: '/policies' },
-  opportunities: { label: 'Opportunities', href: '/opportunities' },
-}
-
-/* ── Design tokens ── */
-const PARCHMENT_LIGHT = '#f4f5f7'
-const SAGE = '#5C7A5E'
 
 export default async function PathwaysPage() {
-  const [hubData, stats, bridges, quote] = await Promise.all([
+  const [hubData, quote] = await Promise.all([
     getPathwaysHubData(),
-    getExchangeStats(),
-    getPathwayBridges(),
     getRandomQuote(),
   ])
 
-  const cookieStore = await cookies()
-  const lang = cookieStore.get('lang')?.value || 'en'
-  const t = getUIStrings(lang)
-
-  const totalContent = Object.values(hubData).reduce(function (sum, p) { return sum + p.totalContent }, 0)
-  const totalServices = Object.values(hubData).reduce(function (sum, p) { return sum + p.entityCounts.services }, 0)
-  const totalPolicies = Object.values(hubData).reduce(function (sum, p) { return sum + p.entityCounts.policies }, 0)
+  // Build pathway counts for the FOL
+  const pathwayCounts: Record<string, number> = {}
+  for (const [id, data] of Object.entries(hubData)) {
+    pathwayCounts[id] = data.totalContent + data.entityCounts.services
+  }
 
   const themeEntries = Object.entries(THEMES)
 
   return (
-    <div style={{  }}>
-
+    <div>
       {/* ══════════════════════════════════════════
-          1. HERO
+          HERO — Dark, immersive, the Flower of Life
           ══════════════════════════════════════════ */}
-      <section style={{ backgroundColor: '#f4f5f7' }}>
-        {/* 3px clay top bar */}
-        <div style={{ height: 3, backgroundColor: '#1b5e8a' }} />
+      <section
+        className="relative overflow-hidden"
+        style={{ background: '#0d1117', minHeight: '90vh' }}
+      >
+        {/* Subtle radial glow */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              'radial-gradient(ellipse at 50% 60%, rgba(26,52,96,0.3) 0%, transparent 70%)',
+          }}
+        />
 
-        <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-6">
-          {/* MONO breadcrumb */}
-          <nav style={{  }} className="text-xs tracking-wider uppercase mb-6">
-            <Link href="/explore" className="hover:underline" style={{ color: "#5c6474" }}>
-              The Exchange
-            </Link>
-            <span style={{ color: "#5c6474" }}> / </span>
-            <span style={{ color: "#1b5e8a" }}>Pathways</span>
-          </nav>
+        <div className="relative max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-20 pb-12">
+          {/* Headline */}
+          <ScrollReveal className="text-center mb-4">
+            <h1
+              className="text-4xl sm:text-5xl lg:text-6xl leading-[1.1] mb-6"
+              style={{ color: '#ffffff' }}
+            >
+              Life is not one thing.
+            </h1>
+            <p
+              className="text-2xl sm:text-3xl lg:text-4xl"
+              style={{ color: 'rgba(255,255,255,0.5)', fontStyle: 'italic' }}
+            >
+              It&rsquo;s at least seven.
+            </p>
+          </ScrollReveal>
 
-          {/* Title */}
-          <h1
-            className="text-3xl sm:text-4xl lg:text-5xl leading-tight mb-4"
-            style={{  }}
-          >
-            Seven pathways into community life.
-          </h1>
+          {/* Flower of Life — interactive navigation */}
+          <ScrollReveal delay={200} className="mt-8 sm:mt-12 max-w-[480px] mx-auto">
+            <InteractiveFOL pathwayCounts={pathwayCounts} />
+          </ScrollReveal>
 
-          {/* Subtitle */}
-          <p
-            className="text-lg sm:text-xl max-w-2xl leading-relaxed mb-8"
-            style={{ fontStyle: 'italic', color: "#5c6474" }}
-          >
-            Every pathway connects you to content, services, officials, learning paths, and opportunities across Houston's civic landscape.
-          </p>
+          {/* Invitation */}
+          <ScrollReveal delay={400} className="text-center mt-8 sm:mt-12">
+            <p
+              className="text-lg sm:text-xl max-w-lg mx-auto leading-relaxed mb-8"
+              style={{ color: 'rgba(255,255,255,0.6)' }}
+            >
+              Each one is a doorway into your city, your community, your own life.
+              <br className="hidden sm:block" />
+              Pick one. Go deep. See where it leads.
+            </p>
+          </ScrollReveal>
 
-          {/* Stats row */}
-          <div className="flex flex-wrap gap-x-8 gap-y-3 mb-8">
-            {[
-              { value: totalContent, label: 'Published' },
-              { value: stats.services, label: 'Services' },
-              { value: stats.officials, label: 'Officials' },
-              { value: totalPolicies, label: 'Policies' },
-              { value: stats.learningPaths, label: 'Learning Paths' },
-            ].map(function (stat) {
-              return (
-                <div key={stat.label} style={{  }} className="text-center">
-                  <p className="text-2xl font-bold" style={{  }}>{stat.value}</p>
-                  <p className="text-[10px] uppercase tracking-wider" style={{ color: "#5c6474" }}>{stat.label}</p>
-                </div>
-              )
-            })}
-          </div>
-
-          {/* 60px clay rule */}
-          <div style={{ width: 60, height: 3, backgroundColor: '#1b5e8a' }} />
+          {/* Scroll indicator */}
+          <ScrollReveal delay={600} className="text-center">
+            <div className="animate-bounce-slow inline-block">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="rgba(255,255,255,0.3)"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M12 5v14M5 12l7 7 7-7" />
+              </svg>
+            </div>
+          </ScrollReveal>
         </div>
       </section>
 
       {/* ══════════════════════════════════════════
-          2. PATHWAY SECTIONS
+          THE SEVEN DOORWAYS
           ══════════════════════════════════════════ */}
       {themeEntries.map(function ([themeId, theme], idx) {
         const data = hubData[themeId]
         if (!data) return null
 
+        const soul = PATHWAY_SOUL[themeId]
+        if (!soul) return null
+
         const hero = data.heroContent[0]
-        const secondary = data.heroContent.slice(1, 3)
-        const topFocusAreas = data.focusAreas.slice(0, 8)
-        const bgColor = idx % 2 === 0 ? '#ffffff' : PARCHMENT_LIGHT
+        const secondary = data.heroContent.slice(1, 4)
+        const isReversed = idx % 2 === 1
 
         return (
-          <section key={themeId} style={{ backgroundColor: bgColor }}>
-            {/* Section divider label */}
-            <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 pt-10">
-              <p
-                className="text-[11px] uppercase tracking-[0.2em] mb-6"
-                style={{ color: theme.color }}
+          <ParallaxSection key={themeId} color={theme.color}>
+            <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24">
+              <div
+                className={`grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start ${
+                  isReversed ? 'lg:[direction:rtl]' : ''
+                }`}
               >
-                Pathway {idx + 1} &middot; {theme.name}
-              </p>
-            </div>
+                {/* ── Text side ── */}
+                <div className={isReversed ? 'lg:[direction:ltr]' : ''}>
+                  <ScrollReveal direction={isReversed ? 'right' : 'left'}>
+                    {/* Pathway number whisper */}
+                    <p
+                      className="text-[11px] uppercase tracking-[0.25em] mb-6 font-mono"
+                      style={{ color: theme.color }}
+                    >
+                      {String(idx + 1).padStart(2, '0')}
+                    </p>
 
-            <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-              <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8">
+                    {/* Tagline — big serif */}
+                    <h2
+                      className="text-3xl sm:text-4xl lg:text-[2.75rem] leading-[1.15] mb-6"
+                      style={{ color: theme.color }}
+                    >
+                      {soul.tagline}
+                    </h2>
 
-                {/* ── Left column: content ── */}
-                <div>
-                  {/* Pathway heading with colored left border */}
-                  <div style={{ borderLeft: `4px solid ${theme.color}`, paddingLeft: 16 }} className="mb-5">
+                    {/* The invitation */}
+                    <p
+                      className="text-lg leading-relaxed mb-8 max-w-md"
+                      style={{ color: '#5c6474' }}
+                    >
+                      {soul.invite}
+                    </p>
+
+                    {/* Pathway SVG icon */}
+                    <div className="mb-8 opacity-20">
+                      <Image
+                        src={`/images/pathways/${theme.slug}.svg`}
+                        alt=""
+                        width={64}
+                        height={64}
+                        className="w-16 h-16"
+                      />
+                    </div>
+
+                    {/* CTA */}
                     <Link
                       href={'/pathways/' + theme.slug}
-                      className="block hover:underline"
-                      style={{
-                                                fontSize: 'clamp(24px, 3vw, 36px)',
-                                                textDecorationColor: theme.color,
-                        lineHeight: 1.2,
-                      }}
+                      className="group inline-flex items-center gap-3 text-base font-bold transition-all"
+                      style={{ color: theme.color }}
                     >
-                      {theme.name}
+                      <span className="border-b-2 group-hover:border-current pb-0.5" style={{ borderColor: theme.color }}>
+                        {soul.verb}
+                      </span>
+                      <svg
+                        className="w-5 h-5 transition-transform group-hover:translate-x-1"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={2.5}
+                        stroke="currentColor"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                      </svg>
                     </Link>
-                    <p
-                      className="mt-2 leading-relaxed max-w-xl"
-                      style={{ fontStyle: 'italic', color: "#5c6474", fontSize: '0.95rem' }}
-                    >
-                      {theme.description}
-                    </p>
-                  </div>
+                  </ScrollReveal>
+                </div>
 
-                  {/* Hero content card */}
+                {/* ── Content side ── */}
+                <div className={isReversed ? 'lg:[direction:ltr]' : ''}>
+                  {/* Hero card */}
                   {hero && (
-                    <Link
-                      href={'/content/' + hero.id}
-                      className="group block border mb-5 transition-colors"
-                      style={{ borderColor: '#dde1e8' }}
+                    <ScrollReveal
+                      direction={isReversed ? 'left' : 'right'}
+                      delay={150}
                     >
-                      <div className="group-hover:border-current" style={{ borderColor: theme.color }}>
+                      <Link
+                        href={'/content/' + hero.id}
+                        className="group block border mb-4 transition-colors"
+                        style={{ borderColor: '#dde1e8' }}
+                      >
                         {hero.image_url && (
                           <div className="aspect-[16/9] overflow-hidden">
                             <Image
                               src={hero.image_url}
                               alt=""
-                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                              className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700"
                               width={800}
-                              height={400}
+                              height={450}
                             />
                           </div>
                         )}
                         <div className="p-5">
-                          <div className="flex items-center gap-3 mb-2">
-                            {hero.content_type && (
-                              <span
-                                className="text-[10px] uppercase tracking-wider font-bold"
-                                style={{ color: theme.color }}
-                              >
-                                {hero.content_type}
-                              </span>
-                            )}
-                            {hero.source_domain && (
-                              <span
-                                className="text-[10px]"
-                                style={{ color: "#5c6474" }}
-                              >
-                                {hero.source_domain}
-                              </span>
-                            )}
-                          </div>
-                          <h3
-                            className="text-lg leading-snug group-hover:underline"
-                            style={{  }}
-                          >
+                          <h3 className="text-lg leading-snug group-hover:underline" style={{ textDecorationColor: theme.color }}>
                             {hero.title}
                           </h3>
                           {hero.summary && (
-                            <p
-                              className="text-sm mt-2 line-clamp-2 leading-relaxed"
-                              style={{ color: "#5c6474" }}
-                            >
+                            <p className="text-sm mt-2 line-clamp-2 leading-relaxed" style={{ color: '#5c6474' }}>
                               {hero.summary}
                             </p>
                           )}
                         </div>
-                      </div>
-                    </Link>
+                      </Link>
+                    </ScrollReveal>
                   )}
 
-                  {/* Secondary content cards */}
+                  {/* Secondary cards — compact row */}
                   {secondary.length > 0 && (
-                    <div className="grid grid-cols-2 gap-4">
-                      {secondary.map(function (item) {
-                        return (
-                          <Link
-                            key={item.id}
-                            href={'/content/' + item.id}
-                            className="group block border transition-colors"
-                            style={{ borderColor: '#dde1e8' }}
-                          >
-                            {item.image_url && (
-                              <div className="aspect-[16/9] overflow-hidden">
-                                <Image
-                                  src={item.image_url}
-                                  alt=""
-                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                  width={800}
-                                  height={400}
-                                />
-                              </div>
-                            )}
-                            <div className="p-3">
-                              <span
-                                className="text-[9px] uppercase tracking-wider font-bold"
-                                style={{ color: theme.color }}
-                              >
-                                {item.content_type}
-                              </span>
-                              <h4
-                                className="text-sm leading-snug mt-1 line-clamp-2 group-hover:underline"
-                                style={{  }}
-                              >
-                                {item.title}
-                              </h4>
-                            </div>
-                          </Link>
-                        )
-                      })}
-                    </div>
-                  )}
-                </div>
-
-                {/* ── Right column: data sidebar ── */}
-                <div>
-                  {/* What you will find */}
-                  <div className="border p-5 mb-4" style={{ borderColor: '#dde1e8' }}>
-                    <p
-                      className="text-[10px] uppercase tracking-[0.15em] mb-4"
-                      style={{ color: "#5c6474" }}
+                    <ScrollReveal
+                      direction={isReversed ? 'left' : 'right'}
+                      delay={300}
                     >
-                      What you will find
-                    </p>
-
-                    <div className="space-y-2 mb-4">
-                      <div className="flex items-center justify-between">
-                        <span style={{ fontSize: '0.9rem' }}>Content</span>
-                        <span style={{ color: theme.color }} className="text-lg font-bold">{data.totalContent}</span>
-                      </div>
-                      {Object.entries(data.entityCounts).map(function ([key, count]) {
-                        if (count === 0) return null
-                        const info = ENTITY_ICONS[key]
-                        return (
-                          <div key={key} className="flex items-center justify-between">
-                            <span style={{ fontSize: '0.9rem' }}>{info?.label || key}</span>
-                            <span style={{ color: theme.color }} className="text-lg font-bold">{count}</span>
-                          </div>
-                        )
-                      })}
-                    </div>
-
-                    {/* Content type breakdown */}
-                    <div className="flex flex-wrap gap-1.5">
-                      {Object.entries(data.contentCounts)
-                        .sort(function (a, b) { return b[1] - a[1] })
-                        .map(function ([type, count]) {
+                      <div className="grid grid-cols-3 gap-3">
+                        {secondary.map(function (item) {
                           return (
                             <Link
-                              key={type}
-                              href={'/news?pathway=' + themeId + '&type=' + type}
-                              className="inline-flex items-center gap-1 text-xs border px-2 py-1 transition-colors hover:border-current"
-                              style={{ borderColor: '#dde1e8',  }}
+                              key={item.id}
+                              href={'/content/' + item.id}
+                              className="group block border transition-colors"
+                              style={{ borderColor: '#dde1e8' }}
                             >
-                              <span className="font-bold">{count}</span>
-                              <span style={{ color: "#5c6474" }}>{CONTENT_TYPE_LABELS[type] || type}</span>
-                            </Link>
-                          )
-                        })}
-                    </div>
-                  </div>
-
-                  {/* Topics (focus areas) */}
-                  {topFocusAreas.length > 0 && (
-                    <div className="border p-5 mb-4" style={{ borderColor: '#dde1e8' }}>
-                      <div className="flex items-center justify-between mb-4">
-                        <p
-                          className="text-[10px] uppercase tracking-[0.15em]"
-                          style={{ color: "#5c6474" }}
-                        >
-                          Topics
-                        </p>
-                        <span className="text-[10px]" style={{ color: "#5c6474" }}>
-                          {data.focusAreas.length} total
-                        </span>
-                      </div>
-                      <ul className="space-y-2">
-                        {topFocusAreas.map(function (fa) {
-                          return (
-                            <li key={fa.focus_id}>
-                              <Link
-                                href={'/explore/focus/' + fa.focus_id}
-                                className="group flex items-center gap-2 hover:underline"
-                              >
-                                <span
-                                  className="w-2 h-2 flex-shrink-0"
-                                  style={{ backgroundColor: theme.color }}
-                                />
-                                <span style={{ fontSize: '0.9rem' }}>
-                                  {fa.focus_area_name}
-                                </span>
-                              </Link>
-                            </li>
-                          )
-                        })}
-                      </ul>
-                      {data.focusAreas.length > 8 && (
-                        <Link
-                          href={'/pathways/' + theme.slug}
-                          className="inline-block mt-3 text-xs hover:underline"
-                          style={{ color: theme.color }}
-                        >
-                          +{data.focusAreas.length - 8} more
-                        </Link>
-                      )}
-                    </div>
-                  )}
-
-                  {/* Keep Learning */}
-                  {(data.learningPaths.length > 0 || data.guides.length > 0) && (
-                    <div className="border p-5 mb-4" style={{ borderColor: '#dde1e8' }}>
-                      <p
-                        className="text-[10px] uppercase tracking-[0.15em] mb-4"
-                        style={{ color: "#5c6474" }}
-                      >
-                        Keep Learning
-                      </p>
-                      <div className="space-y-3">
-                        {data.learningPaths.map(function (lp) {
-                          return (
-                            <Link
-                              key={lp.path_id}
-                              href={'/learning/' + lp.path_id}
-                              className="group block hover:underline"
-                            >
-                              <h4 style={{ fontSize: '0.9rem' }}>
-                                {lp.path_name}
-                              </h4>
-                              {lp.estimated_minutes && (
-                                <span className="text-[10px]" style={{ color: "#5c6474" }}>
-                                  ~{lp.estimated_minutes} min
-                                </span>
+                              {item.image_url && (
+                                <div className="aspect-[4/3] overflow-hidden">
+                                  <Image
+                                    src={item.image_url}
+                                    alt=""
+                                    className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                                    width={400}
+                                    height={300}
+                                  />
+                                </div>
                               )}
-                            </Link>
-                          )
-                        })}
-                        {data.guides.map(function (g) {
-                          return (
-                            <Link
-                              key={g.guide_id}
-                              href={'/guides/' + g.slug}
-                              className="group block hover:underline"
-                            >
-                              <h4 style={{ fontSize: '0.9rem' }}>
-                                {g.title}
-                              </h4>
-                              <span className="text-[10px]" style={{ color: "#5c6474" }}>
-                                Community Guide
-                              </span>
+                              <div className="p-2.5">
+                                <h4 className="text-xs leading-snug line-clamp-2 group-hover:underline" style={{ textDecorationColor: theme.color }}>
+                                  {item.title}
+                                </h4>
+                              </div>
                             </Link>
                           )
                         })}
                       </div>
-                    </div>
+                    </ScrollReveal>
                   )}
-
-                  {/* Connected pathways */}
-                  {data.bridges.length > 0 && (
-                    <div className="mb-4">
-                      <p
-                        className="text-[10px] uppercase tracking-[0.15em] mb-2"
-                        style={{ color: "#5c6474" }}
-                      >
-                        Connected to
-                      </p>
-                      <div className="flex flex-wrap gap-x-3 gap-y-1">
-                        {data.bridges.slice(0, 4).map(function (b) {
-                          return (
-                            <Link
-                              key={b.targetThemeId}
-                              href={'/pathways/' + b.targetSlug}
-                              className="inline-flex items-center gap-1.5 text-xs hover:underline"
-                              style={{ color: b.targetColor }}
-                            >
-                              <span className="w-2 h-2" style={{ backgroundColor: b.targetColor }} />
-                              {b.targetName}
-                              <span style={{ color: "#5c6474" }}>({b.sharedCount})</span>
-                            </Link>
-                          )
-                        })}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Explore CTA */}
-                  <Link
-                    href={'/pathways/' + theme.slug}
-                    className="flex items-center justify-center gap-2 w-full py-3 text-sm font-bold text-white transition-opacity hover:opacity-90"
-                    style={{ backgroundColor: theme.color, letterSpacing: '0.05em' }}
-                  >
-                    Explore {theme.name}
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                    </svg>
-                  </Link>
                 </div>
-
               </div>
             </div>
-          </section>
+          </ParallaxSection>
         )
       })}
 
       {/* ══════════════════════════════════════════
-          3. CROSS-PATHWAY CONNECTIONS
+          SPECTRUM BAR — the seven together
           ══════════════════════════════════════════ */}
-      {bridges.length > 0 && (
-        <section style={{ backgroundColor: '#f4f5f7' }} className="py-12">
-          <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8">
-            <p
-              className="text-[11px] uppercase tracking-[0.2em] mb-3"
-              style={{ color: "#1b5e8a" }}
-            >
-              How pathways connect
-            </p>
-            <p
-              className="text-lg mb-8 max-w-xl"
-              style={{ fontStyle: 'italic', color: "#5c6474" }}
-            >
-              Community issues do not live in silos. These pathways share content, services, and focus areas.
-            </p>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {bridges.slice(0, 9).map(function (b) {
-                const themeA = (THEMES as any)[b[0]]
-                const themeB = (THEMES as any)[b[1]]
-                if (!themeA || !themeB) return null
-                return (
-                  <div
-                    key={b[0] + '|' + b[1]}
-                    className="flex items-center gap-3 border p-4"
-                    style={{ borderColor: '#dde1e8', backgroundColor: '#ffffff' }}
-                  >
-                    <div className="flex items-center gap-1.5 min-w-0">
-                      <span className="w-2.5 h-2.5 flex-shrink-0" style={{ backgroundColor: themeA.color }} />
-                      <Link
-                        href={'/pathways/' + themeA.slug}
-                        className="text-sm truncate hover:underline"
-                        style={{  }}
-                      >
-                        {themeA.name}
-                      </Link>
-                    </div>
-                    <div className="flex items-center gap-1 flex-shrink-0">
-                      <div className="w-6 h-px" style={{ backgroundColor: '#dde1e8' }} />
-                      <span className="text-xs font-bold" style={{ color: "#5c6474" }}>{b[2]}</span>
-                      <div className="w-6 h-px" style={{ backgroundColor: '#dde1e8' }} />
-                    </div>
-                    <div className="flex items-center gap-1.5 min-w-0">
-                      <span className="w-2.5 h-2.5 flex-shrink-0" style={{ backgroundColor: themeB.color }} />
-                      <Link
-                        href={'/pathways/' + themeB.slug}
-                        className="text-sm truncate hover:underline"
-                        style={{  }}
-                      >
-                        {themeB.name}
-                      </Link>
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* ══════════════════════════════════════════
-          4. QUOTE (inline blockquote)
-          ══════════════════════════════════════════ */}
-      {quote && (
-        <section style={{ backgroundColor: '#f4f5f7' }} className="py-10">
-          <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8">
-            <blockquote
-              className="max-w-2xl mx-auto text-center"
-              style={{ borderTop: `1px solid ${'#dde1e8'}`, borderBottom: `1px solid ${'#dde1e8'}`, padding: '2rem 0' }}
-            >
-              <p
-                className="text-xl sm:text-2xl leading-relaxed mb-4"
-                style={{ fontStyle: 'italic',  }}
-              >
-                &ldquo;{quote.quote_text}&rdquo;
-              </p>
-              {quote.attribution && (
-                <cite
-                  className="text-xs uppercase tracking-wider not-italic"
-                  style={{ color: "#5c6474" }}
-                >
-                  {quote.attribution}
-                </cite>
-              )}
-            </blockquote>
-          </div>
-        </section>
-      )}
-
-      {/* ══════════════════════════════════════════
-          5. SPECTRUM BAR
-          ══════════════════════════════════════════ */}
-      <div className="flex h-1.5 overflow-hidden">
+      <div className="flex h-2 overflow-hidden">
         {Object.values(THEMES).map(function (theme) {
           return <div key={theme.slug} className="flex-1" style={{ backgroundColor: theme.color }} />
         })}
       </div>
 
       {/* ══════════════════════════════════════════
-          6. FOOTER CODA
+          CLOSING QUOTE
+          ══════════════════════════════════════════ */}
+      {quote && (
+        <section className="py-16 sm:py-20" style={{ backgroundColor: '#0d1117' }}>
+          <div className="max-w-[1080px] mx-auto px-4 sm:px-6 lg:px-8">
+            <ScrollReveal>
+              <blockquote className="max-w-2xl mx-auto text-center">
+                <p
+                  className="text-xl sm:text-2xl lg:text-3xl leading-relaxed mb-6"
+                  style={{ fontStyle: 'italic', color: 'rgba(255,255,255,0.85)' }}
+                >
+                  &ldquo;{quote.quote_text}&rdquo;
+                </p>
+                {quote.attribution && (
+                  <cite
+                    className="text-xs uppercase tracking-[0.15em] not-italic font-mono"
+                    style={{ color: 'rgba(255,255,255,0.4)' }}
+                  >
+                    {quote.attribution}
+                  </cite>
+                )}
+              </blockquote>
+            </ScrollReveal>
+          </div>
+        </section>
+      )}
+
+      {/* ══════════════════════════════════════════
+          FOOTER RETURN
           ══════════════════════════════════════════ */}
       <div className="py-10 text-center" style={{ backgroundColor: '#f4f5f7' }}>
         <Link
           href="/explore"
           className="hover:underline"
-          style={{ fontStyle: 'italic', color: "#1b5e8a", fontSize: '1rem' }}
+          style={{ fontStyle: 'italic', color: '#1b5e8a', fontSize: '1rem' }}
         >
           &larr; Back to The Exchange
         </Link>
