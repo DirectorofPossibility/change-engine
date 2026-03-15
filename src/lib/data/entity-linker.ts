@@ -29,8 +29,8 @@ export const getLinkableEntities = cache(async function getLinkableEntities(): P
       .not('neighborhood_name', 'is', null),
     supabase
       .from('super_neighborhoods')
-      .select('id, name')
-      .not('name', 'is', null),
+      .select('sn_id, sn_name')
+      .not('sn_name', 'is', null),
   ])
 
   const entities: LinkableEntity[] = []
@@ -51,8 +51,8 @@ export const getLinkableEntities = cache(async function getLinkableEntities(): P
     }
   }
   for (const sn of superNeighborhoods.data ?? []) {
-    if (sn.name && sn.name.length > 3) {
-      entities.push({ name: sn.name, href: '/geography?superNeighborhood=' + sn.id })
+    if (sn.sn_name && sn.sn_name.length > 3) {
+      entities.push({ name: sn.sn_name, href: '/geography?superNeighborhood=' + sn.sn_id })
     }
   }
 
