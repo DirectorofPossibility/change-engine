@@ -7,6 +7,7 @@ import { getUIStrings } from '@/lib/i18n'
 import { THEMES, LANGUAGES } from '@/lib/constants'
 import { getUserProfile } from '@/lib/auth/roles'
 import { getFocusAreasByIds, getRelatedOpportunities, getRelatedPolicies } from '@/lib/data/exchange'
+import { getRelatedOfficials } from '@/lib/data/officials'
 import { getSDGMap, getSDOHMap } from '@/lib/data/taxonomy'
 import { getLibraryNuggets } from '@/lib/data/library'
 import { Globe, ArrowRight, BookOpen, Users, Megaphone, GraduationCap, Rocket } from 'lucide-react'
@@ -197,23 +198,64 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
     }
   }
 
-  // Officials connected to related policies
-  let responsibleOfficials: any[] = []
-  if (policies.length > 0 || relatedPolicies.length > 0) {
+  // Officials via focus areas (primary) + policy connection (supplement)
+  const focusOfficials = focusAreaIds.length > 0 ? await getRelatedOfficials(focusAreaIds) : []
+  let responsibleOfficials: any[] = focusOfficials.map((o: any) => ({
+    ...o, photo_url: o.photo_url || null
+  }))
+  // Supplement with policy-connected officials if we don't have enough
+  if (responsibleOfficials.length < 5 && (policies.length > 0 || relatedPolicies.length > 0)) {
     const policyIds = [...policies.map((p: any) => p.policy_id), ...relatedPolicies.map((p: any) => p.policy_id)]
     const { data: officialJunctions } = await supabase
       .from('policy_officials')
       .select('official_id')
       .in('policy_id', policyIds)
     if (officialJunctions && officialJunctions.length > 0) {
-      const officialIds = Array.from(new Set(officialJunctions.map((j: any) => j.official_id)))
-      const { data: officials } = await supabase
-        .from('elected_officials')
-        .select('official_id, official_name, title, party, level, photo_url')
-        .in('official_id', officialIds)
-        .limit(5)
-      responsibleOfficials = officials || []
+      const existingIds = new Set(responsibleOfficials.map((o: any) => o.official_id))
+      const newIds = Array.from(new Set(officialJunctions.map((j: any) => j.official_id))).filter(id => !existingIds.has(id))
+      if (newIds.length > 0) {
+        const { data: moreOfficials } = await supabase
+          .from('elected_officials')
+          .select('official_id, official_name, title, party, level, photo_url')
+          .in('official_id', newIds)
+          .limit(5 - responsibleOfficials.length)
+        responsibleOfficials = [...responsibleOfficials, ...(moreOfficials || [])]
+      }
     }
+  }
+
+  // Related books from bookshelf by theme or focus areas
+  let relatedBooks: any[] = []
+  {
+    const bookFilters: any[] = []
+    if (item.pathway_primary) bookFilters.push({ col: 'theme_id', val: item.pathway_primary })
+    const { data: books } = await supabase
+      .from('bookshelf' as any)
+      .select('id, title, author, cover_image_url, description, purchase_url, free_url')
+      .eq('is_active', true)
+      .limit(6)
+    // Filter by theme or overlapping focus areas
+    relatedBooks = ((books || []) as any[]).filter(function (b: any) {
+      if (b.theme_id === item.pathway_primary) return true
+      if (b.focus_area_ids && focusAreaIds.length > 0) {
+        return b.focus_area_ids.some((fa: string) => focusAreaIds.includes(fa))
+      }
+      return false
+    }).slice(0, 4)
+  }
+
+  // Related content by type (DIY kits, videos, guides, tools, courses along same focus areas)
+  let typedContent: any[] = []
+  if (focusAreaIds.length > 0) {
+    const { data: typed } = await supabase
+      .from('content_published')
+      .select('id, title_6th_grade, summary_6th_grade, content_type, image_url, pathway_primary')
+      .eq('is_active', true)
+      .neq('id', item.id)
+      .in('content_type', ['diy_kit', 'video', 'guide', 'tool', 'course', 'event'])
+      .overlaps('focus_area_ids', focusAreaIds)
+      .limit(8)
+    typedContent = typed || []
   }
 
   // AI classification data
@@ -326,7 +368,12 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
         className="relative overflow-hidden"
         style={{ background: `linear-gradient(135deg, ${themeColor} 0%, ${themeColor}dd 40%, ${themeColor}55 100%)` }}
       >
+        {/* Texture layers */}
+        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }} />
         <div className="absolute top-[-30%] right-[-10%] w-[500px] h-[500px] rounded-full opacity-10" style={{ background: 'radial-gradient(circle, white 0%, transparent 70%)' }} />
+        <div className="absolute bottom-[-20%] left-[-5%] opacity-[0.06] pointer-events-none" aria-hidden="true">
+          <FlowerOfLife color="#ffffff" size={400} />
+        </div>
 
         <div className="max-w-[1080px] mx-auto px-6 py-12 sm:py-16 relative z-10">
           <div className="flex flex-col lg:flex-row gap-10 items-center">
@@ -391,12 +438,6 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                     <span>{orgData.org_name}</span>
                   </>
                 )}
-                {sourceDomain && (
-                  <>
-                    <span>&middot;</span>
-                    <span>{sourceDomain}</span>
-                  </>
-                )}
               </div>
             </div>
 
@@ -435,6 +476,8 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                 libraryNuggets={libraryNuggets}
                 programs={programs}
                 responsibleOfficials={responsibleOfficials}
+                relatedBooks={relatedBooks}
+                typedContent={typedContent}
               />
             </div>
 
@@ -442,17 +485,23 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                 RIGHT: TAXONOMY WAYFINDER SIDEBAR
                ══════════════════════════════════════════════════════════════════ */}
             <aside className="w-full lg:w-[340px] flex-shrink-0">
-              <div className="lg:sticky lg:top-4 space-y-0 rounded-2xl overflow-hidden" style={{ border: '2px solid #1a1a1a', background: 'white' }}>
+              <div className="lg:sticky lg:top-4 space-y-0 overflow-hidden" style={{ border: `2px solid ${themeColor}30`, background: 'white' }}>
 
-                {/* Wayfinder Header */}
-                <div className="px-6 pt-6 pb-4" style={{ borderBottom: '3px solid transparent', borderImage: `linear-gradient(90deg, ${themeColor}, ${themeColor}66) 1` }}>
-                  <h2 className="font-display text-lg font-black uppercase tracking-[0.05em] mb-1"
-                    style={{ background: `linear-gradient(135deg, ${themeColor}, ${themeColor}88)`, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
-                  >
-                    Wayfinder
-                  </h2>
-                  <p className="text-xs" style={{ color: DIM }}>Navigate by topic to find related resources</p>
-                </div>
+                {/* Wayfinder — collapsible on mobile via <details>, always open on lg */}
+                <details className="lg:open group" open>
+                  <summary className="px-6 py-5 cursor-pointer lg:cursor-default list-none flex items-center justify-between" style={{ borderBottom: `3px solid ${themeColor}25` }}>
+                    <div>
+                      <h2 className="font-display text-lg font-black uppercase tracking-[0.05em] mb-0.5"
+                        style={{ color: themeColor }}
+                      >
+                        Wayfinder
+                      </h2>
+                      <p className="text-xs" style={{ color: DIM }}>Navigate by topic to find related resources</p>
+                    </div>
+                    <span className="lg:hidden text-muted group-open:rotate-180 transition-transform">
+                      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    </span>
+                  </summary>
 
                 {/* Source Box */}
                 {item.source_url && (
@@ -637,6 +686,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                 )}
 
                 <div className="h-4" />
+                </details>
               </div>
             </aside>
           </div>
