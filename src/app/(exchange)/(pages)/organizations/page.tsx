@@ -11,7 +11,7 @@ export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Organizations — Change Engine',
-  description: 'Browse nonprofits, foundations, agencies, and community organizations serving the Houston area.',
+  description: 'Browse nonprofits, foundations, agencies, and community organizations serving your community.',
 }
 
 export default async function OrganizationsPage() {
@@ -24,7 +24,7 @@ export default async function OrganizationsPage() {
     <div className="bg-paper min-h-screen">
       <IndexPageHero
         title="Organizations"
-        subtitle="Houston is powered by hundreds of nonprofits, foundations, agencies, and community groups. Browse, search, and connect with the organizations strengthening your neighborhood."
+        subtitle="Your community is powered by hundreds of nonprofits, foundations, agencies, and community groups. Browse, search, and connect with the organizations strengthening your neighborhood."
         color="#1a6b56"
         stats={[{ value: organizations.length, label: 'Organizations' }]}
       />

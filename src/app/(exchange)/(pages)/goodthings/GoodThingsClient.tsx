@@ -345,7 +345,7 @@ export function GoodThingsClient() {
                 <span key={i} className="inline-flex items-center gap-2 text-sm text-brand-muted flex-shrink-0">
                   <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: item.color }} />
                   <span>{item.text}</span>
-                  <span className="text-brand-muted-light text-[10px]">{item.loc}</span>
+                  <span className="text-brand-muted-light text-xs">{item.loc}</span>
                 </span>
               )
             })}

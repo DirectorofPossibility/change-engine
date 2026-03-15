@@ -203,7 +203,7 @@ export function AdminEditPanel({ entityType, entityId, fields, userRole }: Admin
             <div className="sticky top-0 bg-brand-bg-alt border-b-2 border-brand-text px-5 py-4 flex items-center justify-between">
               <div>
                 <h2 className="font-display text-lg font-bold text-brand-text">Edit Page</h2>
-                <p className="font-mono text-[10px] text-brand-muted uppercase tracking-wider">{entityType} / {entityId}</p>
+                <p className="font-mono text-xs text-brand-muted uppercase tracking-wider">{entityType} / {entityId}</p>
               </div>
               <button onClick={() => setOpen(false)} className="p-1.5 rounded-md hover:bg-brand-border transition-colors">
                 <X size={18} />
@@ -216,7 +216,7 @@ export function AdminEditPanel({ entityType, entityId, fields, userRole }: Admin
                 const val = values[field.key] ?? ''
                 return (
                   <div key={field.key}>
-                    <label className="block font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1.5">
+                    <label className="block font-mono text-xs font-bold uppercase tracking-wider text-brand-muted mb-1.5">
                       {field.label}
                     </label>
                     {field.type === 'search' ? (

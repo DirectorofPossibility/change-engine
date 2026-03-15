@@ -70,7 +70,7 @@ export function CenterCard({ name, emoji, question, slug, count }: CenterCardPro
         {/* Resource count badge */}
         {count > 0 && (
           <span className="absolute -bottom-1 -right-1 min-w-[28px] h-7 flex items-center justify-center
-                           rounded-full bg-brand-accent text-white text-xs font-bold px-1.5 shadow">
+                           rounded-full bg-brand-accent text-white text-sm font-bold px-1.5 shadow">
             {count}
           </span>
         )}

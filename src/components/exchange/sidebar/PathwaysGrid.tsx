@@ -27,7 +27,7 @@ export function PathwaysGrid({ selectedPathway, pathwayCounts, onSelectPathway, 
 
   return (
     <div className="px-5">
-      <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 font-display">
+      <p className="text-xs font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 font-display">
         {t('sidebar.explore_houston')}
       </p>
       <div className="space-y-0.5">
@@ -55,7 +55,7 @@ export function PathwaysGrid({ selectedPathway, pathwayCounts, onSelectPathway, 
               </div>
               <span className="flex-1 text-left truncate">{theme.name}</span>
               {count > 0 && (
-                <span className="text-xs font-semibold tabular-nums text-brand-muted">
+                <span className="text-sm font-semibold tabular-nums text-brand-muted">
                   ({count})
                 </span>
               )}

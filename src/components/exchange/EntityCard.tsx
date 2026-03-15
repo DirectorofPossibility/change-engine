@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { Mail, Phone, Globe, Linkedin, MapPin, Calendar, Users } from 'lucide-react'
+import { Phone, Globe, Linkedin, MapPin, Calendar, Users } from 'lucide-react'
 import { ThemePill } from '@/components/ui/ThemePill'
 import { CenterBadge } from '@/components/ui/CenterBadge'
 import { FolFallback } from '@/components/ui/FolFallback'
@@ -237,7 +237,7 @@ function OfficialVariant(props: OfficialProps) {
         <div className="min-w-0 flex-1">
           <h3 className="font-body text-[0.95rem] leading-snug font-semibold text-ink group-hover:underline">{props.name}</h3>
           {displayTitle && <p className="font-body text-[0.8rem] leading-relaxed text-muted line-clamp-2 mt-0.5">{displayTitle}</p>}
-          <div className="flex items-center gap-1.5 mt-2 text-xs">
+          <div className="flex items-center gap-1.5 mt-2 text-sm">
             {props.level && (
               <span className="inline-flex items-center gap-1 font-bold uppercase tracking-wide" style={{ color: levelColor }}>
                 <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: levelColor }} />
@@ -252,23 +252,18 @@ function OfficialVariant(props: OfficialProps) {
 
       {/* Contact actions */}
       <div className="flex items-center gap-3 flex-wrap px-4 pb-3 pt-0">
-        {props.email && (
-          <a href={'mailto:' + props.email} className="flex items-center gap-1 text-xs text-blue hover:underline" onClick={function (e) { e.stopPropagation() }}>
-            <Mail size={13} /> {t('card.email')}
-          </a>
-        )}
         {props.phone && (
-          <a href={'tel:' + props.phone} className="flex items-center gap-1 text-xs text-blue hover:underline" onClick={function (e) { e.stopPropagation() }}>
+          <a href={'tel:' + props.phone} className="flex items-center gap-1 text-sm text-blue hover:underline" onClick={function (e) { e.stopPropagation() }}>
             <Phone size={13} /> {t('card.call')}
           </a>
         )}
         {props.website && (
-          <a href={props.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs text-blue hover:underline" onClick={function (e) { e.stopPropagation() }}>
+          <a href={props.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-sm text-blue hover:underline" onClick={function (e) { e.stopPropagation() }}>
             <Globe size={13} /> {t('card.website')}
           </a>
         )}
         {props.linkedinUrl && (
-          <a href={props.linkedinUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-xs text-blue hover:underline" onClick={function (e) { e.stopPropagation() }}>
+          <a href={props.linkedinUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-sm text-blue hover:underline" onClick={function (e) { e.stopPropagation() }}>
             <Linkedin size={13} /> LinkedIn
           </a>
         )}
@@ -288,16 +283,16 @@ function ServiceVariant(props: ServiceProps) {
       <div className="p-5">
         <h3 className="font-semibold text-ink mb-1 line-clamp-2">{displayName}</h3>
         {props.orgName && props.orgId ? (
-          <Link href={'/organizations/' + props.orgId} className="text-xs text-blue hover:underline mb-2 block" onClick={function (e) { e.stopPropagation() }}>
+          <Link href={'/organizations/' + props.orgId} className="text-sm text-blue hover:underline mb-2 block" onClick={function (e) { e.stopPropagation() }}>
             {props.orgName}
           </Link>
         ) : props.orgName ? (
-          <p className="text-xs text-muted mb-2">{props.orgName}</p>
+          <p className="text-sm text-muted mb-2">{props.orgName}</p>
         ) : null}
         {displayDesc && <p className="text-sm text-muted mb-3 line-clamp-2">{displayDesc}</p>}
         <div className="space-y-1.5">
           {props.phone && (
-            <a href={'tel:' + props.phone} className="flex items-center gap-2 text-xs text-blue hover:underline" onClick={function (e) { e.stopPropagation() }}>
+            <a href={'tel:' + props.phone} className="flex items-center gap-2 text-sm text-blue hover:underline" onClick={function (e) { e.stopPropagation() }}>
               <Phone size={14} /> {props.phone}
             </a>
           )}
@@ -306,14 +301,14 @@ function ServiceVariant(props: ServiceProps) {
               href={'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(fullAddress)}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-xs text-blue hover:underline"
+              className="flex items-center gap-2 text-sm text-blue hover:underline"
               onClick={function (e) { e.stopPropagation() }}
             >
               <MapPin size={14} className="shrink-0" /> {fullAddress}
             </a>
           )}
           {props.website && (
-            <a href={props.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-blue hover:underline" onClick={function (e) { e.stopPropagation() }}>
+            <a href={props.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-blue hover:underline" onClick={function (e) { e.stopPropagation() }}>
               <Globe size={14} /> {t('card.website')}
             </a>
           )}
@@ -348,7 +343,7 @@ function PolicyVariant(props: PolicyProps) {
             </span>
           )}
           {recency && (
-            <span className="ml-auto text-[10px] font-mono font-bold text-blue bg-blue/10 px-1.5 py-0.5">
+            <span className="ml-auto text-xs font-mono font-bold text-blue bg-blue/10 px-1.5 py-0.5">
               {recency}
             </span>
           )}
@@ -357,11 +352,11 @@ function PolicyVariant(props: PolicyProps) {
         <h4 className="font-bold text-ink text-sm mb-1.5 line-clamp-2 leading-snug group-hover:text-blue transition-colors">{displayName}</h4>
 
         {displaySummary && (
-          <p className="text-xs text-muted mb-2 line-clamp-2 leading-relaxed">{displaySummary}</p>
+          <p className="text-sm text-muted mb-2 line-clamp-2 leading-relaxed">{displaySummary}</p>
         )}
 
         {props.impactPreview && (
-          <p className="text-xs text-amber-700 bg-amber-50 px-2.5 py-1.5 mb-2 line-clamp-1 border border-amber-200">{props.impactPreview}</p>
+          <p className="text-sm text-amber-700 bg-amber-50 px-2.5 py-1.5 mb-2 line-clamp-1 border border-amber-200">{props.impactPreview}</p>
         )}
 
         <div className="flex items-center justify-between">
@@ -374,7 +369,7 @@ function PolicyVariant(props: PolicyProps) {
           <div className="flex items-center gap-3">
             <Link
               href="/officials/lookup"
-              className="text-xs text-muted hover:text-blue hover:underline font-medium"
+              className="text-sm text-muted hover:text-blue hover:underline font-medium"
               onClick={function (e) { e.stopPropagation() }}
             >
               {t('card.contact_rep') || 'Contact your rep'}
@@ -384,7 +379,7 @@ function PolicyVariant(props: PolicyProps) {
                 href={props.sourceUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs text-blue hover:underline font-medium"
+                className="text-sm text-blue hover:underline font-medium"
                 onClick={function (e) { e.stopPropagation() }}
               >
                 {t('card.view_source')} &rarr;
@@ -404,26 +399,26 @@ function CandidateVariant(props: CandidateProps) {
         <div className="flex items-center gap-2 mb-2">
           <h4 className="font-semibold text-ink">{props.name}</h4>
           {props.incumbent === 'Yes' && (
-            <span className="text-xs uppercase tracking-wide font-semibold text-blue">Incumbent</span>
+            <span className="text-sm uppercase tracking-wide font-semibold text-blue">Incumbent</span>
           )}
         </div>
-        <div className="flex items-center gap-1.5 text-xs text-muted mb-2">
+        <div className="flex items-center gap-1.5 text-sm text-muted mb-2">
           {props.party && <span>{props.party}</span>}
           {props.party && props.officeSought && <span>&middot;</span>}
           {props.officeSought && <span>{props.officeSought}</span>}
           {props.district && <span>({props.district})</span>}
         </div>
         {props.bioSummary && <p className="text-sm text-muted mb-2 line-clamp-3">{props.bioSummary}</p>}
-        {props.policyPositions && <p className="text-xs text-muted mb-2 line-clamp-2">Positions: {props.policyPositions}</p>}
-        {props.endorsements && <p className="text-xs text-muted mb-2 line-clamp-1">Endorsements: {props.endorsements}</p>}
+        {props.policyPositions && <p className="text-sm text-muted mb-2 line-clamp-2">Positions: {props.policyPositions}</p>}
+        {props.endorsements && <p className="text-sm text-muted mb-2 line-clamp-1">Endorsements: {props.endorsements}</p>}
         <div className="flex items-center gap-3 flex-wrap">
           {props.campaignWebsite && (
-            <Link href={props.campaignWebsite} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-blue hover:underline">
+            <Link href={props.campaignWebsite} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-sm text-blue hover:underline">
               <Globe size={12} /> Campaign website
             </Link>
           )}
           {props.linkedinUrl && (
-            <Link href={props.linkedinUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-blue hover:underline">
+            <Link href={props.linkedinUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-sm text-blue hover:underline">
               <Linkedin size={12} /> LinkedIn
             </Link>
           )}
@@ -444,9 +439,9 @@ function OpportunityVariant(props: OpportunityProps) {
       <div className="p-4">
         <h4 className="font-semibold text-ink text-sm mb-2 line-clamp-2">{displayName}</h4>
         {displayDesc && (
-          <p className="text-xs text-muted mb-3 line-clamp-2">{displayDesc}</p>
+          <p className="text-sm text-muted mb-3 line-clamp-2">{displayDesc}</p>
         )}
-        <div className="space-y-1.5 text-xs text-muted">
+        <div className="space-y-1.5 text-sm text-muted">
           {props.startDate && (
             <div className="flex items-center gap-1.5">
               <Calendar size={12} />
@@ -486,7 +481,7 @@ function OpportunityVariant(props: OpportunityProps) {
             href={props.registrationUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block mt-3 text-xs text-blue hover:underline"
+            className="inline-block mt-3 text-sm text-blue hover:underline"
             onClick={function (e) { e.stopPropagation() }}
           >
             {t('card.register')} &rarr;

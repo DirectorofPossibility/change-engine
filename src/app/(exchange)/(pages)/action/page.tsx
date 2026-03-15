@@ -242,9 +242,9 @@ export default async function ActionCenterPage() {
                 >
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      {p.bill_number && <span className="text-[10px] font-mono font-semibold" style={{ color }}>{p.bill_number}</span>}
+                      {p.bill_number && <span className="text-xs font-mono font-semibold" style={{ color }}>{p.bill_number}</span>}
                       <span className="text-[9px] uppercase tracking-wider px-1.5 py-0.5" style={{ color, background: `${color}10` }}>{p.level}</span>
-                      {p.status && <span className="text-[10px]" style={{ color: '#9B9590' }}>&middot; {p.status}</span>}
+                      {p.status && <span className="text-xs" style={{ color: '#9B9590' }}>&middot; {p.status}</span>}
                     </div>
                     <h4 className="text-[14px] font-bold leading-snug line-clamp-2 group-hover:underline" style={{ color: '#2D2D2A' }}>
                       {p.title_6th_grade || p.policy_name}
@@ -288,7 +288,7 @@ export default async function ActionCenterPage() {
                         <h4 className="text-[14px] font-bold leading-snug line-clamp-2 group-hover:underline" style={{ color: '#2D2D2A' }}>{opp.opportunity_name}</h4>
                         <div className="flex items-center gap-2 mt-1.5 flex-wrap">
                           {opp.city && <span className="text-[11px]" style={{ color: '#9B9590' }}>{opp.city}</span>}
-                          {opp.is_virtual && <span className="text-[10px] font-mono px-1.5 py-0.5 border border-rule">Virtual</span>}
+                          {opp.is_virtual && <span className="text-xs font-mono px-1.5 py-0.5 border border-rule">Virtual</span>}
                           {opp.start_date && <span className="text-[11px]" style={{ color: '#9B9590' }}>{new Date(opp.start_date).toLocaleDateString()}</span>}
                         </div>
                       </div>

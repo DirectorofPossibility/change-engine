@@ -123,7 +123,7 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
-          <p style={{ fontSize: '0.7rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
+          <p style={{ fontSize: '0.875rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
             The Change Engine
           </p>
           <h1 style={{ fontSize: '2.2rem', lineHeight: 1.15, marginTop: '0.75rem' }}>
@@ -138,7 +138,7 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
           <div className="flex items-center gap-3 mt-4 flex-wrap">
             {guide.theme_id && <ThemePill themeId={guide.theme_id} size="sm" />}
             {guide.engagement_level && (
-              <span className={'px-2 py-0.5 font-medium ' + (ENGAGEMENT_LEVEL_COLORS[guide.engagement_level] || 'bg-gray-100 text-gray-700')} style={{ fontSize: '0.7rem' }}>
+              <span className={'px-2 py-0.5 font-medium ' + (ENGAGEMENT_LEVEL_COLORS[guide.engagement_level] || 'bg-gray-100 text-gray-700')} style={{ fontSize: '0.875rem' }}>
                 {guide.engagement_level}
               </span>
             )}
@@ -148,7 +148,7 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1 hover:underline"
-                style={{ fontSize: '0.7rem', color: "#1b5e8a" }}
+                style={{ fontSize: '0.875rem', color: "#1b5e8a" }}
               >
                 <ExternalLink size={12} />
                 {t('guides.original_source')}
@@ -175,7 +175,7 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
 
       {/* Breadcrumb */}
       <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontSize: '0.7rem', color: "#5c6474" }}>
+        <nav style={{ fontSize: '0.875rem', color: "#5c6474" }}>
           <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
           <Link href="/guides" className="hover:underline" style={{ color: "#1b5e8a" }}>{t('guides.title')}</Link>
@@ -312,7 +312,7 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
                             {org.org_name}
                           </span>
                           {org.description_5th_grade && (
-                            <p style={{ fontSize: '0.8rem', color: "#5c6474", marginTop: '0.15rem' }} className="line-clamp-2">{org.description_5th_grade}</p>
+                            <p style={{ fontSize: '0.875rem', color: "#5c6474", marginTop: '0.15rem' }} className="line-clamp-2">{org.description_5th_grade}</p>
                           )}
                         </div>
                       </div>
@@ -339,7 +339,7 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
                     <div key={opp.opportunity_id} style={{ borderBottom: '1px dotted ' + '#dde1e8', paddingBottom: '0.5rem' }}>
                       <p style={{ fontSize: '0.9rem', fontWeight: 500,  }} className="line-clamp-2">{opp.opportunity_name}</p>
                       {opp.description_5th_grade && (
-                        <p style={{ fontSize: '0.8rem', color: "#5c6474", marginTop: '0.15rem' }} className="line-clamp-1">{opp.description_5th_grade}</p>
+                        <p style={{ fontSize: '0.875rem', color: "#5c6474", marginTop: '0.15rem' }} className="line-clamp-1">{opp.description_5th_grade}</p>
                       )}
                       {opp.registration_url && (
                         <a
@@ -347,7 +347,7 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
                           target="_blank"
                           rel="noopener noreferrer"
                           className="hover:underline mt-0.5 inline-block"
-                          style={{ fontSize: '0.8rem', color: "#1b5e8a" }}
+                          style={{ fontSize: '0.875rem', color: "#1b5e8a" }}
                         >
                           {t('guides.learn_more')} &rarr;
                         </a>
@@ -380,10 +380,10 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
                       </Link>
                       <div className="flex items-center gap-2 mt-0.5">
                         {pol.bill_number && (
-                          <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{pol.bill_number}</span>
+                          <span style={{ fontSize: '0.875rem', color: "#5c6474" }}>{pol.bill_number}</span>
                         )}
                         {pol.status && (
-                          <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{pol.status}</span>
+                          <span style={{ fontSize: '0.875rem', color: "#5c6474" }}>{pol.status}</span>
                         )}
                       </div>
                     </li>
@@ -429,7 +429,7 @@ export default async function GuideDetailPage({ params }: { params: Promise<{ sl
                             {itemTitle}
                           </span>
                           {itemSummary && (
-                            <p style={{ fontSize: '0.8rem', color: "#5c6474", marginTop: '0.15rem' }} className="line-clamp-1">{itemSummary}</p>
+                            <p style={{ fontSize: '0.875rem', color: "#5c6474", marginTop: '0.15rem' }} className="line-clamp-1">{itemSummary}</p>
                           )}
                         </div>
                       </div>

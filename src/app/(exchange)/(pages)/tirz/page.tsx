@@ -27,7 +27,7 @@ export default async function TirzPage() {
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="relative max-w-[900px] mx-auto px-6 py-16">
-          <p style={{ fontSize: '0.65rem', letterSpacing: '0.2em', color: "#5c6474" }} className="uppercase mb-4">
+          <p style={{ fontSize: '0.875rem', letterSpacing: '0.2em', color: "#5c6474" }} className="uppercase mb-4">
             Change Engine
           </p>
           <h1 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', lineHeight: 1.1 }}>
@@ -39,11 +39,11 @@ export default async function TirzPage() {
           <div className="flex flex-wrap gap-6 mt-6">
             <div>
               <span style={{ fontSize: '1.5rem', fontWeight: 700 }}>{zones.length}</span>
-              <span style={{ fontSize: '0.6875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Active Zones</span>
+              <span style={{ fontSize: '0.875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Active Zones</span>
             </div>
             <div>
               <span style={{ fontSize: '1.5rem', fontWeight: 700 }}>City</span>
-              <span style={{ fontSize: '0.6875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Created by Council</span>
+              <span style={{ fontSize: '0.875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Created by Council</span>
             </div>
           </div>
         </div>
@@ -51,7 +51,7 @@ export default async function TirzPage() {
 
       {/* ── Breadcrumb ── */}
       <div className="max-w-[900px] mx-auto px-6 pt-6 pb-2">
-        <nav style={{ fontSize: '0.65rem', letterSpacing: '0.12em', color: "#5c6474" }} className="uppercase">
+        <nav style={{ fontSize: '0.875rem', letterSpacing: '0.12em', color: "#5c6474" }} className="uppercase">
           <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
           <span>TIRZ Zones</span>
@@ -77,7 +77,7 @@ export default async function TirzPage() {
           <div className="flex items-baseline gap-4 mb-6">
             <h2 style={{ fontSize: '1.5rem',  }}>All TIRZ Zones</h2>
             <div className="flex-1" style={{ height: 1, borderBottom: '1px dotted', borderColor: '#dde1e8' }} />
-            <span style={{ fontSize: '0.6875rem', color: "#5c6474", letterSpacing: '0.1em' }} className="uppercase">{zones.length} zones</span>
+            <span style={{ fontSize: '0.875rem', color: "#5c6474", letterSpacing: '0.1em' }} className="uppercase">{zones.length} zones</span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-0" style={{ border: '1px solid #dde1e8' }}>
@@ -100,16 +100,16 @@ export default async function TirzPage() {
                       <h3 style={{ fontSize: '0.9rem',  }} className="truncate group-hover:underline">
                         {zone.name}
                       </h3>
-                      <p style={{ fontSize: '0.6875rem', color: "#5c6474" }}>TIRZ-{zone.site_number}</p>
+                      <p style={{ fontSize: '0.875rem', color: "#5c6474" }}>TIRZ-{zone.site_number}</p>
                     </div>
                   </div>
                   {zone.description && (
-                    <p style={{ fontSize: '0.8rem', color: "#5c6474", lineHeight: 1.5 }} className="line-clamp-2">
+                    <p style={{ fontSize: '0.875rem', color: "#5c6474", lineHeight: 1.5 }} className="line-clamp-2">
                       {zone.description}
                     </p>
                   )}
                   {zone.status && (
-                    <span style={{ fontSize: '0.6875rem', letterSpacing: '0.1em', color: "#5c6474", border: '1px solid #dde1e8', padding: '2px 8px' }} className="uppercase inline-block mt-2">
+                    <span style={{ fontSize: '0.875rem', letterSpacing: '0.1em', color: "#5c6474", border: '1px solid #dde1e8', padding: '2px 8px' }} className="uppercase inline-block mt-2">
                       {zone.status}
                     </span>
                   )}
@@ -120,7 +120,7 @@ export default async function TirzPage() {
 
           {zones.length > VISIBLE_COUNT && (
             <details className="mt-4">
-              <summary style={{ fontSize: '0.65rem', color: "#1b5e8a", letterSpacing: '0.1em', cursor: 'pointer' }} className="uppercase hover:underline py-2">
+              <summary style={{ fontSize: '0.875rem', color: "#1b5e8a", letterSpacing: '0.1em', cursor: 'pointer' }} className="uppercase hover:underline py-2">
                 Show all {zones.length} zones
               </summary>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-0 mt-2" style={{ border: '1px solid #dde1e8' }}>
@@ -143,16 +143,16 @@ export default async function TirzPage() {
                           <h3 style={{ fontSize: '0.9rem',  }} className="truncate group-hover:underline">
                             {zone.name}
                           </h3>
-                          <p style={{ fontSize: '0.6875rem', color: "#5c6474" }}>TIRZ-{zone.site_number}</p>
+                          <p style={{ fontSize: '0.875rem', color: "#5c6474" }}>TIRZ-{zone.site_number}</p>
                         </div>
                       </div>
                       {zone.description && (
-                        <p style={{ fontSize: '0.8rem', color: "#5c6474", lineHeight: 1.5 }} className="line-clamp-2">
+                        <p style={{ fontSize: '0.875rem', color: "#5c6474", lineHeight: 1.5 }} className="line-clamp-2">
                           {zone.description}
                         </p>
                       )}
                       {zone.status && (
-                        <span style={{ fontSize: '0.6875rem', letterSpacing: '0.1em', color: "#5c6474", border: '1px solid #dde1e8', padding: '2px 8px' }} className="uppercase inline-block mt-2">
+                        <span style={{ fontSize: '0.875rem', letterSpacing: '0.1em', color: "#5c6474", border: '1px solid #dde1e8', padding: '2px 8px' }} className="uppercase inline-block mt-2">
                           {zone.status}
                         </span>
                       )}
@@ -181,19 +181,19 @@ export default async function TirzPage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-0" style={{ border: '1px solid #dde1e8' }}>
             <div className="p-5" style={{ borderRight: '1px solid #dde1e8' }}>
               <p style={{ fontSize: '0.95rem', fontWeight: 700 }} className="mb-2">Created by Council</p>
-              <p style={{ fontSize: '0.8rem', color: "#5c6474", lineHeight: 1.6 }}>
+              <p style={{ fontSize: '0.875rem', color: "#5c6474", lineHeight: 1.6 }}>
                 City Council designates TIRZ zones to attract investment in areas that need it most.
               </p>
             </div>
             <div className="p-5" style={{ borderRight: '1px solid #dde1e8' }}>
               <p style={{ fontSize: '0.95rem', fontWeight: 700 }} className="mb-2">Tax Increment Captured</p>
-              <p style={{ fontSize: '0.8rem', color: "#5c6474", lineHeight: 1.6 }}>
+              <p style={{ fontSize: '0.875rem', color: "#5c6474", lineHeight: 1.6 }}>
                 Growth in property tax revenue stays in the zone instead of going to the general fund.
               </p>
             </div>
             <div className="p-5">
               <p style={{ fontSize: '0.95rem', fontWeight: 700 }} className="mb-2">Reinvested Locally</p>
-              <p style={{ fontSize: '0.8rem', color: "#5c6474", lineHeight: 1.6 }}>
+              <p style={{ fontSize: '0.875rem', color: "#5c6474", lineHeight: 1.6 }}>
                 Funds go toward infrastructure, housing, parks, and development within the zone.
               </p>
             </div>
@@ -204,19 +204,19 @@ export default async function TirzPage() {
 
         {/* ── Footer links ── */}
         <div className="flex flex-wrap gap-6 py-4">
-          <Link href="/districts" style={{ fontSize: '0.7rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline">
+          <Link href="/districts" style={{ fontSize: '0.875rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline">
             Districts
           </Link>
-          <Link href="/officials" style={{ fontSize: '0.7rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline">
+          <Link href="/officials" style={{ fontSize: '0.875rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline">
             Officials
           </Link>
-          <Link href="/policies" style={{ fontSize: '0.7rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline">
+          <Link href="/policies" style={{ fontSize: '0.875rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline">
             Policies
           </Link>
-          <Link href="/geography" style={{ fontSize: '0.7rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline">
+          <Link href="/geography" style={{ fontSize: '0.875rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline">
             Geography
           </Link>
-          <Link href="/" style={{ fontSize: '0.7rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline ml-auto">
+          <Link href="/" style={{ fontSize: '0.875rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline ml-auto">
             Back to Home
           </Link>
         </div>

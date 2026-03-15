@@ -475,7 +475,7 @@ export function FidelityClient({ overview }: Props) {
               {/* Top critical missing */}
               {o.topMissing.length > 0 && (
                 <div className="space-y-1">
-                  <p className="text-[10px] uppercase tracking-wide text-brand-muted/50 font-medium">Critical gaps</p>
+                  <p className="text-xs uppercase tracking-wide text-brand-muted/50 font-medium">Critical gaps</p>
                   {o.topMissing.slice(0, 3).map((m) => (
                     <div key={m.field} className="flex items-center justify-between text-xs">
                       <span className="text-brand-muted truncate">{m.field}</span>
@@ -592,7 +592,7 @@ export function FidelityClient({ overview }: Props) {
                               {(e.critical_missing || []).map((field) => (
                                 <span
                                   key={field}
-                                  className="inline-block px-1.5 py-0.5 text-[10px] bg-red-50 text-red-600 rounded"
+                                  className="inline-block px-1.5 py-0.5 text-xs bg-red-50 text-red-600 rounded"
                                 >
                                   {field}
                                 </span>

@@ -45,7 +45,7 @@ export function SpiralProgress({ variant = 'compact' }: SpiralProgressProps) {
                                   }}
               />
               {count > 0 && (
-                <span className="text-[10px] font-mono font-bold" style={{ color: tier.color }}>
+                <span className="text-xs font-mono font-bold" style={{ color: tier.color }}>
                   {count}
                 </span>
               )}
@@ -53,7 +53,7 @@ export function SpiralProgress({ variant = 'compact' }: SpiralProgressProps) {
           )
         })}
         {cycles > 0 && (
-          <span className="text-[10px] font-mono font-bold text-brand-accent ml-1" title={cycles + ' full spiral cycles'}>
+          <span className="text-xs font-mono font-bold text-brand-accent ml-1" title={cycles + ' full spiral cycles'}>
             {cycles}x
           </span>
         )}

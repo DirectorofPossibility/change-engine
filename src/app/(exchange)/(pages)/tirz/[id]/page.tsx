@@ -36,7 +36,7 @@ export default async function TirzDetailPage({ params }: { params: Promise<{ id:
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
-          <p style={{ fontSize: '0.7rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
+          <p style={{ fontSize: '0.875rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
             The Change Engine
           </p>
           <div className="flex items-center gap-3 mt-3 mb-3">
@@ -46,7 +46,7 @@ export default async function TirzDetailPage({ params }: { params: Promise<{ id:
             >
               {zone.site_number}
             </span>
-            <p style={{ fontSize: '0.65rem', color: "#5c6474" }}>TIRZ-{zone.site_number}</p>
+            <p style={{ fontSize: '0.875rem', color: "#5c6474" }}>TIRZ-{zone.site_number}</p>
           </div>
           <h1 style={{ fontSize: '2.2rem', lineHeight: 1.15 }}>
             {zone.name}
@@ -61,7 +61,7 @@ export default async function TirzDetailPage({ params }: { params: Promise<{ id:
 
       {/* Breadcrumb */}
       <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontSize: '0.7rem', color: "#5c6474" }}>
+        <nav style={{ fontSize: '0.875rem', color: "#5c6474" }}>
           <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
           <Link href="/tirz" className="hover:underline" style={{ color: "#1b5e8a" }}>TIRZ Zones</Link>
@@ -80,24 +80,24 @@ export default async function TirzDetailPage({ params }: { params: Promise<{ id:
           <div className="flex flex-wrap gap-8">
             <div>
               <span style={{ fontSize: '1.25rem', fontWeight: 700 }}>TIRZ-{zone.site_number}</span>
-              <span style={{ fontSize: '0.6875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem', textTransform: 'uppercase' }}>Zone Number</span>
+              <span style={{ fontSize: '0.875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem', textTransform: 'uppercase' }}>Zone Number</span>
             </div>
             {zone.status && (
               <div>
                 <span style={{ fontSize: '1.25rem', fontWeight: 700, textTransform: 'capitalize' }}>{zone.status}</span>
-                <span style={{ fontSize: '0.6875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem', textTransform: 'uppercase' }}>Status</span>
+                <span style={{ fontSize: '0.875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem', textTransform: 'uppercase' }}>Status</span>
               </div>
             )}
             {zone.year_established && (
               <div>
                 <span style={{ fontSize: '1.25rem', fontWeight: 700 }}>{zone.year_established}</span>
-                <span style={{ fontSize: '0.6875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem', textTransform: 'uppercase' }}>Established</span>
+                <span style={{ fontSize: '0.875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem', textTransform: 'uppercase' }}>Established</span>
               </div>
             )}
             {zone.managing_entity && (
               <div>
                 <span style={{ fontSize: '0.95rem', fontWeight: 700 }}>{zone.managing_entity}</span>
-                <span style={{ fontSize: '0.6875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem', textTransform: 'uppercase' }}>Managed By</span>
+                <span style={{ fontSize: '0.875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem', textTransform: 'uppercase' }}>Managed By</span>
               </div>
             )}
           </div>
@@ -158,7 +158,7 @@ export default async function TirzDetailPage({ params }: { params: Promise<{ id:
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
               <h2 style={{ fontSize: '1.5rem',  }}>Officials Connected to This Zone</h2>
-              <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{officials.length} officials</span>
+              <span style={{ fontSize: '0.875rem', color: "#5c6474" }}>{officials.length} officials</span>
             </div>
             <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
             <div className="space-y-0">
@@ -182,16 +182,16 @@ export default async function TirzDetailPage({ params }: { params: Promise<{ id:
                     ) : (
                       <div
                         className="w-12 h-12 flex items-center justify-center flex-shrink-0"
-                        style={{ background: "#f4f5f7", fontSize: '0.75rem', color: "#5c6474", border: '1px solid #dde1e8' }}
+                        style={{ background: "#f4f5f7", fontSize: '0.875rem', color: "#5c6474", border: '1px solid #dde1e8' }}
                       >
                         {(official.official_name || '').split(' ').map(function (n: string) { return n[0] }).join('').slice(0, 2)}
                       </div>
                     )}
                     <div className="min-w-0 flex-1">
                       <h3 style={{ fontSize: '0.95rem',  }} className="truncate group-hover:underline">{official.official_name}</h3>
-                      <p style={{ fontSize: '0.65rem', color: "#5c6474" }} className="truncate">{official.title}</p>
+                      <p style={{ fontSize: '0.875rem', color: "#5c6474" }} className="truncate">{official.title}</p>
                       {official.party && (
-                        <span style={{ fontSize: '0.6875rem', color: "#5c6474" }}>{official.party}</span>
+                        <span style={{ fontSize: '0.875rem', color: "#5c6474" }}>{official.party}</span>
                       )}
                     </div>
                   </Link>
@@ -206,7 +206,7 @@ export default async function TirzDetailPage({ params }: { params: Promise<{ id:
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
               <h2 style={{ fontSize: '1.5rem',  }}>Related Policies</h2>
-              <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{policies.length} policies</span>
+              <span style={{ fontSize: '0.875rem', color: "#5c6474" }}>{policies.length} policies</span>
             </div>
             <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
             <div className="space-y-0">
@@ -220,16 +220,16 @@ export default async function TirzDetailPage({ params }: { params: Promise<{ id:
                   >
                     <div className="flex items-center gap-2 mb-1">
                       {p.level && (
-                        <span style={{ fontSize: '0.6875rem', letterSpacing: '0.1em', color: "#5c6474", border: '1px solid #dde1e8', padding: '2px 6px', textTransform: 'uppercase' }}>
+                        <span style={{ fontSize: '0.875rem', letterSpacing: '0.1em', color: "#5c6474", border: '1px solid #dde1e8', padding: '2px 6px', textTransform: 'uppercase' }}>
                           {p.level}
                         </span>
                       )}
-                      {p.status && <span style={{ fontSize: '0.6875rem', color: "#5c6474", textTransform: 'uppercase' }}>{p.status}</span>}
+                      {p.status && <span style={{ fontSize: '0.875rem', color: "#5c6474", textTransform: 'uppercase' }}>{p.status}</span>}
                     </div>
                     <h3 style={{ fontSize: '0.95rem', fontWeight: 600, lineHeight: 1.3 }} className="line-clamp-2 group-hover:underline">
                       {p.title_6th_grade || p.policy_name}
                     </h3>
-                    {p.bill_number && <p style={{ fontSize: '0.65rem', color: "#5c6474", marginTop: '0.25rem' }}>{p.bill_number}</p>}
+                    {p.bill_number && <p style={{ fontSize: '0.875rem', color: "#5c6474", marginTop: '0.25rem' }}>{p.bill_number}</p>}
                   </Link>
                 )
               })}
@@ -250,16 +250,16 @@ export default async function TirzDetailPage({ params }: { params: Promise<{ id:
             Growth in property tax revenue within the zone is captured and reinvested locally.
           </p>
           <div className="flex flex-wrap gap-4">
-            <Link href="/tirz" style={{ fontSize: '0.85rem', color: "#1b5e8a" }} className="hover:underline">
+            <Link href="/tirz" style={{ fontSize: '0.875rem', color: "#1b5e8a" }} className="hover:underline">
               View All TIRZ Zones
             </Link>
-            <Link href="/geography" style={{ fontSize: '0.85rem', color: "#1b5e8a" }} className="hover:underline">
+            <Link href="/geography" style={{ fontSize: '0.875rem', color: "#1b5e8a" }} className="hover:underline">
               Explore Geography
             </Link>
-            <Link href="/districts" style={{ fontSize: '0.85rem', color: "#1b5e8a" }} className="hover:underline">
+            <Link href="/districts" style={{ fontSize: '0.875rem', color: "#1b5e8a" }} className="hover:underline">
               District Types
             </Link>
-            <Link href="/governance" style={{ fontSize: '0.85rem', color: "#1b5e8a" }} className="hover:underline">
+            <Link href="/governance" style={{ fontSize: '0.875rem', color: "#1b5e8a" }} className="hover:underline">
               Governance Overview
             </Link>
           </div>

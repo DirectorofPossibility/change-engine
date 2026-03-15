@@ -62,7 +62,7 @@ export default function ContactPage() {
               <li><strong style={{  }}>Report an issue</strong> -- Something wrong or outdated? Let us know.</li>
               <li><strong style={{  }}>Suggest content</strong> -- Know a resource we should feature? Share it.</li>
               <li><strong style={{  }}>Partner with us</strong> -- Organizations and agencies can join the Exchange.</li>
-              <li><strong style={{  }}>Volunteer</strong> -- Help us build a better civic platform for Houston.</li>
+              <li><strong style={{  }}>Volunteer</strong> -- Help us build a better civic platform for your community.</li>
             </ul>
           </div>
         </div>

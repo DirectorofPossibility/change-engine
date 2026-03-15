@@ -197,7 +197,7 @@ export default async function Design2Home() {
                   <div className="flex flex-wrap gap-1 mt-2">
                     {p.tags.map(function (tag) {
                       return (
-                        <span key={tag} className="text-[10px] px-1.5 py-0.5 rounded" style={{ background: '#FAF8F5', color: '#6B6560' }}>{tag}</span>
+                        <span key={tag} className="text-xs px-1.5 py-0.5 rounded" style={{ background: '#FAF8F5', color: '#6B6560' }}>{tag}</span>
                       )
                     })}
                   </div>

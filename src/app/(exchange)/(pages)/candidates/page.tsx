@@ -9,7 +9,7 @@ export const revalidate = 300
 
 export const metadata: Metadata = {
   title: 'Candidates — Change Engine',
-  description: 'Candidates running for office in the Houston area.',
+  description: 'Candidates running for office in your area.',
 }
 
 export default async function CandidatesPage() {
@@ -32,20 +32,20 @@ export default async function CandidatesPage() {
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
-          <p style={{ fontSize: '0.7rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
+          <p style={{ fontSize: '0.875rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
             The Change Engine
           </p>
           <h1 style={{ fontSize: '2.5rem', lineHeight: 1.15, marginTop: '0.75rem' }}>
             Candidates
           </h1>
           <p style={{ fontSize: '1.1rem', color: "#5c6474", marginTop: '0.75rem', maxWidth: '38rem', lineHeight: 1.7 }}>
-            Get to know the candidates running for office in Houston and Harris County.
+            Get to know the candidates running for office in your community.
           </p>
           {allCandidates.length > 0 && (
             <div className="flex flex-wrap gap-8 mt-8">
               <div>
                 <span style={{ fontSize: '2rem',  }}>{allCandidates.length}</span>
-                <span style={{ fontSize: '0.65rem', color: "#5c6474", textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>Candidates</span>
+                <span style={{ fontSize: '0.875rem', color: "#5c6474", textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>Candidates</span>
               </div>
             </div>
           )}
@@ -54,7 +54,7 @@ export default async function CandidatesPage() {
 
       {/* Breadcrumb */}
       <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontSize: '0.7rem', color: "#5c6474" }}>
+        <nav style={{ fontSize: '0.875rem', color: "#5c6474" }}>
           <Link href="/elections" className="hover:underline" style={{ color: "#1b5e8a" }}>Elections</Link>
           <span className="mx-2">/</span>
           <span>Candidates</span>
@@ -65,7 +65,7 @@ export default async function CandidatesPage() {
       <div className="max-w-[900px] mx-auto px-6 py-8">
         <div className="flex items-baseline justify-between mb-1">
           <h2 style={{ fontSize: '1.5rem',  }}>Active Candidates</h2>
-          <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{allCandidates.length}</span>
+          <span style={{ fontSize: '0.875rem', color: "#5c6474" }}>{allCandidates.length}</span>
         </div>
         <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1.5rem' }} />
 

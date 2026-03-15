@@ -36,7 +36,7 @@ export default async function MyNeighborhoodPage({
             <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
           </div>
           <div className="relative max-w-[900px] mx-auto px-6 py-16">
-            <p style={{ fontSize: '0.65rem', letterSpacing: '0.2em', color: "#5c6474" }} className="uppercase mb-4">
+            <p style={{ fontSize: '0.875rem', letterSpacing: '0.2em', color: "#5c6474" }} className="uppercase mb-4">
               Change Engine
             </p>
             <h1 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', lineHeight: 1.1 }}>
@@ -48,7 +48,7 @@ export default async function MyNeighborhoodPage({
           </div>
         </div>
         <div className="max-w-[900px] mx-auto px-6 pt-6 pb-2">
-          <nav style={{ fontSize: '0.65rem', letterSpacing: '0.12em', color: "#5c6474" }} className="uppercase">
+          <nav style={{ fontSize: '0.875rem', letterSpacing: '0.12em', color: "#5c6474" }} className="uppercase">
             <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
             <span className="mx-2">/</span>
             <span>My Neighborhood</span>
@@ -72,7 +72,7 @@ export default async function MyNeighborhoodPage({
             <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
           </div>
           <div className="relative max-w-[900px] mx-auto px-6 py-16">
-            <p style={{ fontSize: '0.65rem', letterSpacing: '0.2em', color: "#5c6474" }} className="uppercase mb-4">
+            <p style={{ fontSize: '0.875rem', letterSpacing: '0.2em', color: "#5c6474" }} className="uppercase mb-4">
               Change Engine
             </p>
             <h1 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', lineHeight: 1.1 }}>
@@ -81,7 +81,7 @@ export default async function MyNeighborhoodPage({
           </div>
         </div>
         <div className="max-w-[900px] mx-auto px-6 pt-6 pb-2">
-          <nav style={{ fontSize: '0.65rem', letterSpacing: '0.12em', color: "#5c6474" }} className="uppercase">
+          <nav style={{ fontSize: '0.875rem', letterSpacing: '0.12em', color: "#5c6474" }} className="uppercase">
             <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
             <span className="mx-2">/</span>
             <span>My Neighborhood</span>
@@ -114,7 +114,7 @@ export default async function MyNeighborhoodPage({
             <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
           </div>
           <div className="relative max-w-[900px] mx-auto px-6 py-16">
-            <p style={{ fontSize: '0.65rem', letterSpacing: '0.2em', color: "#5c6474" }} className="uppercase mb-4">
+            <p style={{ fontSize: '0.875rem', letterSpacing: '0.2em', color: "#5c6474" }} className="uppercase mb-4">
               Change Engine
             </p>
             <h1 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', lineHeight: 1.1 }}>
@@ -154,7 +154,7 @@ export default async function MyNeighborhoodPage({
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="relative max-w-[900px] mx-auto px-6 py-16">
-          <p style={{ fontSize: '0.65rem', letterSpacing: '0.2em', color: "#5c6474" }} className="uppercase mb-4">
+          <p style={{ fontSize: '0.875rem', letterSpacing: '0.2em', color: "#5c6474" }} className="uppercase mb-4">
             Change Engine -- State of My Neighborhood
           </p>
           <h1 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', lineHeight: 1.1 }}>
@@ -169,7 +169,7 @@ export default async function MyNeighborhoodPage({
                 return (
                   <div key={stat.label}>
                     <span style={{ fontSize: '1.5rem', fontWeight: 700 }}>{stat.value}</span>
-                    <span style={{ fontSize: '0.6875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">{stat.label}</span>
+                    <span style={{ fontSize: '0.875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">{stat.label}</span>
                   </div>
                 )
               })}
@@ -180,7 +180,7 @@ export default async function MyNeighborhoodPage({
 
       {/* ── Breadcrumb ── */}
       <div className="max-w-[900px] mx-auto px-6 pt-6 pb-2">
-        <nav style={{ fontSize: '0.65rem', letterSpacing: '0.12em', color: "#5c6474" }} className="uppercase">
+        <nav style={{ fontSize: '0.875rem', letterSpacing: '0.12em', color: "#5c6474" }} className="uppercase">
           <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
           <Link href="/super-neighborhoods" className="hover:underline" style={{ color: "#1b5e8a" }}>Super Neighborhoods</Link>
@@ -195,7 +195,7 @@ export default async function MyNeighborhoodPage({
         <div className="my-10" style={{ height: 1, background: '#dde1e8' }} />
 
         <div className="text-center py-4">
-          <Link href="/" style={{ fontSize: '0.7rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline">
+          <Link href="/" style={{ fontSize: '0.875rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline">
             Back to Home
           </Link>
         </div>

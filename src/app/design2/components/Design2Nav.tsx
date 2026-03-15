@@ -160,7 +160,7 @@ export function Design2Nav({ election }: Design2NavProps) {
             {NAV_CENTERS.map(function (center) {
               return (
                 <div key={center.label} className="mb-3">
-                  <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider mb-1" style={{ color: center.color }}>
+                  <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider mb-1" style={{ color: center.color }}>
                     <span className="w-2 h-2 rounded-full" style={{ background: center.color }} />
                     {center.label}
                   </div>

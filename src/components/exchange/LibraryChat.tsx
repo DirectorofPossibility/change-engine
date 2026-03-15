@@ -340,7 +340,7 @@ export function LibraryChat({ documentContext }: LibraryChatProps) {
                                 <p className="text-[11px] font-semibold text-brand-text truncate group-hover:text-brand-accent">
                                   {source.title}
                                 </p>
-                                <p className="text-[10px] text-brand-muted">{label}</p>
+                                <p className="text-xs text-brand-muted">{label}</p>
                               </div>
                             </Link>
                           )

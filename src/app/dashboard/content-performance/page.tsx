@@ -258,7 +258,7 @@ export default async function ContentPerformancePage() {
                       minHeight: count > 0 ? '4px' : '0px',
                     }}
                   />
-                  <span className="text-[10px] text-brand-muted-light">
+                  <span className="text-xs text-brand-muted-light">
                     {new Date(date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                   </span>
                 </div>

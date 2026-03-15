@@ -76,7 +76,7 @@ export function NeighborhoodMap({ services, votingLocations, distributionSites, 
     <div className="mb-8">
       <span
         className="font-mono uppercase tracking-[0.2em] block mb-3"
-        style={{ fontSize: '0.6875rem', color: '#5c6474' }}
+        style={{ fontSize: '0.875rem', color: '#5c6474' }}
       >
         Neighborhood Map
       </span>

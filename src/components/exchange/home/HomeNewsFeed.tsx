@@ -35,7 +35,7 @@ export function HomeNewsFeed({ newsFeed, latestContent }: HomeNewsFeedProps) {
       {/* News */}
       <section className="bg-paper">
         <div className="max-w-[720px] mx-auto px-6 py-16">
-          <p className="font-mono text-[10px] tracking-[0.14em] text-blue uppercase mb-1.5">
+          <p className="font-mono text-xs tracking-[0.14em] text-blue uppercase mb-1.5">
             The front page
           </p>
           <p className="font-display text-[clamp(20px,3vw,28px)] leading-snug mb-8">
@@ -63,7 +63,7 @@ export function HomeNewsFeed({ newsFeed, latestContent }: HomeNewsFeedProps) {
                   </p>
                 )}
                 {newsFeed[0].source_domain && (
-                  <p className="font-mono text-[10px] text-muted mt-2.5 tracking-wider uppercase">
+                  <p className="font-mono text-xs text-muted mt-2.5 tracking-wider uppercase">
                     {newsFeed[0].source_domain}
                   </p>
                 )}
@@ -83,7 +83,7 @@ export function HomeNewsFeed({ newsFeed, latestContent }: HomeNewsFeedProps) {
                     {item.title_6th_grade}
                   </h4>
                   {item.source_domain && (
-                    <p className="font-mono text-[10px] text-muted uppercase tracking-wider">
+                    <p className="font-mono text-xs text-muted uppercase tracking-wider">
                       {item.source_domain}
                     </p>
                   )}
@@ -113,7 +113,7 @@ export function HomeNewsFeed({ newsFeed, latestContent }: HomeNewsFeedProps) {
       {latestContent.length > 0 && (
         <section className="bg-paper">
           <div className="max-w-[720px] mx-auto px-6 py-16">
-            <p className="font-mono text-[10px] tracking-[0.14em] text-blue uppercase mb-1.5">
+            <p className="font-mono text-xs tracking-[0.14em] text-blue uppercase mb-1.5">
               From the library
             </p>
             <p className="font-display text-[clamp(20px,3vw,28px)] leading-snug mb-8">
@@ -140,7 +140,7 @@ export function HomeNewsFeed({ newsFeed, latestContent }: HomeNewsFeedProps) {
                       </p>
                     )}
                     {item.source_domain && (
-                      <p className="font-mono text-[10px] text-muted mt-1 uppercase tracking-wider">
+                      <p className="font-mono text-xs text-muted mt-1 uppercase tracking-wider">
                         {item.source_domain as string}
                       </p>
                     )}

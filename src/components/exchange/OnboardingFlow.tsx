@@ -168,7 +168,7 @@ export function OnboardingFlow() {
                   />
                 )
               })}
-              <span className="ml-auto text-[10px] font-mono text-brand-muted-light">
+              <span className="ml-auto text-xs font-mono text-brand-muted-light">
                 {stepIndex + 1} / {steps.length}
               </span>
             </div>

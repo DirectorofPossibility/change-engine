@@ -41,7 +41,7 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
 export default async function SearchPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; sdg?: string; sdoh?: string; gov_level?: string; action_type?: string; time?: string; label?: string }>
+  searchParams: Promise<{ q?: string; sdg?: string; sdoh?: string; gov_level?: string; action_type?: string; time?: string; ntee?: string; airs?: string; label?: string }>
 }) {
   const params = await searchParams
   const query = params.q || ''
@@ -52,6 +52,8 @@ export default async function SearchPage({
   if (params.sdoh) taxFilter.sdoh = params.sdoh
   if (params.gov_level) taxFilter.gov_level = params.gov_level
   if (params.action_type) taxFilter.action_type = params.action_type
+  if (params.ntee) taxFilter.ntee = params.ntee
+  if (params.airs) taxFilter.airs = params.airs
   if (params.time) taxFilter.time = params.time
   const hasTaxFilter = Object.keys(taxFilter).length > 0
 
@@ -152,10 +154,10 @@ export default async function SearchPage({
             <Link key={org.org_id} href={'/organizations/' + org.org_id} className="block p-4 hover:opacity-80 transition-opacity" style={{ border: '1px solid #dde1e8' }}>
               <h4 style={{ fontWeight: 600, fontSize: '0.9rem', marginBottom: '0.25rem' }}>{t?.title || org.org_name}</h4>
               {(t?.summary || org.description_5th_grade) && (
-                <p className="line-clamp-2" style={{ fontSize: '0.8rem', color: "#5c6474" }}>{t?.summary || org.description_5th_grade}</p>
+                <p className="line-clamp-2" style={{ fontSize: '0.875rem', color: "#5c6474" }}>{t?.summary || org.description_5th_grade}</p>
               )}
               {org.website && (
-                <span style={{ fontSize: '0.65rem', color: "#1b5e8a", marginTop: '0.5rem', display: 'inline-block' }}>Visit website</span>
+                <span style={{ fontSize: '0.875rem', color: "#1b5e8a", marginTop: '0.5rem', display: 'inline-block' }}>Visit website</span>
               )}
             </Link>
           )
@@ -206,10 +208,10 @@ export default async function SearchPage({
             <div key={r.resource_id} className="p-4" style={{ border: '1px solid #dde1e8' }}>
               <h4 className="line-clamp-2" style={{ fontWeight: 600, fontSize: '0.9rem', marginBottom: '0.25rem' }}>{r.resource_name}</h4>
               {r.description_5th_grade && (
-                <p className="line-clamp-2 mb-2" style={{ fontSize: '0.8rem', color: "#5c6474" }}>{r.description_5th_grade}</p>
+                <p className="line-clamp-2 mb-2" style={{ fontSize: '0.875rem', color: "#5c6474" }}>{r.description_5th_grade}</p>
               )}
               {r.source_url && (
-                <Link href={r.source_url} target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ fontSize: '0.65rem', color: "#1b5e8a" }}>
+                <Link href={r.source_url} target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ fontSize: '0.875rem', color: "#1b5e8a" }}>
                   View resource
                 </Link>
               )}
@@ -247,7 +249,7 @@ export default async function SearchPage({
             <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
           </div>
           <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
-            <p style={{ fontSize: '0.7rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
+            <p style={{ fontSize: '0.875rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
               The Change Engine
             </p>
             <h1 style={{ fontSize: '2.5rem', lineHeight: 1.15, marginTop: '0.75rem' }}>
@@ -262,7 +264,7 @@ export default async function SearchPage({
 
       {/* Breadcrumb */}
       <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontSize: '0.7rem', color: "#5c6474" }}>
+        <nav style={{ fontSize: '0.875rem', color: "#5c6474" }}>
           <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
           <span>Search</span>

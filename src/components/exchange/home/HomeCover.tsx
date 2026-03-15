@@ -22,7 +22,7 @@ export function HomeCover({ stats }: HomeCoverProps) {
       </div>
 
       <div className="relative z-10 max-w-[640px] mx-auto">
-        <p className="font-mono text-[10px] tracking-[0.18em] text-muted uppercase mb-12">
+        <p className="font-mono text-xs tracking-[0.18em] text-muted uppercase mb-12">
           The Community Exchange
         </p>
 
@@ -53,13 +53,13 @@ export function HomeCover({ stats }: HomeCoverProps) {
           <HeroSearchInput />
         </div>
 
-        <p className="font-mono text-[10px] text-muted tracking-wider">
+        <p className="font-mono text-xs text-muted tracking-wider">
           {stats.resources.toLocaleString()} resources &middot; {stats.organizations.toLocaleString()} orgs &middot; {stats.officials.toLocaleString()} officials
         </p>
       </div>
 
       {/* Scroll hint */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 font-mono text-[10px] text-muted tracking-wider">
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 font-mono text-xs text-muted tracking-wider">
         <a href="#today" className="hover:text-blue transition-colors">&darr;</a>
       </div>
     </section>

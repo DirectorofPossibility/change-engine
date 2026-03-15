@@ -17,14 +17,14 @@ export function TopicsSection({ topics, topicsOpen, onToggle, onTopicClick }: To
     <div className="px-5">
       <button
         onClick={onToggle}
-        className="flex items-center gap-1.5 w-full text-[10px] font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 hover:text-brand-text transition-colors font-display"
+        className="flex items-center gap-1.5 w-full text-xs font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 hover:text-brand-text transition-colors font-display"
       >
         {topicsOpen ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
         {t('sidebar.topics')} ({topics.length})
       </button>
       {topicsOpen && topics.length > 0 && (
         <div className="max-h-48 overflow-y-auto px-3 py-1">
-          <span className="text-xs italic text-brand-muted leading-relaxed">
+          <span className="text-sm italic text-brand-muted leading-relaxed">
             {topics.map(function (topic, i) {
               return (
                 <span key={topic}>
@@ -42,7 +42,7 @@ export function TopicsSection({ topics, topicsOpen, onToggle, onTopicClick }: To
         </div>
       )}
       {topicsOpen && topics.length === 0 && (
-        <p className="text-xs text-brand-muted italic">{t('sidebar.no_topics')}</p>
+        <p className="text-sm text-brand-muted italic">{t('sidebar.no_topics')}</p>
       )}
     </div>
   )

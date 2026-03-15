@@ -128,7 +128,7 @@ export function ToolsGuidesClient({ items, role }: ToolsGuidesClientProps) {
                       {item.description}
                     </p>
                     <div className="flex items-center gap-2 mt-3">
-                      <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium uppercase tracking-wide ${
+                      <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium uppercase tracking-wide ${
                         item.category === 'tool'
                           ? 'bg-blue-50 text-blue-600'
                           : 'bg-amber-50 text-amber-600'
@@ -192,12 +192,12 @@ function AdminTable({ items }: { items: ToolGuideItem[] }) {
                 <td className="px-4 py-3">
                   <div className="flex gap-1">
                     {item.levels.includes('neighbor') && (
-                      <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-teal-50 text-teal-700">
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-teal-50 text-teal-700">
                         Neighbor
                       </span>
                     )}
                     {item.levels.includes('partner') && (
-                      <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-orange-50 text-orange-700">
+                      <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-orange-50 text-orange-700">
                         Partner
                       </span>
                     )}

@@ -25,10 +25,10 @@ import { FlowerOfLife } from '@/components/geo/sacred'
 import Image from 'next/image'
 
 /* ── Design Tokens ── */
-const RULE = '#dde1e8'
-const DIM = '#5c6474'
-const INK = '#0d1117'
-const SIDEBAR_BG = '#f4f5f7'
+const RULE = '#e5e7eb'
+const DIM = '#6b7280'
+const INK = '#1a1a1a'
+const SIDEBAR_BG = '#f9fafb'
 
 export const revalidate = 300
 
@@ -151,7 +151,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
           <div className="flex flex-col lg:flex-row gap-8 items-center">
             <div className="flex-1 min-w-0">
               {/* Breadcrumb + type in one line */}
-              <nav className="text-xs uppercase tracking-wider text-white/60 mb-4 flex items-center gap-2">
+              <nav className="text-sm uppercase tracking-wider text-white/60 mb-4 flex items-center gap-2">
                 <Link href="/" className="hover:text-white transition-colors">Home</Link>
                 <span>&rsaquo;</span>
                 <Link href="/services" className="hover:text-white transition-colors">{t('detail.all_services')}</Link>
@@ -194,7 +194,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
                   contentId={service.service_id}
                   title={displayName}
                 />
-                <span className="text-xs text-white/40">
+                <span className="text-sm text-white/60">
                   {[fullAddress, service.hours].filter(Boolean).join(' \u00b7 ')}
                 </span>
               </div>
@@ -202,12 +202,12 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
               {/* Contact links in hero */}
               <div className="flex flex-wrap items-center gap-3 mt-4">
                 {service.phone && (
-                  <a href={'tel:' + service.phone} className="inline-flex items-center gap-1.5 px-4 py-2 text-white text-xs font-mono uppercase tracking-wider font-semibold transition-colors hover:bg-white/20 rounded-full" style={{ background: 'rgba(255,255,255,0.15)' }}>
+                  <a href={'tel:' + service.phone} className="inline-flex items-center gap-1.5 px-4 py-2 text-white text-sm font-semibold transition-colors hover:bg-white/20 rounded-full" style={{ background: 'rgba(255,255,255,0.15)' }}>
                     <Phone size={13} /> {service.phone}
                   </a>
                 )}
                 {service.website && (
-                  <a href={service.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-2 text-white text-xs font-mono uppercase tracking-wider font-semibold transition-colors hover:bg-white/20 rounded-full" style={{ background: 'rgba(255,255,255,0.15)' }}>
+                  <a href={service.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-2 text-white text-sm font-semibold transition-colors hover:bg-white/20 rounded-full" style={{ background: 'rgba(255,255,255,0.15)' }}>
                     <Globe size={13} /> Website
                   </a>
                 )}
@@ -235,7 +235,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
           TWO-COLUMN LAYOUT
          ══════════════════════════════════════════════════════════════════ */}
       <section className="bg-white">
-        <div className="max-w-[1200px] mx-auto px-6 py-8 sm:py-10">
+        <div className="max-w-[1200px] mx-auto px-6 py-10">
           <div className="flex flex-col lg:flex-row gap-10">
 
             {/* ── LEFT: Main Content ── */}
@@ -243,18 +243,18 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
 
               {/* About — full description if hero was truncated */}
               {displayDesc && displayDesc.length > 200 && (
-                <section className="mb-8">
-                  <h2 className="font-display text-xl font-bold mb-2" style={{ color: INK }}>{t('detail.about_service')}</h2>
+                <section className="mb-10">
+                  <h2 className="font-display text-2xl font-bold mb-2" style={{ color: INK }}>{t('detail.about_service')}</h2>
                   <div className="h-[3px] mb-3" style={{ background: `${themeColor}30` }} />
-                  <p className="text-[0.95rem] leading-relaxed" style={{ color: DIM }}>{displayDesc}</p>
+                  <p className="text-base leading-relaxed" style={{ color: DIM }}>{displayDesc}</p>
                 </section>
               )}
 
               {/* Details accordion — eligibility, fees, languages, hours */}
               {hasDetails && (
-                <details className="mb-8 group" open>
+                <details className="mb-10 group" open>
                   <summary className="flex items-center justify-between cursor-pointer py-3" style={{ borderBottom: `3px solid ${RULE}` }}>
-                    <span className="font-display text-xl font-bold" style={{ color: INK }}>{t('detail.details')}</span>
+                    <span className="font-display text-2xl font-bold" style={{ color: INK }}>{t('detail.details')}</span>
                     <svg width="16" height="16" viewBox="0 0 20 20" fill="none" className="transition-transform group-open:rotate-180">
                       <path d="M5 7.5L10 12.5L15 7.5" stroke={DIM} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
@@ -262,25 +262,25 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
                   <div className="pt-3 space-y-0">
                     {service.eligibility && (
                       <div className="py-3" style={{ borderBottom: `3px solid ${RULE}` }}>
-                        <p className="text-[0.85rem] font-semibold mb-0.5" style={{ color: INK }}>{t('detail.eligibility')}</p>
+                        <p className="text-sm font-semibold mb-0.5" style={{ color: INK }}>{t('detail.eligibility')}</p>
                         <p className="text-sm" style={{ color: DIM }}>{service.eligibility}</p>
                       </div>
                     )}
                     {(service as any).fees && (
                       <div className="py-3" style={{ borderBottom: `3px solid ${RULE}` }}>
-                        <p className="text-[0.85rem] font-semibold mb-0.5" style={{ color: INK }}>{t('detail.fees')}</p>
+                        <p className="text-sm font-semibold mb-0.5" style={{ color: INK }}>{t('detail.fees')}</p>
                         <p className="text-sm" style={{ color: DIM }}>{(service as any).fees}</p>
                       </div>
                     )}
                     {(service as any).languages && (
                       <div className="py-3" style={{ borderBottom: `3px solid ${RULE}` }}>
-                        <p className="text-[0.85rem] font-semibold mb-0.5" style={{ color: INK }}>{t('detail.languages')}</p>
+                        <p className="text-sm font-semibold mb-0.5" style={{ color: INK }}>{t('detail.languages')}</p>
                         <p className="text-sm" style={{ color: DIM }}>{(service as any).languages}</p>
                       </div>
                     )}
                     {service.hours && (
                       <div className="py-3" style={{ borderBottom: `3px solid ${RULE}` }}>
-                        <p className="text-[0.85rem] font-semibold mb-0.5" style={{ color: INK }}>Hours</p>
+                        <p className="text-sm font-semibold mb-0.5" style={{ color: INK }}>Hours</p>
                         <p className="text-sm" style={{ color: DIM }}>{service.hours}</p>
                       </div>
                     )}
@@ -290,7 +290,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
 
               {/* Location Map */}
               {(service as any).latitude != null && (service as any).longitude != null && (
-                <div className="mb-8 rounded overflow-hidden" style={{ border: `1px solid ${RULE}` }}>
+                <div className="mb-10 rounded overflow-hidden" style={{ border: `1px solid ${RULE}` }}>
                   <InteractiveMap
                     markers={[{
                       id: service.service_id,
@@ -313,9 +313,9 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
 
               {/* Parent Organization */}
               {org && (
-                <section className="mb-8">
+                <section className="mb-10">
                   <div className="flex items-baseline justify-between">
-                    <h2 className="font-display text-xl font-bold" style={{ color: INK }}>{t('detail.organization')}</h2>
+                    <h2 className="font-display text-2xl font-bold" style={{ color: INK }}>{t('detail.organization')}</h2>
                   </div>
                   <div className="h-[3px] mb-3" style={{ background: `${themeColor}30` }} />
                   <Link href={'/organizations/' + org.org_id} className="flex items-center gap-4 p-4 transition-colors hover:bg-gray-50 rounded" style={{ border: `1px solid ${RULE}` }}>
@@ -323,7 +323,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
                       <Image src={org.logo_url} alt="" width={48} height={48} className="w-12 h-12 rounded object-contain flex-shrink-0 bg-gray-50" />
                     )}
                     <div className="min-w-0">
-                      <h3 className="text-[0.9rem] font-bold" style={{ color: INK }}>{org.org_name}</h3>
+                      <h3 className="text-base font-bold" style={{ color: INK }}>{org.org_name}</h3>
                       {org.description_5th_grade && (
                         <p className="line-clamp-2 mt-0.5 text-sm" style={{ color: DIM }}>{org.description_5th_grade}</p>
                       )}
@@ -334,9 +334,9 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
 
               {/* Library nuggets */}
               {libraryNuggets.length > 0 && (
-                <section className="mb-8">
+                <section className="mb-10">
                   <div className="flex items-baseline justify-between">
-                    <h2 className="font-display text-xl font-bold" style={{ color: INK }}>{t('detail.go_deeper')}</h2>
+                    <h2 className="font-display text-2xl font-bold" style={{ color: INK }}>{t('detail.go_deeper')}</h2>
                   </div>
                   <div className="h-[3px] mb-3" style={{ background: `${themeColor}30` }} />
                   <LibraryNugget nuggets={libraryNuggets} variant="section" color={themeColor} labels={{ goDeeper: t('detail.go_deeper') }} />
@@ -345,42 +345,26 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
 
               {/* Related Services */}
               {displayRelated.length > 0 && (
-                <section className="mb-8">
+                <section className="mb-10">
                   <div className="flex items-baseline justify-between">
-                    <h2 className="font-display text-xl font-bold" style={{ color: INK }}>{t('detail.other_resources')}</h2>
-                    <Link href="/services" className="inline-flex items-center gap-1 hover:underline font-mono text-[0.6rem] uppercase tracking-wider" style={{ color: themeColor }}>
+                    <h2 className="font-display text-2xl font-bold" style={{ color: INK }}>{t('detail.other_resources')}</h2>
+                    <Link href="/services" className="inline-flex items-center gap-1 hover:underline text-sm font-medium" style={{ color: themeColor }}>
                       {t('detail.all_services')} <ArrowRight size={11} />
                     </Link>
                   </div>
                   <div className="h-[3px] mb-3" style={{ background: `${themeColor}30` }} />
-                  {displayRelated.slice(0, 3).map(function (svc) {
-                    return (
-                      <Link key={svc.service_id} href={'/services/' + svc.service_id} className="flex items-start gap-3 py-2.5 hover:underline" style={{ borderBottom: `3px solid ${RULE}` }}>
-                        <span className="mt-2 flex-shrink-0 inline-block w-1.5 h-1.5 rounded-full" style={{ background: themeColor }} />
-                        <div className="min-w-0">
-                          <span className="block font-semibold text-[0.9rem]" style={{ color: INK }}>{svc.service_name}</span>
-                          {svc.description_5th_grade && (
-                            <span className="block line-clamp-1 mt-0.5 text-sm" style={{ color: DIM }}>{svc.description_5th_grade}</span>
-                          )}
-                        </div>
-                      </Link>
-                    )
-                  })}
-                  {displayRelated.length > 3 && (
-                    <details className="mt-2">
-                      <summary className="italic text-sm cursor-pointer" style={{ color: themeColor }}>
-                        {displayRelated.length - 3} more services
-                      </summary>
-                      {displayRelated.slice(3).map(function (svc) {
-                        return (
-                          <Link key={svc.service_id} href={'/services/' + svc.service_id} className="flex items-start gap-3 py-2.5 hover:underline" style={{ borderBottom: `3px solid ${RULE}` }}>
-                            <span className="mt-2 flex-shrink-0 inline-block w-1.5 h-1.5 rounded-full" style={{ background: themeColor }} />
-                            <span className="font-semibold text-[0.9rem]" style={{ color: INK }}>{svc.service_name}</span>
-                          </Link>
-                        )
-                      })}
-                    </details>
-                  )}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {displayRelated.map(function (svc) {
+                      return (
+                        <Link key={svc.service_id} href={'/services/' + svc.service_id}
+                          className="block p-4 rounded-xl border-2 transition-all hover:-translate-y-0.5 hover:shadow-md"
+                          style={{ borderColor: `${themeColor}25`, background: `${themeColor}05` }}>
+                          <span className="block font-bold text-base mb-1" style={{ color: INK }}>{svc.service_name}</span>
+                          {svc.description_5th_grade && <span className="block text-sm line-clamp-2" style={{ color: DIM }}>{svc.description_5th_grade}</span>}
+                        </Link>
+                      )
+                    })}
+                  </div>
                 </section>
               )}
 
@@ -416,8 +400,8 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
         <div className="max-w-[820px] mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
           <Link
             href="/services"
-            className="inline-flex items-center gap-2 transition-colors hover:text-[#1b5e8a]"
-            style={{ fontSize: '0.7rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: DIM }}
+            className="inline-flex items-center gap-2 text-sm font-semibold transition-colors hover:text-[#1b5e8a]"
+            style={{ color: DIM }}
           >
             <ArrowRight size={14} className="rotate-180" /> Back to Services
           </Link>

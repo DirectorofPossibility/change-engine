@@ -369,7 +369,7 @@ function PathwayDetail({ pw, allPathways, bridges, onSelect }: {
       {/* Focus Areas */}
       {pw.focusAreas.length > 0 && (
         <div className="mb-4">
-          <h4 className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-2">
+          <h4 className="text-xs font-bold uppercase tracking-wider text-brand-muted mb-2">
             Focus Areas ({pw.focusAreas.length})
           </h4>
           <div className="flex flex-wrap gap-1">
@@ -383,7 +383,7 @@ function PathwayDetail({ pw, allPathways, bridges, onSelect }: {
               )
             })}
             {pw.focusAreas.length > 24 && (
-              <span className="text-[10px] text-brand-muted px-2 py-1">+{pw.focusAreas.length - 24} more</span>
+              <span className="text-xs text-brand-muted px-2 py-1">+{pw.focusAreas.length - 24} more</span>
             )}
           </div>
         </div>
@@ -392,7 +392,7 @@ function PathwayDetail({ pw, allPathways, bridges, onSelect }: {
       {/* Bridge connections */}
       {pwBridges.length > 0 && (
         <div>
-          <h4 className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-2">
+          <h4 className="text-xs font-bold uppercase tracking-wider text-brand-muted mb-2">
             Connected Pathways
           </h4>
           <div className="space-y-0.5">
@@ -406,7 +406,7 @@ function PathwayDetail({ pw, allPathways, bridges, onSelect }: {
                   className="flex items-center gap-2 w-full px-2 py-1.5 rounded hover:bg-brand-bg-alt transition-colors text-left">
                   <span className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: other.color }} />
                   <span className="text-xs font-medium text-brand-text flex-1">{other.name}</span>
-                  <span className="text-[10px] text-brand-muted">{b.count} shared</span>
+                  <span className="text-xs text-brand-muted">{b.count} shared</span>
                 </button>
               )
             })}
@@ -451,7 +451,7 @@ function GraphSummary({ data, totalEntities, onSelect }: {
       </div>
 
       {/* Pathway list */}
-      <h4 className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-2">7 Topics</h4>
+      <h4 className="text-xs font-bold uppercase tracking-wider text-brand-muted mb-2">7 Topics</h4>
       <div className="space-y-0.5 mb-4">
         {data.pathways.map(function (pw) {
           const total = pw.entityCounts.content + pw.entityCounts.services + pw.entityCounts.officials + pw.entityCounts.organizations + pw.entityCounts.policies
@@ -461,8 +461,8 @@ function GraphSummary({ data, totalEntities, onSelect }: {
               className="flex items-center gap-2.5 w-full px-2 py-2 hover:bg-brand-bg-alt transition-colors text-left group">
               <span className="w-3 h-3 rounded" style={{ backgroundColor: pw.color }} />
               <span className="text-sm font-medium text-brand-text flex-1">{pw.name}</span>
-              <span className="text-[10px] text-brand-muted">{pw.focusAreas.length} topics</span>
-              <span className="text-[10px] font-medium" style={{ color: pw.color }}>{total}</span>
+              <span className="text-xs text-brand-muted">{pw.focusAreas.length} topics</span>
+              <span className="text-xs font-medium" style={{ color: pw.color }}>{total}</span>
             </button>
           )
         })}
@@ -471,7 +471,7 @@ function GraphSummary({ data, totalEntities, onSelect }: {
       {/* Top bridges */}
       {data.bridges.length > 0 && (
         <div>
-          <h4 className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-2">Strongest Connections</h4>
+          <h4 className="text-xs font-bold uppercase tracking-wider text-brand-muted mb-2">Strongest Connections</h4>
           <div className="space-y-0.5">
             {data.bridges.slice(0, 5).map(function (b, i) {
               const from = data.pathways.find(function (p) { return p.id === b.from })
@@ -484,7 +484,7 @@ function GraphSummary({ data, totalEntities, onSelect }: {
                   <span className="text-brand-muted flex-shrink-0">--</span>
                   <span className="w-2 h-2 rounded-sm" style={{ backgroundColor: to.color }} />
                   <span className="font-medium">{to.name.replace('Our ', '')}</span>
-                  <span className="text-[10px] text-brand-muted ml-auto">{b.count} shared</span>
+                  <span className="text-xs text-brand-muted ml-auto">{b.count} shared</span>
                 </div>
               )
             })}

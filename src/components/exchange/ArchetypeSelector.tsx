@@ -69,7 +69,7 @@ export function ArchetypeSelector({ compact, onSelect }: ArchetypeSelectorProps)
             >
               <a.Icon size={16} color={isActive ? '#C75B2A' : '#9B9590'} />
               <span>{a.name}</span>
-              {isActive && <span className="text-[10px] text-brand-accent ml-auto">Active</span>}
+              {isActive && <span className="text-xs text-brand-accent ml-auto">Active</span>}
             </button>
           )
         })}
@@ -106,7 +106,7 @@ export function ArchetypeSelector({ compact, onSelect }: ArchetypeSelectorProps)
             </div>
             <p className="text-[11px] text-brand-muted leading-relaxed">{a.desc}</p>
             {isActive && (
-              <span className="inline-block mt-2 text-[10px] font-mono font-bold uppercase tracking-wider text-brand-accent">Active</span>
+              <span className="inline-block mt-2 text-xs font-mono font-bold uppercase tracking-wider text-brand-accent">Active</span>
             )}
           </button>
         )

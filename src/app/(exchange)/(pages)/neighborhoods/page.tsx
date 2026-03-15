@@ -7,7 +7,7 @@ export const revalidate = 300
 
 export const metadata: Metadata = {
   title: 'Neighborhoods — Change Engine',
-  description: 'Explore Houston neighborhoods and the resources, officials, and organizations that serve them.',
+  description: 'Explore neighborhoods and the resources, officials, and organizations that serve them.',
 }
 
 // ── Design tokens ─────────────────────────────────────────────────────
@@ -39,23 +39,23 @@ export default async function NeighborhoodsPage() {
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="relative max-w-[900px] mx-auto px-6 py-16">
-          <p style={{ fontSize: '0.65rem', letterSpacing: '0.2em', color: "#5c6474" }} className="uppercase mb-4">
+          <p style={{ fontSize: '0.875rem', letterSpacing: '0.2em', color: "#5c6474" }} className="uppercase mb-4">
             Change Engine
           </p>
           <h1 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', lineHeight: 1.1 }}>
-            Houston Neighborhoods
+            Neighborhoods
           </h1>
           <p style={{ fontSize: '1.1rem', color: "#5c6474", lineHeight: 1.7 }} className="mt-4 max-w-xl">
-            Every corner of Houston, mapped and connected. Find the services, officials, organizations, and community resources near you.
+            Every corner of your city, mapped and connected. Find the services, officials, organizations, and community resources near you.
           </p>
           <div className="flex flex-wrap gap-6 mt-6">
             <div>
               <span style={{ fontSize: '1.5rem', fontWeight: 700 }}>{allNeighborhoods.length}</span>
-              <span style={{ fontSize: '0.6875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Neighborhoods</span>
+              <span style={{ fontSize: '0.875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Neighborhoods</span>
             </div>
             <div>
               <span style={{ fontSize: '1.5rem', fontWeight: 700 }}>{(supers || []).length}</span>
-              <span style={{ fontSize: '0.6875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Super Neighborhoods</span>
+              <span style={{ fontSize: '0.875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Super Neighborhoods</span>
             </div>
           </div>
         </div>
@@ -63,7 +63,7 @@ export default async function NeighborhoodsPage() {
 
       {/* ── Breadcrumb ── */}
       <div className="max-w-[900px] mx-auto px-6 pt-6 pb-2">
-        <nav style={{ fontSize: '0.65rem', letterSpacing: '0.12em', color: "#5c6474" }} className="uppercase">
+        <nav style={{ fontSize: '0.875rem', letterSpacing: '0.12em', color: "#5c6474" }} className="uppercase">
           <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
           <span>Neighborhoods</span>
@@ -73,10 +73,10 @@ export default async function NeighborhoodsPage() {
       <div className="max-w-[900px] mx-auto px-6 py-10">
         {/* Quick links */}
         <div className="flex gap-6 mb-8">
-          <Link href="/super-neighborhoods" style={{ fontSize: '0.7rem', letterSpacing: '0.08em', color: "#1b5e8a" }} className="uppercase hover:underline">
+          <Link href="/super-neighborhoods" style={{ fontSize: '0.875rem', letterSpacing: '0.08em', color: "#1b5e8a" }} className="uppercase hover:underline">
             View by Super Neighborhood
           </Link>
-          <Link href="/geography" style={{ fontSize: '0.7rem', letterSpacing: '0.08em', color: "#1b5e8a" }} className="uppercase hover:underline">
+          <Link href="/geography" style={{ fontSize: '0.875rem', letterSpacing: '0.08em', color: "#1b5e8a" }} className="uppercase hover:underline">
             View on Map
           </Link>
         </div>
@@ -86,7 +86,7 @@ export default async function NeighborhoodsPage() {
           <div className="flex items-baseline gap-4 mb-6">
             <h2 style={{ fontSize: '1.5rem',  }}>All Neighborhoods</h2>
             <div className="flex-1" style={{ height: 1, borderBottom: '1px dotted', borderColor: '#dde1e8' }} />
-            <span style={{ fontSize: '0.6875rem', color: "#5c6474", letterSpacing: '0.1em' }} className="uppercase">{allNeighborhoods.length} total</span>
+            <span style={{ fontSize: '0.875rem', color: "#5c6474", letterSpacing: '0.1em' }} className="uppercase">{allNeighborhoods.length} total</span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-0" style={{ border: '1px solid #dde1e8' }}>
@@ -103,7 +103,7 @@ export default async function NeighborhoodsPage() {
                     <div>
                       <h3 style={{ fontSize: '0.9rem',  }} className="group-hover:underline">{n.neighborhood_name}</h3>
                       {n.super_neighborhood_id && snMap[n.super_neighborhood_id] && (
-                        <p style={{ fontSize: '0.6875rem', color: "#5c6474" }} className="mt-0.5">{snMap[n.super_neighborhood_id]}</p>
+                        <p style={{ fontSize: '0.875rem', color: "#5c6474" }} className="mt-0.5">{snMap[n.super_neighborhood_id]}</p>
                       )}
                     </div>
                   </div>
@@ -114,7 +114,7 @@ export default async function NeighborhoodsPage() {
 
           {allNeighborhoods.length > VISIBLE_COUNT && (
             <details className="mt-4">
-              <summary style={{ fontSize: '0.65rem', color: "#1b5e8a", letterSpacing: '0.1em', cursor: 'pointer' }} className="uppercase hover:underline py-2">
+              <summary style={{ fontSize: '0.875rem', color: "#1b5e8a", letterSpacing: '0.1em', cursor: 'pointer' }} className="uppercase hover:underline py-2">
                 Show all {allNeighborhoods.length} neighborhoods
               </summary>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-0 mt-2" style={{ border: '1px solid #dde1e8' }}>
@@ -131,7 +131,7 @@ export default async function NeighborhoodsPage() {
                         <div>
                           <h3 style={{ fontSize: '0.9rem',  }} className="group-hover:underline">{n.neighborhood_name}</h3>
                           {n.super_neighborhood_id && snMap[n.super_neighborhood_id] && (
-                            <p style={{ fontSize: '0.6875rem', color: "#5c6474" }} className="mt-0.5">{snMap[n.super_neighborhood_id]}</p>
+                            <p style={{ fontSize: '0.875rem', color: "#5c6474" }} className="mt-0.5">{snMap[n.super_neighborhood_id]}</p>
                           )}
                         </div>
                       </div>
@@ -147,16 +147,16 @@ export default async function NeighborhoodsPage() {
 
         {/* ── Footer links ── */}
         <div className="flex flex-wrap gap-6 py-4">
-          <Link href="/geography" style={{ fontSize: '0.7rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline">
+          <Link href="/geography" style={{ fontSize: '0.875rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline">
             Geography Map
           </Link>
-          <Link href="/services" style={{ fontSize: '0.7rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline">
+          <Link href="/services" style={{ fontSize: '0.875rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline">
             Services
           </Link>
-          <Link href="/officials" style={{ fontSize: '0.7rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline">
+          <Link href="/officials" style={{ fontSize: '0.875rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline">
             Officials
           </Link>
-          <Link href="/" style={{ fontSize: '0.7rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline ml-auto">
+          <Link href="/" style={{ fontSize: '0.875rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline ml-auto">
             Back to Home
           </Link>
         </div>

@@ -85,7 +85,7 @@ export default async function GlossaryPage() {
                       <h3 style={{  }} className="font-semibold">{t.term}</h3>
                       <p style={{ color: "#5c6474" }} className="text-sm mt-1 leading-relaxed">{t.definition_5th_grade || t.definition}</p>
                       {t.category && (
-                        <span style={{ color: "#5c6474", background: "#f4f5f7" }} className="inline-block text-xs px-2 py-0.5 mt-2">{t.category}</span>
+                        <span style={{ color: "#5c6474", background: "#f4f5f7" }} className="inline-block text-sm px-2 py-0.5 mt-2">{t.category}</span>
                       )}
                     </div>
                   )

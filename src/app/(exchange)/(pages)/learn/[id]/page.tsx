@@ -173,7 +173,7 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
-          <p style={{ fontSize: '0.7rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
+          <p style={{ fontSize: '0.875rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
             The Change Engine
           </p>
           <h1 style={{ fontSize: '2.2rem', lineHeight: 1.15, marginTop: '0.75rem' }}>
@@ -187,22 +187,22 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
           {/* Meta */}
           <div className="flex items-center gap-4 flex-wrap mt-4">
             {path.difficulty_level && (
-              <span className="flex items-center gap-1.5" style={{ fontSize: '0.7rem', color: "#5c6474" }}>
+              <span className="flex items-center gap-1.5" style={{ fontSize: '0.875rem', color: "#5c6474" }}>
                 {path.difficulty_level}
               </span>
             )}
             {path.estimated_minutes != null && (
-              <span className="flex items-center gap-1.5" style={{ fontSize: '0.7rem', color: "#5c6474" }}>
+              <span className="flex items-center gap-1.5" style={{ fontSize: '0.875rem', color: "#5c6474" }}>
                 <Clock size={15} /> {path.estimated_minutes} min
               </span>
             )}
             {path.module_count != null && (
-              <span className="flex items-center gap-1.5" style={{ fontSize: '0.7rem', color: "#5c6474" }}>
+              <span className="flex items-center gap-1.5" style={{ fontSize: '0.875rem', color: "#5c6474" }}>
                 <BookOpen size={15} /> {path.module_count} modules
               </span>
             )}
             {badge && (
-              <span className="flex items-center gap-1.5" style={{ fontSize: '0.7rem', color: "#1b5e8a", fontWeight: 500 }}>
+              <span className="flex items-center gap-1.5" style={{ fontSize: '0.875rem', color: "#1b5e8a", fontWeight: 500 }}>
                 <Award size={15} /> Earn: {badge.badge_name}
               </span>
             )}
@@ -212,7 +212,7 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
 
       {/* Breadcrumb */}
       <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontSize: '0.7rem', color: "#5c6474" }}>
+        <nav style={{ fontSize: '0.875rem', color: "#5c6474" }}>
           <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
           <Link href="/learn" className="hover:underline" style={{ color: "#1b5e8a" }}>{t('learn.title')}</Link>
@@ -248,7 +248,7 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
               <h2 style={{ fontSize: '1.5rem',  }}>{t('learn.modules_heading')}</h2>
-              <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{timelineModules.length} modules</span>
+              <span style={{ fontSize: '0.875rem', color: "#5c6474" }}>{timelineModules.length} modules</span>
             </div>
             <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
             {user ? (
@@ -346,13 +346,13 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
                 <div key={o.opportunity_id} className="p-3 bg-paper">
                   <div style={{ fontSize: '0.9rem', fontWeight: 500,  }}>{o.opportunity_name}</div>
                   {o.start_date && (
-                    <div style={{ fontSize: '0.65rem', color: "#5c6474", marginTop: '0.25rem' }}>
+                    <div style={{ fontSize: '0.875rem', color: "#5c6474", marginTop: '0.25rem' }}>
                       {new Date(o.start_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                       {o.city && (' · ' + o.city)}
                     </div>
                   )}
                   {o.registration_url && (
-                    <a href={o.registration_url} target="_blank" rel="noopener noreferrer" className="hover:underline mt-1 inline-block" style={{ fontSize: '0.65rem', color: "#1b5e8a" }}>
+                    <a href={o.registration_url} target="_blank" rel="noopener noreferrer" className="hover:underline mt-1 inline-block" style={{ fontSize: '0.875rem', color: "#1b5e8a" }}>
                       Register
                     </a>
                   )}
@@ -374,8 +374,8 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
                 <Link key={p.policy_id} href={'/policies/' + p.policy_id} className="block p-3 hover:underline bg-paper">
                   <div style={{ fontSize: '0.9rem', fontWeight: 500,  }}>{p.policy_name}</div>
                   <div className="flex items-center gap-2 mt-1">
-                    {p.status && <span style={{ fontSize: '0.65rem', color: "#5c6474" }}>{p.status}</span>}
-                    {p.level && <span style={{ fontSize: '0.65rem', color: "#5c6474" }}>- {p.level}</span>}
+                    {p.status && <span style={{ fontSize: '0.875rem', color: "#5c6474" }}>{p.status}</span>}
+                    {p.level && <span style={{ fontSize: '0.875rem', color: "#5c6474" }}>- {p.level}</span>}
                   </div>
                 </Link>
               ))}
@@ -396,7 +396,7 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
               </Link>
             ))}
           </div>
-          <Link href="/learn" className="flex items-center gap-1 hover:underline mt-3" style={{ fontSize: '0.65rem', color: "#1b5e8a" }}>
+          <Link href="/learn" className="flex items-center gap-1 hover:underline mt-3" style={{ fontSize: '0.875rem', color: "#1b5e8a" }}>
             {t('learn.view_all')} <ChevronRight size={12} />
           </Link>
         </section>
@@ -405,7 +405,7 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
         <div className="flex justify-between mt-12 pt-8" style={{ borderTop: '1px dotted ' + '#dde1e8' }}>
           {prevPath ? (
             <Link href={'/learn/' + (prevPath.slug || prevPath.path_id)} className="group">
-              <span className="block mb-1" style={{ fontSize: '0.65rem', color: "#5c6474" }}>{t('learn.previous_path')}</span>
+              <span className="block mb-1" style={{ fontSize: '0.875rem', color: "#5c6474" }}>{t('learn.previous_path')}</span>
               <span className="group-hover:underline" style={{ fontSize: '0.9rem', fontWeight: 500,  }}>
                 {prevPath.path_name}
               </span>
@@ -413,7 +413,7 @@ export default async function LearningPathDetailPage({ params }: { params: Promi
           ) : <div />}
           {nextPath ? (
             <Link href={'/learn/' + (nextPath.slug || nextPath.path_id)} className="text-right group">
-              <span className="block mb-1" style={{ fontSize: '0.65rem', color: "#5c6474" }}>{t('learn.next_path')}</span>
+              <span className="block mb-1" style={{ fontSize: '0.875rem', color: "#5c6474" }}>{t('learn.next_path')}</span>
               <span className="group-hover:underline" style={{ fontSize: '0.9rem', fontWeight: 500,  }}>
                 {nextPath.path_name}
               </span>

@@ -45,15 +45,15 @@ export default async function CampaignDetailPage({ params }: { params: Promise<{
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
-          <p style={{ fontSize: '0.7rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
+          <p style={{ fontSize: '0.875rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
             The Change Engine
           </p>
           <div className="flex items-center gap-3 mt-3">
-            <span style={{ fontSize: '0.65rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: "#1b5e8a" }}>
+            <span style={{ fontSize: '0.875rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: "#1b5e8a" }}>
               {c.status || 'Campaign'}
             </span>
             {c.campaign_type && (
-              <span style={{ fontSize: '0.65rem', color: "#5c6474" }}>{c.campaign_type}</span>
+              <span style={{ fontSize: '0.875rem', color: "#5c6474" }}>{c.campaign_type}</span>
             )}
           </div>
           <h1 style={{ fontSize: '2.2rem', lineHeight: 1.15, marginTop: '0.5rem' }}>
@@ -64,7 +64,7 @@ export default async function CampaignDetailPage({ params }: { params: Promise<{
               {c.description_5th_grade}
             </p>
           )}
-          <div className="flex flex-wrap gap-4 mt-4" style={{ fontSize: '0.7rem', color: "#5c6474" }}>
+          <div className="flex flex-wrap gap-4 mt-4" style={{ fontSize: '0.875rem', color: "#5c6474" }}>
             {c.start_date && (
               <span className="flex items-center gap-1">
                 <Calendar className="w-3.5 h-3.5" />
@@ -83,7 +83,7 @@ export default async function CampaignDetailPage({ params }: { params: Promise<{
 
       {/* Breadcrumb */}
       <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontSize: '0.7rem', color: "#5c6474" }}>
+        <nav style={{ fontSize: '0.875rem', color: "#5c6474" }}>
           <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
           <Link href="/campaigns" className="hover:underline" style={{ color: "#1b5e8a" }}>Campaigns</Link>
@@ -107,7 +107,7 @@ export default async function CampaignDetailPage({ params }: { params: Promise<{
             <p style={{ fontSize: '0.95rem', lineHeight: 1.85 }}>{c.goal_description}</p>
             {progress !== null && (
               <div className="mt-4">
-                <div className="flex justify-between mb-1" style={{ fontSize: '0.7rem', color: "#5c6474" }}>
+                <div className="flex justify-between mb-1" style={{ fontSize: '0.875rem', color: "#5c6474" }}>
                   <span>Progress</span>
                   <span>{progress}%</span>
                 </div>

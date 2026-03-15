@@ -54,7 +54,7 @@ export function SidebarRelatedBox({
               )}
               <div className="min-w-0 flex-1">
                 {item.type && (
-                  <span className="text-[10px] uppercase tracking-wider font-semibold" style={{ color: accentColor }}>
+                  <span className="text-xs uppercase tracking-wider font-semibold" style={{ color: accentColor }}>
                     {item.type}
                   </span>
                 )}

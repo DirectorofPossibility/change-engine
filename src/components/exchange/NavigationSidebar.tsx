@@ -190,7 +190,7 @@ export function NavigationSidebar({ children }: { children: React.ReactNode }) {
 
       {/* ── Your Journey — 7 Pathways (always open, NOT collapsible) ── */}
       <div className="px-5">
-        <span className="flex items-center gap-1.5 text-[10px] font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 font-display">
+        <span className="flex items-center gap-1.5 text-xs font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 font-display">
           {t('sidebar.your_journey')}
         </span>
         <div className="space-y-0.5">
@@ -226,7 +226,7 @@ export function NavigationSidebar({ children }: { children: React.ReactNode }) {
       <div className="px-5">
         <button
           onClick={function () { setDiscoverOpen(!discoverOpen) }}
-          className="flex items-center gap-1.5 w-full text-[10px] font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 hover:text-brand-text transition-colors font-display"
+          className="flex items-center gap-1.5 w-full text-xs font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 hover:text-brand-text transition-colors font-display"
         >
           {discoverOpen ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
           {t('sidebar.discover')}
@@ -271,7 +271,7 @@ export function NavigationSidebar({ children }: { children: React.ReactNode }) {
       <div className="px-5">
         <button
           onClick={function () { setLearnOpen(!learnOpen) }}
-          className="flex items-center gap-1.5 w-full text-[10px] font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 hover:text-brand-text transition-colors font-display"
+          className="flex items-center gap-1.5 w-full text-xs font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 hover:text-brand-text transition-colors font-display"
         >
           {learnOpen ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
           {t('sidebar.learn')}
@@ -332,7 +332,7 @@ export function NavigationSidebar({ children }: { children: React.ReactNode }) {
       <div className="px-5">
         <button
           onClick={function () { setConnectOpen(!connectOpen) }}
-          className="flex items-center gap-1.5 w-full text-[10px] font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 hover:text-brand-text transition-colors font-display"
+          className="flex items-center gap-1.5 w-full text-xs font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 hover:text-brand-text transition-colors font-display"
         >
           {connectOpen ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
           {t('sidebar.connect')}

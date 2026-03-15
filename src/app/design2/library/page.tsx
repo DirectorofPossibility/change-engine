@@ -84,7 +84,7 @@ export default async function LibraryPage() {
                   <Link key={doc.id} href={'/design2/library/doc/' + doc.id} className="bg-white rounded-xl border p-4 transition-all hover:shadow-md" style={{ borderColor: '#E2DDD5' }}>
                     <h3 className="font-serif text-[14px] font-semibold" style={{ color: '#1a1a1a' }}>{doc.title}</h3>
                     {doc.summary && <p className="text-[12px] mt-1 line-clamp-2" style={{ color: '#6B6560' }}>{doc.summary}</p>}
-                    {doc.page_count && <span className="text-[10px] mt-2 inline-block uppercase tracking-wider" style={{ color: '#9B9590' }}>{doc.page_count} pages</span>}
+                    {doc.page_count && <span className="text-xs mt-2 inline-block uppercase tracking-wider" style={{ color: '#9B9590' }}>{doc.page_count} pages</span>}
                   </Link>
                 )
               })}
@@ -109,14 +109,14 @@ export default async function LibraryPage() {
                     {theme && (
                       <div className="flex items-center gap-1.5 mb-1.5">
                         <span className="w-2 h-2 rounded-full" style={{ background: theme.color }} />
-                        <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: theme.color }}>{theme.name}</span>
+                        <span className="text-xs font-bold uppercase tracking-wider" style={{ color: theme.color }}>{theme.name}</span>
                       </div>
                     )}
                     <h3 className="font-serif text-[14px] font-semibold leading-snug line-clamp-2" style={{ color: '#1a1a1a' }}>{item.title_6th_grade}</h3>
                     <div className="flex items-center gap-2 mt-2">
-                      <span className="text-[10px] uppercase tracking-wider" style={{ color: '#9B9590' }}>{item.source_domain}</span>
-                      <span className="text-[10px]" style={{ color: '#E2DDD5' }}>|</span>
-                      <span className="text-[10px] uppercase tracking-wider" style={{ color: '#9B9590' }}>{item.resource_type}</span>
+                      <span className="text-xs uppercase tracking-wider" style={{ color: '#9B9590' }}>{item.source_domain}</span>
+                      <span className="text-xs" style={{ color: '#E2DDD5' }}>|</span>
+                      <span className="text-xs uppercase tracking-wider" style={{ color: '#9B9590' }}>{item.resource_type}</span>
                     </div>
                   </div>
                 </Link>

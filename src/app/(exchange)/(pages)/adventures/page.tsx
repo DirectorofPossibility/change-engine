@@ -23,7 +23,7 @@ export default function AdventuresPage() {
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
-          <p style={{ fontSize: '0.7rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
+          <p style={{ fontSize: '0.875rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
             The Change Engine
           </p>
           <h1 style={{ fontSize: '2.5rem', lineHeight: 1.15, marginTop: '0.75rem' }}>
@@ -35,15 +35,15 @@ export default function AdventuresPage() {
           <div className="flex flex-wrap gap-8 mt-8">
             <div>
               <span style={{ fontSize: '2rem',  }}>{ALL_ADVENTURES.length}</span>
-              <span style={{ fontSize: '0.65rem', color: "#5c6474", textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>Adventures</span>
+              <span style={{ fontSize: '0.875rem', color: "#5c6474", textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>Adventures</span>
             </div>
             <div>
               <span style={{ fontSize: '2rem',  }}>~5 min</span>
-              <span style={{ fontSize: '0.65rem', color: "#5c6474", textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>Each</span>
+              <span style={{ fontSize: '0.875rem', color: "#5c6474", textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>Each</span>
             </div>
             <div>
               <span style={{ fontSize: '2rem',  }}>Free</span>
-              <span style={{ fontSize: '0.65rem', color: "#5c6474", textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>Always</span>
+              <span style={{ fontSize: '0.875rem', color: "#5c6474", textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>Always</span>
             </div>
           </div>
         </div>
@@ -51,7 +51,7 @@ export default function AdventuresPage() {
 
       {/* Breadcrumb */}
       <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontSize: '0.7rem', color: "#5c6474" }}>
+        <nav style={{ fontSize: '0.875rem', color: "#5c6474" }}>
           <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
           <span>Adventures</span>
@@ -63,7 +63,7 @@ export default function AdventuresPage() {
         {/* Section header */}
         <div className="flex items-baseline justify-between mb-1">
           <h2 style={{ fontSize: '1.5rem',  }}>Choose Your Adventure</h2>
-          <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{ALL_ADVENTURES.length}</span>
+          <span style={{ fontSize: '0.875rem', color: "#5c6474" }}>{ALL_ADVENTURES.length}</span>
         </div>
         <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1.5rem' }} />
 
@@ -79,9 +79,9 @@ export default function AdventuresPage() {
               >
                 <div className="p-6 bg-paper">
                   <h3 style={{ fontSize: '1.15rem' }}>{adventure.title}</h3>
-                  <p style={{ color: "#1b5e8a", fontSize: '0.7rem', marginTop: '0.25rem' }}>{adventure.subtitle}</p>
-                  <p style={{ color: "#5c6474", fontSize: '0.85rem', lineHeight: 1.6, marginTop: '0.5rem' }}>{adventure.description}</p>
-                  <div className="flex items-center gap-4 mt-3" style={{ color: "#5c6474", fontSize: '0.65rem' }}>
+                  <p style={{ color: "#1b5e8a", fontSize: '0.875rem', marginTop: '0.25rem' }}>{adventure.subtitle}</p>
+                  <p style={{ color: "#5c6474", fontSize: '0.875rem', lineHeight: 1.6, marginTop: '0.5rem' }}>{adventure.description}</p>
+                  <div className="flex items-center gap-4 mt-3" style={{ color: "#5c6474", fontSize: '0.875rem' }}>
                     <span>~{adventure.estimatedMinutes} min</span>
                     <span>{adventure.nodeCount} scenes</span>
                   </div>
@@ -108,9 +108,9 @@ export default function AdventuresPage() {
                   >
                     <div className="p-6 bg-paper">
                       <h3 style={{ fontSize: '1.15rem' }}>{adventure.title}</h3>
-                      <p style={{ color: "#1b5e8a", fontSize: '0.7rem', marginTop: '0.25rem' }}>{adventure.subtitle}</p>
-                      <p style={{ color: "#5c6474", fontSize: '0.85rem', lineHeight: 1.6, marginTop: '0.5rem' }}>{adventure.description}</p>
-                      <div className="flex items-center gap-4 mt-3" style={{ color: "#5c6474", fontSize: '0.65rem' }}>
+                      <p style={{ color: "#1b5e8a", fontSize: '0.875rem', marginTop: '0.25rem' }}>{adventure.subtitle}</p>
+                      <p style={{ color: "#5c6474", fontSize: '0.875rem', lineHeight: 1.6, marginTop: '0.5rem' }}>{adventure.description}</p>
+                      <div className="flex items-center gap-4 mt-3" style={{ color: "#5c6474", fontSize: '0.875rem' }}>
                         <span>~{adventure.estimatedMinutes} min</span>
                         <span>{adventure.nodeCount} scenes</span>
                       </div>
@@ -127,7 +127,7 @@ export default function AdventuresPage() {
         {/* How it works */}
         <div className="flex items-baseline justify-between mb-1">
           <h2 style={{ fontSize: '1.5rem',  }}>How Community Adventures Work</h2>
-          <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>3 steps</span>
+          <span style={{ fontSize: '0.875rem', color: "#5c6474" }}>3 steps</span>
         </div>
         <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1.5rem' }} />
 
@@ -139,9 +139,9 @@ export default function AdventuresPage() {
           ].map(function (item) {
             return (
               <div key={item.step} className="p-5 border" style={{ borderColor: '#dde1e8', background: "#f4f5f7" }}>
-                <span style={{ color: "#1b5e8a", fontSize: '0.85rem', fontWeight: 700 }}>{item.step}.</span>
+                <span style={{ color: "#1b5e8a", fontSize: '0.875rem', fontWeight: 700 }}>{item.step}.</span>
                 <h3 style={{ fontSize: '1rem', marginTop: '0.5rem' }}>{item.title}</h3>
-                <p style={{ color: "#5c6474", fontSize: '0.8rem', lineHeight: 1.6, marginTop: '0.25rem' }}>{item.desc}</p>
+                <p style={{ color: "#5c6474", fontSize: '0.875rem', lineHeight: 1.6, marginTop: '0.25rem' }}>{item.desc}</p>
               </div>
             )
           })}

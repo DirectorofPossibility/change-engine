@@ -12,7 +12,7 @@ export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Opportunities — Change Engine',
-  description: 'Volunteer, learn, and get involved in your Houston community.',
+  description: 'Volunteer, learn, and get involved in your community.',
 }
 
 export default async function OpportunitiesPage() {
@@ -41,7 +41,7 @@ export default async function OpportunitiesPage() {
     <div className="bg-paper min-h-screen">
       <IndexPageHero
         title="Opportunities"
-        subtitle="Your community needs your talents, time, and energy. Browse volunteer positions, learning opportunities, and ways to get involved in Houston."
+        subtitle="Your community needs your talents, time, and energy. Browse volunteer positions, learning opportunities, and ways to get involved in your community."
         color="#1e4d7a"
         stats={all.length > 0 ? [{ value: all.length, label: 'Opportunities' }] : undefined}
       />

@@ -55,7 +55,7 @@ export function HomeToday({ quote, promotions, upcomingEvents }: HomeTodayProps)
   return (
     <section id="today" className="bg-paper">
       <div className="max-w-[720px] mx-auto px-6 py-16">
-        <p className="font-mono text-[10px] tracking-[0.14em] text-blue uppercase mb-1.5">
+        <p className="font-mono text-xs tracking-[0.14em] text-blue uppercase mb-1.5">
           Today in Houston
         </p>
         <p className="font-body text-sm text-muted mb-8">
@@ -81,7 +81,7 @@ export function HomeToday({ quote, promotions, upcomingEvents }: HomeTodayProps)
         {/* Coming up */}
         {hasEvents && (
           <div className="mb-10">
-            <p className="font-mono text-[10px] tracking-[0.12em] text-muted uppercase mb-4">
+            <p className="font-mono text-xs tracking-[0.12em] text-muted uppercase mb-4">
               Coming up
             </p>
             {upcomingEvents!.slice(0, 5).map(function (ev) {
@@ -92,7 +92,7 @@ export function HomeToday({ quote, promotions, upcomingEvents }: HomeTodayProps)
                   className="group flex gap-4 py-3 transition-colors border-b border-clay/10"
                 >
                   <div className="text-center min-w-[44px] shrink-0">
-                    <p className="font-mono text-[10px] text-muted uppercase">
+                    <p className="font-mono text-xs text-muted uppercase">
                       {formatDayOfWeek(ev.date)}
                     </p>
                     <p className="font-body text-lg text-blue">
@@ -104,7 +104,7 @@ export function HomeToday({ quote, promotions, upcomingEvents }: HomeTodayProps)
                       {ev.title}
                     </p>
                     {ev.location && (
-                      <p className="font-mono text-[10px] text-muted mt-0.5 tracking-wider">
+                      <p className="font-mono text-xs text-muted mt-0.5 tracking-wider">
                         {ev.location}
                       </p>
                     )}
@@ -127,7 +127,7 @@ export function HomeToday({ quote, promotions, upcomingEvents }: HomeTodayProps)
               key={promo.promo_id}
               className="mb-4 py-4 border-y border-rule"
             >
-              <p className="font-mono text-[10px] tracking-wider uppercase mb-1.5" style={{ color: promo.color || '#1b5e8a' }}>
+              <p className="font-mono text-xs tracking-wider uppercase mb-1.5" style={{ color: promo.color || '#1b5e8a' }}>
                 Announcement
               </p>
               <p className="font-body text-lg mb-1">

@@ -237,7 +237,7 @@ export function Sidebar({ pipelineStats, role = 'admin', orgName, pendingRequest
             <span className="text-white/30">&rarr;</span>
             <span className="text-green-300 font-medium">{pipelineStats.published}</span>
           </div>
-          <div className="flex items-center gap-1 text-[10px] text-white/30 mt-0.5">
+          <div className="flex items-center gap-1 text-xs text-white/30 mt-0.5">
             <span>inbox</span>
             <span></span>
             <span>review</span>
@@ -263,7 +263,7 @@ function NavGroupSection({ group, isActive, pendingRequestCount }: {
       <button
         onClick={function () { setOpen(!open) }}
         aria-expanded={open}
-        className="flex items-center justify-between w-full px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-white/40 hover:text-white/60 transition-colors"
+        className="flex items-center justify-between w-full px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-white/40 hover:text-white/60 transition-colors"
       >
         {group.label}
         <ChevronDown
@@ -288,7 +288,7 @@ function NavGroupSection({ group, isActive, pendingRequestCount }: {
                 <Icon size={15} className="flex-shrink-0" />
                 <span className="flex-1 truncate">{item.label}</span>
                 {item.href === '/dashboard/users' && pendingRequestCount > 0 && (
-                  <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">
+                  <span className="bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full leading-none">
                     {pendingRequestCount}
                   </span>
                 )}

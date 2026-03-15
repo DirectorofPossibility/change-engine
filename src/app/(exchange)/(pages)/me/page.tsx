@@ -436,7 +436,7 @@ export default async function MyDashboardPage() {
                 <div style={{ borderBottom: '2px dotted ' + '#dde1e8' }} className="mb-4" />
                 <div className="p-4 relative overflow-hidden" style={{ border: '2px solid ' + '#dde1e8' }}>
                   <div className="absolute left-0 top-0 bottom-0 w-1" style={{ background: '#1b5e8a' }} />
-                  <p style={{ color: "#1b5e8a" }} className="text-[10px] uppercase tracking-wider mb-1 pl-2">Community Partner</p>
+                  <p style={{ color: "#1b5e8a" }} className="text-xs uppercase tracking-wider mb-1 pl-2">Community Partner</p>
                   <p style={{  }} className="text-lg pl-2">$100<span className="text-sm" style={{ color: "#5c6474" }}> - $5,000/yr</span></p>
                   <ul className="mt-2 pl-2 space-y-1 text-[12px]" style={{ color: "#5c6474" }}>
                     <li>Verified organizational profile</li>

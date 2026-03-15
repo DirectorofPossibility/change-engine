@@ -329,7 +329,7 @@ export function SenatorToolClient() {
 
       {/* ── Hero ── */}
       <section className="max-w-[800px] mx-auto px-8 pt-16 pb-12 text-center border-b-2 border-brand-border">
-        <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-brand-muted-light mb-5">Most people think their voice doesn&apos;t matter. Most people are wrong.</p>
+        <p className="font-mono text-xs font-bold uppercase tracking-widest text-brand-muted-light mb-5">Most people think their voice doesn&apos;t matter. Most people are wrong.</p>
         <h1 className="font-display text-[clamp(2.5rem,5vw,3.5rem)] leading-[1.1] text-brand-text mb-5">
           Call your senators. <span className="text-brand-accent">It works.</span>
         </h1>
@@ -391,7 +391,7 @@ export function SenatorToolClient() {
       <main className="grid grid-cols-1 lg:grid-cols-[1fr_440px]">
         {/* Left: Content */}
         <article className="p-8 sm:p-12 lg:border-r-2 border-brand-border">
-          <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-brand-accent mb-3">What Congress Is Deciding</p>
+          <p className="font-mono text-xs font-bold uppercase tracking-widest text-brand-accent mb-3">What Congress Is Deciding</p>
           <h2 className="font-display text-2xl sm:text-3xl text-brand-text mb-5">{campaign.title}</h2>
           <p className="text-base leading-relaxed text-brand-muted mb-5">{campaign.summary}</p>
           <a href={campaign.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm font-bold text-brand-text hover:underline">
@@ -462,7 +462,7 @@ export function SenatorToolClient() {
 
           {/* Other Issues */}
           <div className="border border-brand-border p-7">
-            <h3 className="font-mono text-[10px] font-bold uppercase tracking-widest text-brand-muted-light mb-5">Other Issues You Can Call About</h3>
+            <h3 className="font-mono text-xs font-bold uppercase tracking-widest text-brand-muted-light mb-5">Other Issues You Can Call About</h3>
             <div className="space-y-3">
               {campaignKeys.map(function (key) {
                 const c = CAMPAIGNS[key]
@@ -498,7 +498,7 @@ export function SenatorToolClient() {
             </div>
 
             <div className="mb-4">
-              <label className="block font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-2">Your Zip Code</label>
+              <label className="block font-mono text-xs font-bold uppercase tracking-wider text-brand-muted mb-2">Your Zip Code</label>
               <input
                 type="text"
                 value={zip}
@@ -509,7 +509,7 @@ export function SenatorToolClient() {
               />
             </div>
             <div className="mb-4">
-              <label className="block font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-2">State</label>
+              <label className="block font-mono text-xs font-bold uppercase tracking-wider text-brand-muted mb-2">State</label>
               <select
                 value={stateCode}
                 onChange={function (e) { handleStateChange(e.target.value) }}
@@ -578,7 +578,7 @@ export function SenatorToolClient() {
             <div className="bg-white p-5 text-brand-text text-sm leading-relaxed whitespace-pre-line mb-4 border border-brand-border">
               {campaign.script.intro.replace('[ZIP]', zip || '[ZIP]')}
 
-              <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted-light mt-5 mb-3">Pick the one closest to your view:</p>
+              <p className="font-mono text-xs font-bold uppercase tracking-wider text-brand-muted-light mt-5 mb-3">Pick the one closest to your view:</p>
 
               {campaign.script.options.map(function (opt) {
                 const isSelected = selectedOption === opt.id
@@ -640,7 +640,7 @@ export function SenatorToolClient() {
             ) : (
               <>
                 <div className="mb-4">
-                  <label className="block font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-2">Who did you call?</label>
+                  <label className="block font-mono text-xs font-bold uppercase tracking-wider text-brand-muted mb-2">Who did you call?</label>
                   <select
                     value={logSenator}
                     onChange={function (e) { setLogSenator(e.target.value) }}
@@ -653,7 +653,7 @@ export function SenatorToolClient() {
                   </select>
                 </div>
                 <div className="mb-5">
-                  <label className="block font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-2">What happened?</label>
+                  <label className="block font-mono text-xs font-bold uppercase tracking-wider text-brand-muted mb-2">What happened?</label>
                   <select
                     value={logOutcome}
                     onChange={function (e) { setLogOutcome(e.target.value) }}

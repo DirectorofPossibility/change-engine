@@ -360,7 +360,7 @@ export function MyBallot({ candidates, electionName, electionDate }: MyBallotPro
                                         {c.candidate_name}
                                       </span>
                                       {c.incumbent_status === 'Yes' && (
-                                        <span className="inline-flex items-center gap-0.5 text-[10px] uppercase tracking-wide font-semibold text-brand-accent bg-brand-accent/10 px-1.5 py-0.5 rounded">
+                                        <span className="inline-flex items-center gap-0.5 text-xs uppercase tracking-wide font-semibold text-brand-accent bg-brand-accent/10 px-1.5 py-0.5 rounded">
                                           <Shield size={9} />
                                           Incumbent
                                         </span>

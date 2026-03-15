@@ -30,7 +30,7 @@ export default async function StoriesPage() {
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
-          <p style={{ fontSize: '0.7rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
+          <p style={{ fontSize: '0.875rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
             The Change Engine
           </p>
           <h1 style={{ fontSize: '2.5rem', lineHeight: 1.15, marginTop: '0.75rem' }}>
@@ -43,7 +43,7 @@ export default async function StoriesPage() {
             <div className="flex flex-wrap gap-8 mt-8">
               <div>
                 <span style={{ fontSize: '2rem',  }}>{items.length}</span>
-                <span style={{ fontSize: '0.65rem', color: "#5c6474", textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>Stories</span>
+                <span style={{ fontSize: '0.875rem', color: "#5c6474", textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>Stories</span>
               </div>
             </div>
           )}
@@ -52,7 +52,7 @@ export default async function StoriesPage() {
 
       {/* Breadcrumb */}
       <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontSize: '0.7rem', color: "#5c6474" }}>
+        <nav style={{ fontSize: '0.875rem', color: "#5c6474" }}>
           <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
           <span>Stories</span>
@@ -63,7 +63,7 @@ export default async function StoriesPage() {
       <div className="max-w-[900px] mx-auto px-6 py-8">
         <div className="flex items-baseline justify-between mb-1">
           <h2 style={{ fontSize: '1.5rem',  }}>All Stories</h2>
-          <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{items.length}</span>
+          <span style={{ fontSize: '0.875rem', color: "#5c6474" }}>{items.length}</span>
         </div>
         <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1.5rem' }} />
 
@@ -86,10 +86,10 @@ export default async function StoriesPage() {
                   {s.title || s.story_title}
                 </h3>
                 {(s.summary || s.story_summary) && (
-                  <p style={{ color: "#5c6474", fontSize: '0.85rem' }} className="mt-1 line-clamp-3">{s.summary || s.story_summary}</p>
+                  <p style={{ color: "#5c6474", fontSize: '0.875rem' }} className="mt-1 line-clamp-3">{s.summary || s.story_summary}</p>
                 )}
                 {s.person_name && (
-                  <p style={{ color: "#1b5e8a", fontSize: '0.65rem', marginTop: '0.5rem', fontWeight: 500 }}>
+                  <p style={{ color: "#1b5e8a", fontSize: '0.875rem', marginTop: '0.5rem', fontWeight: 500 }}>
                     {s.person_name}{s.neighborhood ? ' from ' + s.neighborhood : ''}
                   </p>
                 )}
@@ -116,10 +116,10 @@ export default async function StoriesPage() {
                       {s.title || s.story_title}
                     </h3>
                     {(s.summary || s.story_summary) && (
-                      <p style={{ color: "#5c6474", fontSize: '0.85rem' }} className="mt-1 line-clamp-3">{s.summary || s.story_summary}</p>
+                      <p style={{ color: "#5c6474", fontSize: '0.875rem' }} className="mt-1 line-clamp-3">{s.summary || s.story_summary}</p>
                     )}
                     {s.person_name && (
-                      <p style={{ color: "#1b5e8a", fontSize: '0.65rem', marginTop: '0.5rem', fontWeight: 500 }}>
+                      <p style={{ color: "#1b5e8a", fontSize: '0.875rem', marginTop: '0.5rem', fontWeight: 500 }}>
                         {s.person_name}{s.neighborhood ? ' from ' + s.neighborhood : ''}
                       </p>
                     )}

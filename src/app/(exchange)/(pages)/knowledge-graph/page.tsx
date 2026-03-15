@@ -7,7 +7,7 @@ import { SpiralTracker } from '@/components/exchange/SpiralTracker'
 
 export const metadata: Metadata = {
   title: 'Civic Knowledge Graph — Change Engine',
-  description: 'Explore the Civic Knowledge Graph: 7 pathways, hundreds of focus areas, and thousands of connected entities across Houston.',
+  description: 'Explore the Civic Knowledge Graph: 7 pathways, hundreds of focus areas, and thousands of connected entities across your community.',
 }
 
 export const revalidate = 300
@@ -60,7 +60,7 @@ export default async function KnowledgeGraphPage() {
       <div className="max-w-[900px] mx-auto px-6 py-8">
         <div className="space-y-4 mb-8" style={{ color: "#5c6474" }}>
           <p style={{ color: "#1b5e8a" }} className="text-sm font-semibold">
-            Everything in Houston civic life is connected. Nobody was showing you how.
+            Everything in civic life is connected. Nobody was showing you how.
           </p>
           <p>
             A city council vote affects a neighborhood. A nonprofit serves families in that neighborhood. A foundation funds the nonprofit. A state law shapes what the foundation can do.

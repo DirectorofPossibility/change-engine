@@ -306,7 +306,7 @@ export default async function ResourceCenterPage() {
                         <h4 className="text-[14px] font-bold leading-snug line-clamp-2 group-hover:underline" style={{ color: '#2D2D2A' }}>{opp.opportunity_name}</h4>
                         <div className="flex items-center gap-2 mt-1.5 flex-wrap">
                           {opp.city && <span className="text-[11px]" style={{ color: '#9B9590' }}>{opp.city}</span>}
-                          {opp.is_virtual && <span className="text-[10px] font-mono px-1.5 py-0.5 border border-rule">Virtual</span>}
+                          {opp.is_virtual && <span className="text-xs font-mono px-1.5 py-0.5 border border-rule">Virtual</span>}
                           {opp.start_date && <span className="text-[11px]" style={{ color: '#9B9590' }}>{new Date(opp.start_date).toLocaleDateString()}</span>}
                         </div>
                       </div>

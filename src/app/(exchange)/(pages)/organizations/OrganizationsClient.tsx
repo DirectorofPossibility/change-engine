@@ -74,18 +74,18 @@ function classifyScope(org: Org): GeoScope {
 
 const SCOPE_CONFIG: Record<GeoScope, { label: string; description: string; color: string }> = {
   local: {
-    label: 'Houston Area',
-    description: 'Organizations based in the Greater Houston region',
+    label: 'Local',
+    description: 'Organizations based in your local area',
     color: '#1a6b56',
   },
   regional: {
     label: 'Texas & Regional',
-    description: 'Statewide and regional organizations serving Houston',
+    description: 'Statewide and regional organizations serving your area',
     color: '#1e4d7a',
   },
   national: {
     label: 'National & Beyond',
-    description: 'National and international organizations with Houston-relevant programs',
+    description: 'National and international organizations with locally relevant programs',
     color: '#4a2870',
   },
 }
@@ -286,7 +286,7 @@ function OrgGrid({ orgs }: { orgs: Array<Org & { _scope: GeoScope }> }) {
                   {org.description_5th_grade || org.mission_statement}
                 </p>
               )}
-              <div className="flex items-center gap-2 mt-1 text-[10px] text-muted-light">
+              <div className="flex items-center gap-2 mt-1 text-xs text-muted-light">
                 {org.org_type === 'Community Partner' ? (
                   <span className="inline-flex items-center gap-1 font-semibold" style={{ color: '#1b5e8a' }}>
                     <svg className="w-2.5 h-2.5" viewBox="0 0 20 20" fill="#1b5e8a"><path d="M10 1l2.39 1.68L15.2 2.1l.58 2.82 2.32 1.58-.92 2.72 1.14 2.6-2.14 1.86.18 2.88-2.8.76L12.39 19 10 17.5 7.61 19l-1.17-2.68-2.8-.76.18-2.88L1.68 10.82l1.14-2.6-.92-2.72L4.22 3.92l.58-2.82 2.81.58L10 1z" /></svg>

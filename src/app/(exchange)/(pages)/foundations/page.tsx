@@ -59,7 +59,7 @@ export default async function FoundationsPage() {
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="relative max-w-[900px] mx-auto px-6 py-16">
-          <p style={{ fontSize: '0.65rem', letterSpacing: '0.2em', color: "#5c6474" }} className="uppercase mb-4">
+          <p style={{ fontSize: '0.875rem', letterSpacing: '0.2em', color: "#5c6474" }} className="uppercase mb-4">
             Change Engine
           </p>
           <h1 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', lineHeight: 1.1 }}>
@@ -71,20 +71,20 @@ export default async function FoundationsPage() {
           <div className="flex flex-wrap gap-6 mt-6">
             <div>
               <span style={{ fontSize: '1.5rem', fontWeight: 700 }}>{foundations.length}</span>
-              <span style={{ fontSize: '0.6875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Foundations</span>
+              <span style={{ fontSize: '0.875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Foundations</span>
             </div>
             <div>
               <span style={{ fontSize: '1.5rem', fontWeight: 700 }}>{assetStr}</span>
-              <span style={{ fontSize: '0.6875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Est. Assets</span>
+              <span style={{ fontSize: '0.875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Est. Assets</span>
             </div>
             <div>
               <span style={{ fontSize: '1.5rem', fontWeight: 700 }}>{uniqueFocusAreas}</span>
-              <span style={{ fontSize: '0.6875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Focus Areas</span>
+              <span style={{ fontSize: '0.875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Focus Areas</span>
             </div>
             {spotlightCount > 0 && (
               <div>
                 <span style={{ fontSize: '1.5rem', fontWeight: 700 }}>{spotlightCount}</span>
-                <span style={{ fontSize: '0.6875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Spotlighted</span>
+                <span style={{ fontSize: '0.875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Spotlighted</span>
               </div>
             )}
           </div>
@@ -93,7 +93,7 @@ export default async function FoundationsPage() {
 
       {/* ── Breadcrumb ── */}
       <div className="max-w-[900px] mx-auto px-6 pt-6 pb-2">
-        <nav style={{ fontSize: '0.65rem', letterSpacing: '0.12em', color: "#5c6474" }} className="uppercase">
+        <nav style={{ fontSize: '0.875rem', letterSpacing: '0.12em', color: "#5c6474" }} className="uppercase">
           <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
           <span>Foundations</span>
@@ -141,16 +141,16 @@ export default async function FoundationsPage() {
 
         {/* ── Footer links ── */}
         <div className="flex flex-wrap gap-6 py-4">
-          <Link href="/organizations" style={{ fontSize: '0.7rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline">
+          <Link href="/organizations" style={{ fontSize: '0.875rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline">
             Organizations
           </Link>
-          <Link href="/services" style={{ fontSize: '0.7rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline">
+          <Link href="/services" style={{ fontSize: '0.875rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline">
             Services
           </Link>
-          <Link href="/officials" style={{ fontSize: '0.7rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline">
+          <Link href="/officials" style={{ fontSize: '0.875rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline">
             Officials
           </Link>
-          <Link href="/" style={{ fontSize: '0.7rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline ml-auto">
+          <Link href="/" style={{ fontSize: '0.875rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline ml-auto">
             Back to Home
           </Link>
         </div>

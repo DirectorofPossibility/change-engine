@@ -100,7 +100,7 @@ export function PersonaPageClient({ slug, config, sectionData, stats, quote, pat
                   <Icon size={48} color={centerColor} />
                 </div>
                 <div>
-                  <p className="text-[10px] font-mono font-bold uppercase tracking-widest" style={{ color: centerColor }}>
+                  <p className="text-xs font-mono font-bold uppercase tracking-widest" style={{ color: centerColor }}>
                     Your Journey
                   </p>
                   <h1 className="font-display text-3xl sm:text-4xl font-bold text-brand-text">{config.name}</h1>
@@ -119,7 +119,7 @@ export function PersonaPageClient({ slug, config, sectionData, stats, quote, pat
             <div className="lg:w-[340px] flex-shrink-0 space-y-4">
               {/* ZIP personalization */}
               <div className="bg-white border border-brand-border p-4" style={{}}>
-                <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted block mb-2">
+                <label className="text-xs font-mono font-bold uppercase tracking-wider text-brand-muted block mb-2">
                   Personalize Your View
                 </label>
                 <div className="flex gap-2">
@@ -175,7 +175,7 @@ export function PersonaPageClient({ slug, config, sectionData, stats, quote, pat
                   <p className="text-xl sm:text-2xl font-display font-bold" style={{ color: centerColor }}>
                     {stat.value.toLocaleString()}
                   </p>
-                  <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted mt-0.5">
+                  <p className="text-xs font-mono font-bold uppercase tracking-wider text-brand-muted mt-0.5">
                     {stat.label}
                   </p>
                 </div>
@@ -297,7 +297,7 @@ export function PersonaPageClient({ slug, config, sectionData, stats, quote, pat
 
             {/* Help numbers */}
             <div className="px-4 py-3 bg-brand-bg border border-brand-border">
-              <p className="text-[10px] font-mono font-bold text-brand-muted">
+              <p className="text-xs font-mono font-bold text-brand-muted">
                 24/7 lines: <span className="text-brand-text">211</span> / <span className="text-brand-text">311</span> / <span className="text-brand-text">988</span>
               </p>
             </div>

@@ -84,7 +84,7 @@ export function SiteConfigClient({ items }: { items: SiteConfigItem[] }) {
                     <div className="flex-1 min-w-0 pr-4">
                       <div className="flex items-center gap-2">
                         <span className="font-medium text-sm">{item.label}</span>
-                        <code className="text-[10px] bg-gray-100 px-1.5 py-0.5 rounded text-gray-500">{item.key}</code>
+                        <code className="text-xs bg-gray-100 px-1.5 py-0.5 rounded text-gray-500">{item.key}</code>
                       </div>
                       {item.description && (
                         <p className="text-xs text-gray-500 mt-0.5">{item.description}</p>

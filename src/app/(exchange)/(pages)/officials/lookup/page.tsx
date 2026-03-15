@@ -8,7 +8,7 @@ export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: 'Who Represents You?',
-  description: 'Drop your ZIP code to see who represents you in Houston and Harris County.',
+  description: 'Drop your ZIP code to see who represents you at every level of government.',
 }
 
 export default function ZipLookupPage() {

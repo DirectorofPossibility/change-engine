@@ -40,7 +40,7 @@ function NuggetCard({ nugget, color = '#8B7E74', readMoreLabel = 'Read more' }: 
           </p>
           <div className="flex items-center justify-between mt-2">
             {nugget.pageRef && (
-              <span className="text-[10px] text-brand-muted">{nugget.pageRef}</span>
+              <span className="text-xs text-brand-muted">{nugget.pageRef}</span>
             )}
             <span
               className="text-xs font-semibold transition-colors"

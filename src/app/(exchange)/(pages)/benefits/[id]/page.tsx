@@ -34,11 +34,11 @@ export default async function BenefitDetailPage({ params }: { params: Promise<{ 
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
-          <p style={{ fontSize: '0.7rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
+          <p style={{ fontSize: '0.875rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
             The Change Engine
           </p>
           {b.benefit_type && (
-            <span style={{ fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: "#1b5e8a", display: 'block', marginTop: '0.75rem' }}>{b.benefit_type}</span>
+            <span style={{ fontSize: '0.875rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: "#1b5e8a", display: 'block', marginTop: '0.75rem' }}>{b.benefit_type}</span>
           )}
           <h1 style={{ fontSize: '2.2rem', lineHeight: 1.15, marginTop: '0.5rem' }}>
             {b.benefit_name}
@@ -51,7 +51,7 @@ export default async function BenefitDetailPage({ params }: { params: Promise<{ 
           {b.application_url && (
             <a href={b.application_url} target="_blank" rel="noopener noreferrer"
               className="inline-block mt-4 px-5 py-2 text-white transition-opacity hover:opacity-90"
-              style={{ background: '#1b5e8a', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+              style={{ background: '#1b5e8a', fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
               Apply Now
             </a>
           )}
@@ -60,7 +60,7 @@ export default async function BenefitDetailPage({ params }: { params: Promise<{ 
 
       {/* Breadcrumb */}
       <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontSize: '0.7rem', color: "#5c6474" }}>
+        <nav style={{ fontSize: '0.875rem', color: "#5c6474" }}>
           <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
           <Link href="/benefits" className="hover:underline" style={{ color: "#1b5e8a" }}>Benefits</Link>

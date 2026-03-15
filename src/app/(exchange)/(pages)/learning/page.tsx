@@ -14,7 +14,7 @@ export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: 'Learning Center — Change Engine',
-  description: 'Understand your community through research, news, guided pathways, and conversation. Houston civic knowledge at a 6th-grade reading level.',
+  description: 'Understand your community through research, news, guided pathways, and conversation. Civic knowledge at a 6th-grade reading level.',
 }
 
 const THEME_LIST = Object.entries(THEMES).map(([id, t]) => ({ id, ...t }))
@@ -112,7 +112,7 @@ export default async function LearningCenterPage() {
             </div>
 
             <h1 className="font-serif text-[clamp(2.2rem,5vw,3.5rem)] leading-[1.08] mb-5" style={{ color: '#2D2D2A' }}>
-              What&rsquo;s happening in Houston &mdash; <span style={{ color: '#6B6560' }}>and why it matters to you.</span>
+              What&rsquo;s happening &mdash; <span style={{ color: '#6B6560' }}>and why it matters to you.</span>
             </h1>
             <p className="text-[17px] leading-relaxed max-w-xl" style={{ color: '#6B6560' }}>
               News, research, guided pathways, and AI-powered discovery. Everything written at a 6th-grade reading level, in 3 languages.
@@ -154,7 +154,7 @@ export default async function LearningCenterPage() {
             <div className="flex items-center gap-3">
               <Newspaper size={20} style={{ color: '#2563eb' }} />
               <div>
-                <h2 className="font-serif text-2xl" style={{ color: '#2D2D2A' }}>Latest from Houston</h2>
+                <h2 className="font-serif text-2xl" style={{ color: '#2D2D2A' }}>Latest from Your Community</h2>
                 <p className="text-[13px]" style={{ color: '#9B9590' }}>{newsCount.toLocaleString()} articles &middot; organized by what matters to you</p>
               </div>
             </div>
@@ -230,7 +230,7 @@ export default async function LearningCenterPage() {
                           {theme && (
                             <div className="flex items-center gap-1.5 mb-1">
                               <span className="w-1.5 h-1.5" style={{ background: theme.color }} />
-                              <span className="text-[10px] uppercase tracking-wider font-semibold" style={{ color: theme.color }}>{theme.name}</span>
+                              <span className="text-xs uppercase tracking-wider font-semibold" style={{ color: theme.color }}>{theme.name}</span>
                             </div>
                           )}
                           <h4 className="text-[14px] font-bold leading-snug line-clamp-2 group-hover:underline" style={{ color: '#2D2D2A' }}>
@@ -394,11 +394,11 @@ export default async function LearningCenterPage() {
                       </svg>
                       <div className="absolute bottom-2 left-3 flex items-center gap-1.5">
                         <BookOpen size={12} color="white" />
-                        {doc.page_count && <span className="text-[10px] font-mono text-white/70">{doc.page_count} pages</span>}
+                        {doc.page_count && <span className="text-xs font-mono text-white/70">{doc.page_count} pages</span>}
                       </div>
                     </div>
                     <div className="p-4">
-                      {theme && <span className="text-[10px] uppercase tracking-wider font-semibold block mb-1" style={{ color: theme.color }}>{theme.name}</span>}
+                      {theme && <span className="text-xs uppercase tracking-wider font-semibold block mb-1" style={{ color: theme.color }}>{theme.name}</span>}
                       <h4 className="text-[14px] font-bold leading-snug line-clamp-3 group-hover:underline" style={{ color: '#2D2D2A' }}>
                         {doc.title}
                       </h4>
@@ -453,7 +453,7 @@ export default async function LearningCenterPage() {
                         )}
                       </div>
                       <div className="flex-1 min-w-0 flex flex-col justify-center">
-                        {theme && <span className="text-[10px] uppercase tracking-wider font-semibold mb-0.5" style={{ color: theme.color }}>{theme.name}</span>}
+                        {theme && <span className="text-xs uppercase tracking-wider font-semibold mb-0.5" style={{ color: theme.color }}>{theme.name}</span>}
                         <h4 className="text-[15px] font-bold leading-snug line-clamp-2 group-hover:underline" style={{ color: '#2D2D2A' }}>{guide.title}</h4>
                         {guide.description && <p className="text-[12px] mt-1 line-clamp-1" style={{ color: '#9B9590' }}>{guide.description}</p>}
                       </div>
@@ -504,7 +504,7 @@ export default async function LearningCenterPage() {
                     <div className="flex-1">
                       <h3 className="text-[15px] font-bold group-hover:underline" style={{ color: '#2D2D2A' }}>Ask Chance</h3>
                       <p className="text-[12px] mt-1 leading-relaxed line-clamp-2" style={{ color: '#6B6560' }}>
-                        Your AI civic guide. Ask about services, officials, policies — answers grounded in real Houston data.
+                        Your AI civic guide. Ask about services, officials, policies — answers grounded in real community data.
                       </p>
                       <span className="inline-flex items-center gap-1.5 mt-2 text-[11px] font-semibold" style={{ color: '#16a34a' }}>
                         <span className="relative flex h-2 w-2">
@@ -526,7 +526,7 @@ export default async function LearningCenterPage() {
                     <div className="flex-1">
                       <h3 className="text-[15px] font-bold group-hover:underline" style={{ color: '#2D2D2A' }}>Community Bookshelf</h3>
                       <p className="text-[12px] mt-1 leading-relaxed line-clamp-2" style={{ color: '#6B6560' }}>
-                        Books that shaped how Houston thinks about itself. Curated reads on civic life and belonging.
+                        Books that shape how communities think about themselves. Curated reads on civic life and belonging.
                       </p>
                     </div>
                   </div>

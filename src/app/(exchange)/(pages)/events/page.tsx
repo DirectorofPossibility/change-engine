@@ -59,7 +59,7 @@ export default async function EventsPage() {
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
               <h2 style={{ fontSize: '1.5rem',  }}>Upcoming</h2>
-              <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{upcoming.length}</span>
+              <span style={{ fontSize: '0.875rem', color: "#5c6474" }}>{upcoming.length}</span>
             </div>
             <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
             {upcoming.slice(0, 4).map(function (e) {
@@ -83,7 +83,7 @@ export default async function EventsPage() {
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
               <h2 style={{ fontSize: '1.5rem', color: "#5c6474" }}>Past Events</h2>
-              <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{past.length}</span>
+              <span style={{ fontSize: '0.875rem', color: "#5c6474" }}>{past.length}</span>
             </div>
             <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
             <div style={{ opacity: 0.7 }}>
@@ -124,36 +124,36 @@ function EventItem({ e, userZip }: { e: any; userZip: string }) {
     <Link href={'/events/' + e.event_id} className="flex items-start gap-4 py-4 hover:opacity-80" style={{ borderBottom: '1px solid #dde1e8' }}>
       {date && (
         <div className="flex-shrink-0 w-14 h-14 flex flex-col items-center justify-center" style={{ background: "#f4f5f7", border: '1px solid #dde1e8' }}>
-          <span style={{ fontSize: '0.6875rem', textTransform: 'uppercase', fontWeight: 700, color: "#1b5e8a" }}>{date.toLocaleDateString('en-US', { month: 'short' })}</span>
+          <span style={{ fontSize: '0.875rem', textTransform: 'uppercase', fontWeight: 700, color: "#1b5e8a" }}>{date.toLocaleDateString('en-US', { month: 'short' })}</span>
           <span style={{ fontSize: '1.2rem', fontWeight: 700, lineHeight: 1 }}>{date.getDate()}</span>
         </div>
       )}
       <div className="flex-1 min-w-0">
         <h3 style={{ fontWeight: 600,  }}>{e.event_name}</h3>
-        {e.description_5th_grade && <p className="line-clamp-2 mt-1" style={{ fontSize: '0.85rem', color: "#5c6474" }}>{e.description_5th_grade}</p>}
+        {e.description_5th_grade && <p className="line-clamp-2 mt-1" style={{ fontSize: '0.875rem', color: "#5c6474" }}>{e.description_5th_grade}</p>}
         <div className="flex flex-wrap gap-3 mt-2">
           {date && (
-            <span className="flex items-center gap-1" style={{ fontSize: '0.6875rem', color: "#5c6474" }}>
+            <span className="flex items-center gap-1" style={{ fontSize: '0.875rem', color: "#5c6474" }}>
               <Clock className="w-3 h-3" />{date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
             </span>
           )}
           {e.is_virtual === 'true' ? (
-            <span className="flex items-center gap-1" style={{ fontSize: '0.6875rem', color: "#5c6474" }}>
+            <span className="flex items-center gap-1" style={{ fontSize: '0.875rem', color: "#5c6474" }}>
               <Video className="w-3 h-3" />Virtual
             </span>
           ) : e.city && (
-            <span className="flex items-center gap-1" style={{ fontSize: '0.6875rem', color: "#5c6474" }}>
+            <span className="flex items-center gap-1" style={{ fontSize: '0.875rem', color: "#5c6474" }}>
               <MapPin className="w-3 h-3" />{e.city}
             </span>
           )}
           {userZip && e.zip_code === userZip && (
-            <span style={{ fontSize: '0.6875rem', fontWeight: 500, color: "#1b5e8a" }}>Near you</span>
+            <span style={{ fontSize: '0.875rem', fontWeight: 500, color: "#1b5e8a" }}>Near you</span>
           )}
           {e.is_free === 'true' && (
-            <span style={{ fontSize: '0.6875rem', fontWeight: 500, color: '#2d5a27' }}>Free</span>
+            <span style={{ fontSize: '0.875rem', fontWeight: 500, color: '#2d5a27' }}>Free</span>
           )}
           {e.event_type && (
-            <span style={{ fontSize: '0.6875rem', color: "#5c6474" }}>{e.event_type}</span>
+            <span style={{ fontSize: '0.875rem', color: "#5c6474" }}>{e.event_type}</span>
           )}
         </div>
       </div>

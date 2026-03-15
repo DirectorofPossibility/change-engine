@@ -288,7 +288,7 @@ export function EditsReviewClient({ edits: initialEdits, counts }: EditsReviewCl
                       {edit.field_name && <span className="ml-2 font-mono">{FEEDBACK_LABELS[edit.field_name] || edit.field_name}</span>}
                     </p>
                   </div>
-                  <span className={'text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded ' + statusConf.bg + ' ' + statusConf.color}>
+                  <span className={'text-xs font-mono font-bold uppercase px-2 py-0.5 rounded ' + statusConf.bg + ' ' + statusConf.color}>
                     {statusConf.label}
                   </span>
                   <span className="text-[11px] text-brand-muted-light flex-shrink-0">
@@ -306,7 +306,7 @@ export function EditsReviewClient({ edits: initialEdits, counts }: EditsReviewCl
                   <div className="border-t border-brand-border px-4 py-4 space-y-4">
                     {/* Feedback message */}
                     <div>
-                      <p className="text-[10px] font-mono uppercase tracking-wider text-brand-muted-light mb-1">Community Feedback</p>
+                      <p className="text-xs font-mono uppercase tracking-wider text-brand-muted-light mb-1">Community Feedback</p>
                       <p className="text-sm text-brand-text bg-amber-50 rounded-lg p-3 border border-amber-200">
                         {edit.reason || 'No message provided'}
                       </p>
@@ -314,7 +314,7 @@ export function EditsReviewClient({ edits: initialEdits, counts }: EditsReviewCl
 
                     {edit.suggested_value && (
                       <div>
-                        <p className="text-[10px] font-mono uppercase tracking-wider text-brand-muted-light mb-1">Suggested Value</p>
+                        <p className="text-xs font-mono uppercase tracking-wider text-brand-muted-light mb-1">Suggested Value</p>
                         <p className="text-sm text-brand-text bg-green-50 rounded-lg p-3 border border-green-200">
                           {edit.suggested_value}
                         </p>
@@ -346,7 +346,7 @@ export function EditsReviewClient({ edits: initialEdits, counts }: EditsReviewCl
                     {/* Inline editor */}
                     {isEditing && (
                       <div className="border-2 border-blue-200 rounded-lg bg-blue-50/30 p-4 space-y-3">
-                        <p className="text-[10px] font-mono uppercase tracking-wider text-blue-600 font-bold">Edit Entity</p>
+                        <p className="text-xs font-mono uppercase tracking-wider text-blue-600 font-bold">Edit Entity</p>
 
                         {loadingEntity ? (
                           <div className="flex items-center gap-2 py-4 text-sm text-brand-muted">

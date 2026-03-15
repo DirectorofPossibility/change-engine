@@ -61,7 +61,7 @@ function ProgressRing({ completed, total }: { completed: number; total: number }
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span className="text-2xl font-bold text-[#0d1117]">{completed}</span>
-        <span className="text-xs text-[#6C7380]">of {total}</span>
+        <span className="text-sm text-[#6C7380]">of {total}</span>
       </div>
     </div>
   )
@@ -127,7 +127,7 @@ export default function CivicScorecard() {
                     {item.label}
                   </span>
                   {item.completedAt && (
-                    <span className="ml-2 text-xs text-[#6C7380]">
+                    <span className="ml-2 text-sm text-[#6C7380]">
                       {formatDate(item.completedAt)}
                     </span>
                   )}
@@ -143,7 +143,7 @@ export default function CivicScorecard() {
                   <span className="text-sm text-[#6C7380] group-hover:text-[#0d1117] transition-colors">
                     {item.label}
                   </span>
-                  <span className="ml-2 text-xs text-[#E8723A] opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span className="ml-2 text-sm text-[#E8723A] opacity-0 group-hover:opacity-100 transition-opacity">
                     Get started &rarr;
                   </span>
                 </div>
@@ -155,7 +155,7 @@ export default function CivicScorecard() {
 
       {/* Progress bar (mobile-friendly alternative view) */}
       <div className="mt-6 pt-4 border-t border-[#E5E1DB]">
-        <div className="flex items-center justify-between text-xs text-[#6C7380] mb-2">
+        <div className="flex items-center justify-between text-sm text-[#6C7380] mb-2">
           <span>{completed} of {total} actions completed</span>
           <span>{Math.round((completed / total) * 100)}%</span>
         </div>

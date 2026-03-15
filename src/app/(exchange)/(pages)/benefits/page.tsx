@@ -32,7 +32,7 @@ export default async function BenefitsPage() {
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
-          <p style={{ fontSize: '0.7rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
+          <p style={{ fontSize: '0.875rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
             The Change Engine
           </p>
           <h1 style={{ fontSize: '2.5rem', lineHeight: 1.15, marginTop: '0.75rem' }}>
@@ -45,7 +45,7 @@ export default async function BenefitsPage() {
             <div className="flex flex-wrap gap-8 mt-8">
               <div>
                 <span style={{ fontSize: '2rem',  }}>{allBenefits.length}</span>
-                <span style={{ fontSize: '0.65rem', color: "#5c6474", textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>Programs</span>
+                <span style={{ fontSize: '0.875rem', color: "#5c6474", textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>Programs</span>
               </div>
             </div>
           )}
@@ -54,7 +54,7 @@ export default async function BenefitsPage() {
 
       {/* Breadcrumb */}
       <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontSize: '0.7rem', color: "#5c6474" }}>
+        <nav style={{ fontSize: '0.875rem', color: "#5c6474" }}>
           <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
           <span>Benefits</span>
@@ -65,7 +65,7 @@ export default async function BenefitsPage() {
       <div className="max-w-[900px] mx-auto px-6 py-8">
         <div className="flex items-baseline justify-between mb-1">
           <h2 style={{ fontSize: '1.5rem',  }}>All Programs</h2>
-          <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{allBenefits.length}</span>
+          <span style={{ fontSize: '0.875rem', color: "#5c6474" }}>{allBenefits.length}</span>
         </div>
         <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1.5rem' }} />
 
@@ -76,11 +76,11 @@ export default async function BenefitsPage() {
                 className="block p-5 border hover:border-current transition-colors"
                 style={{ borderColor: '#dde1e8', background: "#f4f5f7" }}>
                 <h3 style={{ fontSize: '1rem' }}>{b.benefit_name}</h3>
-                {b.description_5th_grade && <p style={{ color: "#5c6474", fontSize: '0.85rem' }} className="mt-1 line-clamp-2">{b.description_5th_grade}</p>}
+                {b.description_5th_grade && <p style={{ color: "#5c6474", fontSize: '0.875rem' }} className="mt-1 line-clamp-2">{b.description_5th_grade}</p>}
                 <div className="flex flex-wrap gap-3 mt-2" style={{  }}>
-                  {b.benefit_type && <span style={{ color: "#5c6474", fontSize: '0.7rem' }}>{b.benefit_type}</span>}
-                  {b.benefit_amount && <span style={{ color: "#1b5e8a", fontSize: '0.7rem' }}>{b.benefit_amount}</span>}
-                  {b.application_url && <span style={{ color: "#1b5e8a", fontSize: '0.7rem' }}>Get started</span>}
+                  {b.benefit_type && <span style={{ color: "#5c6474", fontSize: '0.875rem' }}>{b.benefit_type}</span>}
+                  {b.benefit_amount && <span style={{ color: "#1b5e8a", fontSize: '0.875rem' }}>{b.benefit_amount}</span>}
+                  {b.application_url && <span style={{ color: "#1b5e8a", fontSize: '0.875rem' }}>Get started</span>}
                 </div>
               </Link>
             )
@@ -99,11 +99,11 @@ export default async function BenefitsPage() {
                     className="block p-5 border hover:border-current transition-colors"
                     style={{ borderColor: '#dde1e8', background: "#f4f5f7" }}>
                     <h3 style={{ fontSize: '1rem' }}>{b.benefit_name}</h3>
-                    {b.description_5th_grade && <p style={{ color: "#5c6474", fontSize: '0.85rem' }} className="mt-1 line-clamp-2">{b.description_5th_grade}</p>}
+                    {b.description_5th_grade && <p style={{ color: "#5c6474", fontSize: '0.875rem' }} className="mt-1 line-clamp-2">{b.description_5th_grade}</p>}
                     <div className="flex flex-wrap gap-3 mt-2" style={{  }}>
-                      {b.benefit_type && <span style={{ color: "#5c6474", fontSize: '0.7rem' }}>{b.benefit_type}</span>}
-                      {b.benefit_amount && <span style={{ color: "#1b5e8a", fontSize: '0.7rem' }}>{b.benefit_amount}</span>}
-                      {b.application_url && <span style={{ color: "#1b5e8a", fontSize: '0.7rem' }}>Get started</span>}
+                      {b.benefit_type && <span style={{ color: "#5c6474", fontSize: '0.875rem' }}>{b.benefit_type}</span>}
+                      {b.benefit_amount && <span style={{ color: "#1b5e8a", fontSize: '0.875rem' }}>{b.benefit_amount}</span>}
+                      {b.application_url && <span style={{ color: "#1b5e8a", fontSize: '0.875rem' }}>Get started</span>}
                     </div>
                   </Link>
                 )

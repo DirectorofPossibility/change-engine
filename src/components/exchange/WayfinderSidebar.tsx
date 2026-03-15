@@ -201,7 +201,7 @@ export function WayfinderSidebar({
       <div className="px-5">
         <button
           onClick={function () { setDiscoverOpen(!discoverOpen) }}
-          className="flex items-center gap-1.5 w-full text-[10px] font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 hover:text-brand-text transition-colors font-display"
+          className="flex items-center gap-1.5 w-full text-xs font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 hover:text-brand-text transition-colors font-display"
         >
           {discoverOpen ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
           {t('sidebar.your_guide')}
@@ -229,7 +229,7 @@ export function WayfinderSidebar({
 
       {/* 7 Pathways */}
       <div className="px-5">
-        <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 font-display">
+        <p className="text-xs font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 font-display">
           {t('sidebar.explore_houston')}
         </p>
         <div className="space-y-0.5">
@@ -285,7 +285,7 @@ export function WayfinderSidebar({
       <div className="px-5">
         <button
           onClick={function () { setTopicsOpen(!topicsOpen) }}
-          className="flex items-center gap-1.5 w-full text-[10px] font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 hover:text-brand-text transition-colors font-display"
+          className="flex items-center gap-1.5 w-full text-xs font-bold tracking-[0.14em] uppercase text-brand-muted mb-2 hover:text-brand-text transition-colors font-display"
         >
           {topicsOpen ? <ChevronDown size={13} /> : <ChevronRight size={13} />}
           {t('sidebar.topics')} ({topics.length})

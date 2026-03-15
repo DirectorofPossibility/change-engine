@@ -117,7 +117,7 @@ export default function JourneyIndexPage() {
                       <Icon size={22} color="white" />
                     </div>
                     <div>
-                      <span className="text-[10px] uppercase tracking-[0.15em] block" style={{ color: 'rgba(255,255,255,0.6)' }}>Journey</span>
+                      <span className="text-xs uppercase tracking-[0.15em] block" style={{ color: 'rgba(255,255,255,0.6)' }}>Journey</span>
                       <span className="text-[17px] font-bold text-white">{j.name}</span>
                     </div>
                   </div>
@@ -130,7 +130,7 @@ export default function JourneyIndexPage() {
                   <div className="flex items-center gap-2 flex-wrap">
                     {j.stats.map(function (s) {
                       return (
-                        <span key={s} className="text-[10px] font-mono px-2 py-1" style={{ background: j.accentBg, color: j.color }}>
+                        <span key={s} className="text-xs font-mono px-2 py-1" style={{ background: j.accentBg, color: j.color }}>
                           {s}
                         </span>
                       )

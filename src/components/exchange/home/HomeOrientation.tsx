@@ -48,7 +48,7 @@ export function HomeOrientation() {
       {/* How to use this guide */}
       <section className="bg-paper">
         <div className="max-w-[720px] mx-auto px-6 py-16">
-          <p className="font-mono text-[10px] tracking-[0.14em] text-blue uppercase mb-1.5">
+          <p className="font-mono text-xs tracking-[0.14em] text-blue uppercase mb-1.5">
             How to use this guide
           </p>
           <p className="font-display text-[clamp(20px,3vw,28px)] leading-snug mb-2">
@@ -95,7 +95,7 @@ export function HomeOrientation() {
       {/* Browse by topic */}
       <section className="bg-paper">
         <div className="max-w-[720px] mx-auto px-6 py-16">
-          <p className="font-mono text-[10px] tracking-[0.14em] text-blue uppercase mb-1.5">
+          <p className="font-mono text-xs tracking-[0.14em] text-blue uppercase mb-1.5">
             Browse by topic
           </p>
           <p className="font-display text-[clamp(20px,3vw,28px)] leading-snug mb-2">

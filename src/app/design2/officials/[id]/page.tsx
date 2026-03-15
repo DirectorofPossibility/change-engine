@@ -369,7 +369,7 @@ export default async function OfficialDetailPage({
                         <MapPin size={18} className="mt-0.5 flex-shrink-0" style={{ color: '#6B6560' }} />
                         <div>
                           <span
-                            className="text-[10px] font-bold uppercase tracking-wider"
+                            className="text-xs font-bold uppercase tracking-wider"
                             style={{ color: '#6B6560' }}
                           >
                             Office
@@ -386,7 +386,7 @@ export default async function OfficialDetailPage({
                         <MapPin size={18} className="mt-0.5 flex-shrink-0" style={{ color: '#6B6560' }} />
                         <div>
                           <span
-                            className="text-[10px] font-bold uppercase tracking-wider"
+                            className="text-xs font-bold uppercase tracking-wider"
                             style={{ color: '#6B6560' }}
                           >
                             District Office

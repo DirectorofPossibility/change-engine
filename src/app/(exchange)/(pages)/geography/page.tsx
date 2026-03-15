@@ -11,7 +11,7 @@ export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: 'Explore Your Community — Map View',
-  description: 'Explore Houston through its neighborhoods, districts, and civic boundaries. Find services, officials, and organizations in your area.',
+  description: 'Explore your city through its neighborhoods, districts, and civic boundaries. Find services, officials, and organizations in your area.',
 }
 
 export default async function GeographyPage({
@@ -28,7 +28,7 @@ export default async function GeographyPage({
     <div className="bg-paper min-h-screen">
       <IndexPageHero
         title="Explore Your Community"
-        subtitle="Houston through its neighborhoods, districts, and civic boundaries. Find services, officials, and organizations in your area."
+        subtitle="Your city through its neighborhoods, districts, and civic boundaries. Find services, officials, and organizations in your area."
         color="#1b5e8a"
         stats={[
           { value: superNeighborhoods.length, label: 'Neighborhoods' },

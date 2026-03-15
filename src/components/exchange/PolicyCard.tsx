@@ -68,7 +68,7 @@ export function PolicyCard({ name, summary, billNumber, status, level, sourceUrl
             </span>
           )}
           {recency && (
-            <span className="ml-auto text-[10px] font-mono font-bold text-blue bg-blue/10 px-1.5 py-0.5 rounded">
+            <span className="ml-auto text-xs font-mono font-bold text-blue bg-blue/10 px-1.5 py-0.5 rounded">
               {recency}
             </span>
           )}

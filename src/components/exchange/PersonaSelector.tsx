@@ -38,7 +38,7 @@ export function PersonaSelector() {
                   <div className="flex flex-wrap gap-1 mt-2">
                     {persona.centers.map(function (c) {
                       return (
-                        <span key={c} className="text-[10px] px-1.5 py-0.5 rounded bg-brand-bg text-brand-muted">{c}</span>
+                        <span key={c} className="text-xs px-1.5 py-0.5 rounded bg-brand-bg text-brand-muted">{c}</span>
                       )
                     })}
                   </div>

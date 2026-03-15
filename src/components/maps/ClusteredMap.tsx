@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useMap } from 'react-leaflet'
 import L from 'leaflet'
 import MarkerClusterGroup from 'react-leaflet-cluster'
-import { HoustonMap } from './HoustonMap'
+import { BaseMap } from './BaseMap'
 import { MapMarker, type MarkerData } from './MapMarker'
 import { MapLegend } from './MapLegend'
 
@@ -68,7 +68,7 @@ export function ClusteredMap({ markers, className, showLegend = true }: Clustere
 
   return (
     <div>
-      <HoustonMap className={className || 'w-full h-[400px]'}>
+      <BaseMap className={className || 'w-full h-[400px]'}>
         <FitBounds markers={markers} />
         <ZoomReporter onZoomChange={handleZoom} />
         <MarkerClusterGroup
@@ -83,7 +83,7 @@ export function ClusteredMap({ markers, className, showLegend = true }: Clustere
             <MapMarker key={m.id} marker={m} />
           ))}
         </MarkerClusterGroup>
-      </HoustonMap>
+      </BaseMap>
       {showLegend && types.length > 1 && zoom >= 12 && <MapLegend types={types} />}
     </div>
   )

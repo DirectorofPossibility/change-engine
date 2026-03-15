@@ -210,7 +210,7 @@ export function NeighborhoodStory({ data }: NeighborhoodStoryProps) {
                               {official.title}
                             </p>
                             {official.party && (
-                              <span className="inline-block text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted mt-1 bg-brand-bg rounded px-1.5 py-0.5">
+                              <span className="inline-block text-xs font-mono font-bold uppercase tracking-wider text-brand-muted mt-1 bg-brand-bg rounded px-1.5 py-0.5">
                                 {official.party}
                               </span>
                             )}
@@ -333,14 +333,14 @@ export function NeighborhoodStory({ data }: NeighborhoodStoryProps) {
                       <div className="flex items-center gap-2 mb-2">
                         {policy.level && (
                           <span
-                            className="text-[10px] font-mono font-bold uppercase px-1.5 py-0.5 rounded text-white"
+                            className="text-xs font-mono font-bold uppercase px-1.5 py-0.5 rounded text-white"
                             style={{ backgroundColor: levelColor }}
                           >
                             {policy.level}
                           </span>
                         )}
                         {policy.status && (
-                          <span className="text-[10px] text-brand-muted">{policy.status}</span>
+                          <span className="text-xs text-brand-muted">{policy.status}</span>
                         )}
                       </div>
                       <h4 className="font-semibold text-brand-text text-sm line-clamp-2">
@@ -390,7 +390,7 @@ export function NeighborhoodStory({ data }: NeighborhoodStoryProps) {
                             {item.summary_6th_grade}
                           </p>
                         )}
-                        <div className="flex items-center gap-2 mt-1 text-[10px] text-brand-muted">
+                        <div className="flex items-center gap-2 mt-1 text-xs text-brand-muted">
                           {item.content_type && <span className="capitalize">{item.content_type}</span>}
                           {item.published_at && <span>{formatDate(item.published_at)}</span>}
                         </div>
@@ -432,7 +432,7 @@ export function NeighborhoodStory({ data }: NeighborhoodStoryProps) {
                         <Calendar size={12} />
                         <span>{formatDate(election.election_date)}</span>
                         {election.election_type && (
-                          <span className="bg-brand-bg rounded px-1.5 py-0.5 text-[10px] font-mono uppercase">
+                          <span className="bg-brand-bg rounded px-1.5 py-0.5 text-xs font-mono uppercase">
                             {election.election_type}
                           </span>
                         )}
@@ -444,7 +444,7 @@ export function NeighborhoodStory({ data }: NeighborhoodStoryProps) {
                         (isUrgent ? 'bg-brand-accent/10 text-brand-accent' : 'bg-brand-bg text-brand-muted')
                       }>
                         <div className="text-lg font-bold leading-none">{days}</div>
-                        <div className="text-[10px] font-mono uppercase">days</div>
+                        <div className="text-xs font-mono uppercase">days</div>
                       </div>
                     )}
                   </div>
@@ -538,7 +538,7 @@ function StatCard({
     <div className="bg-white border border-brand-border p-3 text-center">
       <div className="flex justify-center mb-1" style={{ color }}>{icon}</div>
       <div className="text-lg font-bold text-brand-text leading-tight">{value}</div>
-      <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted mt-0.5">
+      <div className="text-xs font-mono font-bold uppercase tracking-wider text-brand-muted mt-0.5">
         {label}
       </div>
     </div>

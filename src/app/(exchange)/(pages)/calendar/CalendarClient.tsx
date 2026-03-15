@@ -256,7 +256,7 @@ export function CalendarClient({ items, themes, initialPathway }: CalendarClient
       {/* Event type filter */}
       {eventTypes.length > 1 && (
         <div className="flex flex-wrap gap-1.5 mb-3">
-          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-muted self-center mr-1">Type</span>
+          <span className="text-xs font-mono font-bold uppercase tracking-wider text-brand-muted self-center mr-1">Type</span>
           <button
             onClick={function () { setActiveEventType(null) }}
             className={'px-2.5 py-1 text-[11px] font-medium transition-colors border ' +
@@ -316,7 +316,7 @@ export function CalendarClient({ items, themes, initialPathway }: CalendarClient
           <div className="grid grid-cols-7 border-b border-brand-border">
             {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(function (d) {
               return (
-                <div key={d} className="text-center text-[10px] font-semibold text-brand-muted py-2 uppercase tracking-wide">
+                <div key={d} className="text-center text-xs font-semibold text-brand-muted py-2 uppercase tracking-wide">
                   {d}
                 </div>
               )
@@ -348,7 +348,7 @@ export function CalendarClient({ items, themes, initialPathway }: CalendarClient
                         <button
                           key={item.id}
                           onClick={function () { setSelectedEvent(item) }}
-                          className="w-full text-left px-1 py-0.5 rounded text-[10px] leading-tight truncate transition-colors hover:opacity-80"
+                          className="w-full text-left px-1 py-0.5 rounded text-xs leading-tight truncate transition-colors hover:opacity-80"
                           style={{ backgroundColor: cfg.color + '18', color: cfg.color }}
                         >
                           {item.title}
@@ -358,7 +358,7 @@ export function CalendarClient({ items, themes, initialPathway }: CalendarClient
                     {dayItems.length > 3 && (
                       <button
                         onClick={function () { setCurrentDate(day); setView('day') }}
-                        className="text-[10px] text-brand-accent hover:underline px-1"
+                        className="text-xs text-brand-accent hover:underline px-1"
                       >
                         +{dayItems.length - 3} more
                       </button>
@@ -382,7 +382,7 @@ export function CalendarClient({ items, themes, initialPathway }: CalendarClient
                 <div key={i} className={'border-r border-brand-border/50 last:border-r-0 ' + (isToday ? 'bg-brand-accent/5' : '')}>
                   {/* Day header */}
                   <div className={'text-center py-2 border-b border-brand-border/50 ' + (isToday ? 'bg-brand-accent/10' : 'bg-brand-bg/50')}>
-                    <div className="text-[10px] text-brand-muted uppercase">
+                    <div className="text-xs text-brand-muted uppercase">
                       {day.toLocaleDateString('en-US', { weekday: 'short' })}
                     </div>
                     <div className={'text-lg font-bold ' + (isToday ? 'text-brand-accent' : 'text-brand-text')}>
@@ -392,7 +392,7 @@ export function CalendarClient({ items, themes, initialPathway }: CalendarClient
                   {/* Events */}
                   <div className="p-1.5 space-y-1 min-h-[200px]">
                     {dayItems.length === 0 && (
-                      <p className="text-[10px] text-brand-muted/40 text-center pt-8">No events</p>
+                      <p className="text-xs text-brand-muted/40 text-center pt-8">No events</p>
                     )}
                     {dayItems.map(function (item) {
                       const cfg = CATEGORY_CONFIG[item.category] || CATEGORY_CONFIG.event
@@ -406,11 +406,11 @@ export function CalendarClient({ items, themes, initialPathway }: CalendarClient
                         >
                           <div className="flex items-center gap-1 mb-0.5">
                             <Icon size={10} style={{ color: cfg.color }} />
-                            <span className="text-[10px] font-medium" style={{ color: cfg.color }}>{cfg.label}</span>
+                            <span className="text-xs font-medium" style={{ color: cfg.color }}>{cfg.label}</span>
                           </div>
                           <p className="text-xs font-medium text-brand-text line-clamp-2">{item.title}</p>
                           {item.date && (
-                            <p className="text-[10px] text-brand-muted mt-0.5">
+                            <p className="text-xs text-brand-muted mt-0.5">
                               <Clock size={9} className="inline mr-0.5" />
                               {formatTime(item.date)}
                             </p>
@@ -506,18 +506,18 @@ function renderEventCard(item: CalendarItem, themes: ThemeInfo[], onClick: () =>
     >
       {dateInfo && (
         <div className="flex-shrink-0 w-14 text-center">
-          <div className="text-[10px] font-bold text-brand-muted tracking-wider">{dateInfo.month}</div>
+          <div className="text-xs font-bold text-brand-muted tracking-wider">{dateInfo.month}</div>
           <div className="text-2xl font-bold text-brand-text leading-tight">{dateInfo.day}</div>
-          <div className="text-[10px] text-brand-muted">{dateInfo.weekday}</div>
+          <div className="text-xs text-brand-muted">{dateInfo.weekday}</div>
         </div>
       )}
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">
-          <span className={'inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded ' + cfg.bgClass + ' ' + cfg.textClass}>
+          <span className={'inline-flex items-center gap-1 text-xs font-medium px-1.5 py-0.5 rounded ' + cfg.bgClass + ' ' + cfg.textClass}>
             <Icon size={10} /> {item.eventType || cfg.label}
           </span>
           {item.isVirtual && (
-            <span className="inline-flex items-center gap-0.5 text-[10px] text-blue-600">
+            <span className="inline-flex items-center gap-0.5 text-xs text-blue-600">
               <Video size={10} /> Virtual
             </span>
           )}

@@ -180,8 +180,8 @@ export default async function AboutPage() {
                 style={{ border: '1px solid #dde1e8' }}
               >
                 <h3 style={{  }} className="text-sm mb-1">{item.label}</h3>
-                <p style={{ color: "#5c6474" }} className="text-xs">{item.desc}</p>
-                <span style={{ color: "#1b5e8a" }} className="inline-block mt-3 text-[10px]">
+                <p style={{ color: "#5c6474" }} className="text-sm">{item.desc}</p>
+                <span style={{ color: "#1b5e8a" }} className="inline-block mt-3 text-xs">
                   Explore &rarr;
                 </span>
               </Link>
@@ -221,7 +221,7 @@ export default async function AboutPage() {
             { href: '/contact', label: 'Contact Us' },
           ].map(function (link) {
             return (
-              <Link key={link.href} href={link.href} style={{ color: "#5c6474" }} className="text-xs hover:underline">
+              <Link key={link.href} href={link.href} style={{ color: "#5c6474" }} className="text-sm hover:underline">
                 {link.label}
               </Link>
             )

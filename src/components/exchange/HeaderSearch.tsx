@@ -144,7 +144,7 @@ export function HeaderSearch() {
                 <FOLBullet size={14} color={r.color} />
                 <div className="flex-1 min-w-0">
                   <span className="block text-sm text-brand-text truncate">{r.name}</span>
-                  <span className="block text-[10px] text-brand-muted uppercase tracking-wider">{r.type}</span>
+                  <span className="block text-xs text-brand-muted uppercase tracking-wider">{r.type}</span>
                 </div>
               </Link>
             )

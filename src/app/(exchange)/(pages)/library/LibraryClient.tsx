@@ -182,7 +182,7 @@ export function LibraryClient({ documents }: LibraryClientProps) {
         <div className="relative border-2" style={{ borderColor: '#5D3A1A', backgroundColor: '#FFFEF7' }}>
           <div className="flex items-center gap-2 px-4 py-1.5 border-b" style={{ backgroundColor: '#5D3A1A' }}>
             <Search size={12} className="text-amber-200" />
-            <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-amber-200">Library Search Terminal</span>
+            <span className="font-mono text-xs font-bold uppercase tracking-widest text-amber-200">Library Search Terminal</span>
           </div>
           <div className="relative">
             <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2" style={{ color: '#8B7355' }} />
@@ -245,7 +245,7 @@ export function LibraryClient({ documents }: LibraryClientProps) {
                     }}
                   >
                     <span
-                      className="font-display text-[10px] sm:text-xs font-bold leading-none"
+                      className="font-display text-xs sm:text-xs font-bold leading-none"
                       style={{ color: isActive ? '#FFFEF7' : '#5D3A1A' }}
                     >
                       {letter}
@@ -360,7 +360,7 @@ export function LibraryClient({ documents }: LibraryClientProps) {
                       <span className="font-display text-base font-bold" style={{ color: '#5D3A1A' }}>
                         {col.theme.name}
                       </span>
-                      <span className="font-mono text-[10px] tracking-wide" style={{ color: '#8B7355' }}>
+                      <span className="font-mono text-xs tracking-wide" style={{ color: '#8B7355' }}>
                         {col.docs.length} volume{col.docs.length !== 1 ? 's' : ''}
                       </span>
                       <div className="flex-1 border-b" style={{ borderColor: '#C4A882' }} />
@@ -394,7 +394,7 @@ export function LibraryClient({ documents }: LibraryClientProps) {
         <div className="max-w-4xl mx-auto px-4">
           <div className=" border overflow-hidden" style={{ borderColor: '#C4A882', backgroundColor: '#FFFEF7' }}>
             {/* Table header */}
-            <div className="grid grid-cols-12 gap-2 px-4 py-2 border-b font-mono text-[10px] font-bold uppercase tracking-widest" style={{ borderColor: '#C4A882', color: '#8B7355', backgroundColor: '#f4f5f7' }}>
+            <div className="grid grid-cols-12 gap-2 px-4 py-2 border-b font-mono text-xs font-bold uppercase tracking-widest" style={{ borderColor: '#C4A882', color: '#8B7355', backgroundColor: '#f4f5f7' }}>
               <div className="col-span-6 sm:col-span-5">Title</div>
               <div className="col-span-3 sm:col-span-3 hidden sm:block">Collection</div>
               <div className="col-span-3 sm:col-span-2 text-right">Pages</div>
@@ -508,7 +508,7 @@ function BookSpine({
             style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
           >
             <span
-              className="font-display text-[9px] sm:text-[10px] font-bold text-white leading-tight text-center"
+              className="font-display text-[9px] sm:text-xs font-bold text-white leading-tight text-center"
               style={{
                 maxHeight: '110px',
                 overflow: 'hidden',
@@ -544,7 +544,7 @@ function BookSpine({
           <div className="flex items-center gap-2 mb-2">
             {themes.map(function (t) {
               return (
-                <span key={t.id} className="flex items-center gap-1 text-[10px] font-mono font-bold" style={{ color: t.color }}>
+                <span key={t.id} className="flex items-center gap-1 text-xs font-mono font-bold" style={{ color: t.color }}>
                   <span className="w-2 h-2 rounded-sm" style={{ backgroundColor: t.color }} />
                   {t.name}
                 </span>
@@ -562,7 +562,7 @@ function BookSpine({
               <p className="font-mono text-[9px] font-bold uppercase tracking-widest mb-1" style={{ color: '#B8860B' }}>Key Points</p>
               {doc.key_points.slice(0, 2).map(function (point, i) {
                 return (
-                  <p key={i} className="text-[10px] leading-relaxed line-clamp-1 mb-0.5" style={{ color: '#6B5B4E' }}>
+                  <p key={i} className="text-xs leading-relaxed line-clamp-1 mb-0.5" style={{ color: '#6B5B4E' }}>
                     &bull; {point}
                   </p>
                 )

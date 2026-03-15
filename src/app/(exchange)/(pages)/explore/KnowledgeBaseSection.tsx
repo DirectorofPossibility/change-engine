@@ -484,12 +484,12 @@ export function KnowledgeBaseClient({ items, themes, focusAreas }: KnowledgeBase
                           <p className="text-xs text-brand-muted line-clamp-2">{item.summary}</p>
                         )}
                         <div className="flex items-center gap-2 mt-2">
-                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-brand-bg text-brand-muted capitalize">
+                          <span className="text-xs px-1.5 py-0.5 rounded bg-brand-bg text-brand-muted capitalize">
                             {item.content_type}
                           </span>
                           {item.tags && item.tags.slice(0, 2).map(function (tag) {
                             return (
-                              <span key={tag} className="text-[10px] px-1.5 py-0.5 rounded bg-brand-bg text-brand-muted">
+                              <span key={tag} className="text-xs px-1.5 py-0.5 rounded bg-brand-bg text-brand-muted">
                                 {tag}
                               </span>
                             )
@@ -540,12 +540,12 @@ function renderItem(item: KBItem, themeMap: Record<string, KBTheme>) {
         )}
       </div>
       <div className="hidden sm:flex gap-1 flex-shrink-0 items-center">
-        <span className="text-[10px] px-1.5 py-0.5 rounded bg-brand-bg text-brand-muted capitalize">
+        <span className="text-xs px-1.5 py-0.5 rounded bg-brand-bg text-brand-muted capitalize">
           {item.content_type}
         </span>
         {item.tags && item.tags.slice(0, 1).map(function (tag) {
           return (
-            <span key={tag} className="text-[10px] px-1.5 py-0.5 rounded bg-brand-bg text-brand-muted">
+            <span key={tag} className="text-xs px-1.5 py-0.5 rounded bg-brand-bg text-brand-muted">
               {tag}
             </span>
           )

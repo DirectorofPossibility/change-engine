@@ -16,7 +16,7 @@ interface FocusAreaPillsProps {
 export function FocusAreaPills({ focusAreaNames, focusAreas, linkable = true }: FocusAreaPillsProps) {
   if (focusAreas && focusAreas.length > 0) {
     return (
-      <span className="text-xs italic text-brand-muted">
+      <span className="text-sm italic text-brand-muted">
         {focusAreas.map(function (fa, i) {
           return (
             <span key={fa.focus_id}>
@@ -41,7 +41,7 @@ export function FocusAreaPills({ focusAreaNames, focusAreas, linkable = true }: 
   if (!focusAreaNames || focusAreaNames.length === 0) return null
 
   return (
-    <span className="text-xs italic text-brand-muted">
+    <span className="text-sm italic text-brand-muted">
       {focusAreaNames.map(function (name, i) {
         return (
           <span key={name}>

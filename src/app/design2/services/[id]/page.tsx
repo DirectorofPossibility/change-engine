@@ -172,7 +172,7 @@ export default async function ServiceDetailPage({
                         />
                         <div className="min-w-0">
                           <p
-                            className="text-[10px] font-bold uppercase tracking-wider mb-0.5"
+                            className="text-xs font-bold uppercase tracking-wider mb-0.5"
                             style={{ color: '#6B6560' }}
                           >
                             {field.label}
@@ -220,7 +220,7 @@ export default async function ServiceDetailPage({
                   {svc.eligibility && (
                     <div>
                       <p
-                        className="text-[10px] font-bold uppercase tracking-wider mb-1"
+                        className="text-xs font-bold uppercase tracking-wider mb-1"
                         style={{ color: '#6B6560' }}
                       >
                         Eligibility
@@ -233,7 +233,7 @@ export default async function ServiceDetailPage({
                   {svc.fees && (
                     <div>
                       <p
-                        className="text-[10px] font-bold uppercase tracking-wider mb-1"
+                        className="text-xs font-bold uppercase tracking-wider mb-1"
                         style={{ color: '#6B6560' }}
                       >
                         Fees
@@ -246,7 +246,7 @@ export default async function ServiceDetailPage({
                   {svc.languages && (
                     <div>
                       <p
-                        className="text-[10px] font-bold uppercase tracking-wider mb-1"
+                        className="text-xs font-bold uppercase tracking-wider mb-1"
                         style={{ color: '#6B6560' }}
                       >
                         Languages

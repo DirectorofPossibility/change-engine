@@ -166,7 +166,7 @@ export function FeedManagerClient({ initialFeeds }: { initialFeeds: RssFeed[] })
           return (
             <div key={s.label} className="bg-white rounded-xl border border-brand-border p-4 text-center">
               <p className={'text-2xl font-serif font-bold ' + s.color}>{s.value}</p>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-brand-muted">{s.label}</p>
+              <p className="text-xs font-bold uppercase tracking-wider text-brand-muted">{s.label}</p>
             </div>
           )
         })}
@@ -207,12 +207,12 @@ export function FeedManagerClient({ initialFeeds }: { initialFeeds: RssFeed[] })
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2 flex-wrap">
                         <h3 className="font-semibold text-brand-text text-sm">{feed.feed_name}</h3>
-                        <span className={'text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded ' + (feed.is_active ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-600')}>
+                        <span className={'text-xs font-bold uppercase tracking-wider px-1.5 py-0.5 rounded ' + (feed.is_active ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-600')}>
                           {feed.is_active ? 'Active' : 'Paused'}
                         </span>
-                        {feed.category && <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted bg-brand-bg-alt px-1.5 py-0.5 rounded">{feed.category}</span>}
-                        {pt && <span className="inline-flex items-center gap-1 text-[10px] font-medium" style={{ color: pt.color }}><span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: pt.color }} />{pt.name}</span>}
-                        {feed.error_count > 0 && <span className="text-[10px] font-bold text-red-600 bg-red-50 px-1.5 py-0.5 rounded">{feed.error_count} errors</span>}
+                        {feed.category && <span className="text-xs font-bold uppercase tracking-wider text-brand-muted bg-brand-bg-alt px-1.5 py-0.5 rounded">{feed.category}</span>}
+                        {pt && <span className="inline-flex items-center gap-1 text-xs font-medium" style={{ color: pt.color }}><span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: pt.color }} />{pt.name}</span>}
+                        {feed.error_count > 0 && <span className="text-xs font-bold text-red-600 bg-red-50 px-1.5 py-0.5 rounded">{feed.error_count} errors</span>}
                       </div>
                       <p className="text-xs text-brand-muted mt-0.5 truncate">{feed.feed_url}</p>
                       <div className="flex items-center gap-4 mt-1.5 text-[11px] text-brand-muted">
@@ -315,24 +315,24 @@ function EditFeedForm({ feed, saving, onSave, onCancel }: {
   return (
     <div className="mt-3 pt-3 border-t border-brand-border">
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-        <div><label className="block text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-0.5">Name</label>
+        <div><label className="block text-xs font-bold uppercase tracking-wider text-brand-muted mb-0.5">Name</label>
           <input type="text" value={form.feed_name} onChange={function (e) { set('feed_name', e.target.value) }} className="w-full px-2 py-1.5 border border-brand-border rounded-lg text-xs" /></div>
-        <div className="col-span-2"><label className="block text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-0.5">URL</label>
+        <div className="col-span-2"><label className="block text-xs font-bold uppercase tracking-wider text-brand-muted mb-0.5">URL</label>
           <input type="url" value={form.feed_url} onChange={function (e) { set('feed_url', e.target.value) }} className="w-full px-2 py-1.5 border border-brand-border rounded-lg text-xs" /></div>
-        <div><label className="block text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-0.5">Domain</label>
+        <div><label className="block text-xs font-bold uppercase tracking-wider text-brand-muted mb-0.5">Domain</label>
           <input type="text" value={form.source_domain} onChange={function (e) { set('source_domain', e.target.value) }} className="w-full px-2 py-1.5 border border-brand-border rounded-lg text-xs" /></div>
-        <div><label className="block text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-0.5">Category</label>
+        <div><label className="block text-xs font-bold uppercase tracking-wider text-brand-muted mb-0.5">Category</label>
           <select value={form.category} onChange={function (e) { set('category', e.target.value) }} className="w-full px-2 py-1.5 border border-brand-border rounded-lg text-xs">
             {CATEGORIES.filter(function (c) { return c !== 'all' }).map(function (c) { return <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option> })}
           </select></div>
-        <div><label className="block text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-0.5">Pathway</label>
+        <div><label className="block text-xs font-bold uppercase tracking-wider text-brand-muted mb-0.5">Pathway</label>
           <select value={form.pathway_hint} onChange={function (e) { set('pathway_hint', e.target.value) }} className="w-full px-2 py-1.5 border border-brand-border rounded-lg text-xs">
             <option value="">Auto-classify</option>
             {Object.entries(THEMES).map(function ([id, t]) { return <option key={id} value={id}>{t.name}</option> })}
           </select></div>
-        <div><label className="block text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-0.5">Poll (hrs)</label>
+        <div><label className="block text-xs font-bold uppercase tracking-wider text-brand-muted mb-0.5">Poll (hrs)</label>
           <input type="number" value={form.poll_interval_hours} min={1} max={168} onChange={function (e) { set('poll_interval_hours', parseInt(e.target.value) || 24) }} className="w-full px-2 py-1.5 border border-brand-border rounded-lg text-xs" /></div>
-        <div className="col-span-2 sm:col-span-3"><label className="block text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-0.5">Notes</label>
+        <div className="col-span-2 sm:col-span-3"><label className="block text-xs font-bold uppercase tracking-wider text-brand-muted mb-0.5">Notes</label>
           <input type="text" value={form.notes} onChange={function (e) { set('notes', e.target.value) }} className="w-full px-2 py-1.5 border border-brand-border rounded-lg text-xs" placeholder="Contact info, API key requirements, etc." /></div>
       </div>
       <div className="mt-3 flex gap-2">

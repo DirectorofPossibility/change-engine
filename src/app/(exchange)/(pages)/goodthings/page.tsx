@@ -22,7 +22,7 @@ export default async function GoodThingsPage() {
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="relative z-10 max-w-[900px] mx-auto px-6 py-16 md:py-20">
-          <p className="text-blue uppercase" style={{ fontSize: 11, letterSpacing: '0.12em' }}>
+          <p className="text-blue uppercase" style={{ fontSize: '0.875rem', letterSpacing: '0.12em' }}>
             The Change Engine
           </p>
           <h1 className="mt-4" style={{ fontSize: 40, lineHeight: 1.1,  }}>
@@ -35,7 +35,7 @@ export default async function GoodThingsPage() {
         <div className="h-px bg-rule" />
       </div>
       <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav className="text-muted" style={{ fontSize: 11, letterSpacing: '0.06em' }}>
+        <nav className="text-muted" style={{ fontSize: '0.875rem', letterSpacing: '0.06em' }}>
           <Link href="/" className="hover:underline text-blue">Home</Link>
           <span className="mx-2">/</span>
           <span>Three Good Things</span>

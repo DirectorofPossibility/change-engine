@@ -40,12 +40,12 @@ export default async function MunicipalServiceDetailPage({ params }: { params: P
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
-          <p style={{ fontSize: '0.7rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
+          <p style={{ fontSize: '0.875rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
             The Change Engine
           </p>
-          <span style={{ fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: "#1b5e8a", display: 'block', marginTop: '0.75rem' }}>City Service</span>
+          <span style={{ fontSize: '0.875rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: "#1b5e8a", display: 'block', marginTop: '0.75rem' }}>City Service</span>
           {s.department && (
-            <span style={{ fontSize: '0.65rem', color: "#5c6474", display: 'block', marginTop: '0.25rem' }}>{s.department}</span>
+            <span style={{ fontSize: '0.875rem', color: "#5c6474", display: 'block', marginTop: '0.25rem' }}>{s.department}</span>
           )}
           <h1 style={{ fontSize: '2.2rem', lineHeight: 1.15, marginTop: '0.5rem' }}>
             {s.service_name}
@@ -60,7 +60,7 @@ export default async function MunicipalServiceDetailPage({ params }: { params: P
 
       {/* Breadcrumb */}
       <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontSize: '0.7rem', color: "#5c6474" }}>
+        <nav style={{ fontSize: '0.875rem', color: "#5c6474" }}>
           <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
           <Link href="/municipal-services" className="hover:underline" style={{ color: "#1b5e8a" }}>City Services</Link>
@@ -82,13 +82,13 @@ export default async function MunicipalServiceDetailPage({ params }: { params: P
             <div className="space-y-3">
               {s.phone && (
                 <div style={{ fontSize: '0.9rem' }}>
-                  <span style={{ fontSize: '0.65rem', color: "#5c6474", textTransform: 'uppercase', letterSpacing: '0.08em' }}>Phone: </span>
+                  <span style={{ fontSize: '0.875rem', color: "#5c6474", textTransform: 'uppercase', letterSpacing: '0.08em' }}>Phone: </span>
                   <a href={`tel:${s.phone}`} style={{ color: "#1b5e8a" }} className="hover:underline">{s.phone}</a>
                 </div>
               )}
               {s.website && (
                 <div style={{ fontSize: '0.9rem' }}>
-                  <span style={{ fontSize: '0.65rem', color: "#5c6474", textTransform: 'uppercase', letterSpacing: '0.08em' }}>Web: </span>
+                  <span style={{ fontSize: '0.875rem', color: "#5c6474", textTransform: 'uppercase', letterSpacing: '0.08em' }}>Web: </span>
                   <a href={s.website} target="_blank" rel="noopener noreferrer" style={{ color: "#1b5e8a" }} className="hover:underline truncate">
                     {s.website.replace(/^https?:\/\//, '')}
                   </a>
@@ -96,7 +96,7 @@ export default async function MunicipalServiceDetailPage({ params }: { params: P
               )}
               {s.address && (
                 <div style={{ fontSize: '0.9rem' }}>
-                  <span style={{ fontSize: '0.65rem', color: "#5c6474", textTransform: 'uppercase', letterSpacing: '0.08em' }}>Address: </span>
+                  <span style={{ fontSize: '0.875rem', color: "#5c6474", textTransform: 'uppercase', letterSpacing: '0.08em' }}>Address: </span>
                   <span style={{  }}>{s.address}</span>
                 </div>
               )}

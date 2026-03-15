@@ -288,18 +288,18 @@ export default function BookshelfAdmin() {
                 <p className="text-xs text-brand-muted">by {b.author} {b.year_published ? '(' + b.year_published + ')' : ''}</p>
                 <div className="flex items-center gap-3 mt-1.5">
                   {pw && (
-                    <span className="flex items-center gap-1 font-mono text-[10px] text-brand-muted-light">
+                    <span className="flex items-center gap-1 font-mono text-xs text-brand-muted-light">
                       <span className="w-2 h-2 rounded-sm" style={{ background: pw.color }} />
                       {pw.name}
                     </span>
                   )}
                   {b.is_featured && (
-                    <span className="font-mono text-[10px] font-bold uppercase tracking-wide text-brand-accent">Featured</span>
+                    <span className="font-mono text-xs font-bold uppercase tracking-wide text-brand-accent">Featured</span>
                   )}
                   {!b.is_active && (
-                    <span className="font-mono text-[10px] font-bold uppercase tracking-wide text-brand-danger">Hidden</span>
+                    <span className="font-mono text-xs font-bold uppercase tracking-wide text-brand-danger">Hidden</span>
                   )}
-                  <span className="font-mono text-[10px] text-brand-muted-light">#{b.display_order}</span>
+                  <span className="font-mono text-xs text-brand-muted-light">#{b.display_order}</span>
                 </div>
               </div>
               <div className="flex items-start gap-1.5 flex-shrink-0">

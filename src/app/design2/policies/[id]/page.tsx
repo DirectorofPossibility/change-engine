@@ -293,12 +293,12 @@ export default async function PolicyDetailPage({
                         )}
                         <div className="flex items-center gap-2 mt-1">
                           {o.level && (
-                            <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: levelColor(o.level) }}>
+                            <span className="text-xs font-bold uppercase tracking-wider" style={{ color: levelColor(o.level) }}>
                               {o.level}
                             </span>
                           )}
                           {o.party && (
-                            <span className="text-[10px]" style={{ color: '#9B9590' }}>
+                            <span className="text-xs" style={{ color: '#9B9590' }}>
                               {o.party}
                             </span>
                           )}
@@ -392,7 +392,7 @@ export default async function PolicyDetailPage({
                   {Object.entries(geoGrouped).map(([geoType, ids]) => (
                     <div key={geoType}>
                       <h3
-                        className="text-[10px] font-bold uppercase tracking-wider mb-1.5"
+                        className="text-xs font-bold uppercase tracking-wider mb-1.5"
                         style={{ color: '#6B6560' }}
                       >
                         {geoType}

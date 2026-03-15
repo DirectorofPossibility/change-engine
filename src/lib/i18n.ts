@@ -52,13 +52,13 @@ const en: Record<string, string> = {
   'footer.privacy': 'Privacy',
   'footer.terms': 'Terms',
   'footer.accessibility': 'Accessibility',
-  'footer.tagline': 'Your neighborhood field guide to Houston — who runs it, what\'s available, and how to get involved.',
-  'footer.built_in': 'Made in Houston, TX',
+  'footer.tagline': 'Your neighborhood field guide — who runs it, what\'s available, and how to get involved.',
+  'footer.built_in': 'Made with love, for everyone',
   'support.button': 'Back This Project',
 
   // Homepage
-  'home.location': 'Houston, Texas',
-  'home.subtitle': 'The only guide to Houston you actually need.',
+  'home.location': 'Your City',
+  'home.subtitle': 'The only guide to your city you actually need.',
   'home.cta_pathways': 'Browse Sections',
   'home.cta_help': 'Field Guide',
   'home.cta_officials': 'Who Represents Me?',
@@ -86,7 +86,7 @@ const en: Record<string, string> = {
 
   // Help page
   'help.title': 'Field Guide',
-  'help.subtitle': 'Whatever you\u2019re dealing with, Houston has something for you. Go at your own pace.',
+  'help.subtitle': 'Whatever you\u2019re dealing with, your community has something for you. Go at your own pace.',
   'help.emergency': 'Immediate resources available',
   'help.crisis_911': '911 for emergencies',
   'help.crisis_988': '988 for mental health crisis',
@@ -100,7 +100,7 @@ const en: Record<string, string> = {
   // Services page
   'services.title': 'Local Services',
   'services.subtitle': 'What\u2019s available near you — mapped, searchable, and free to browse.',
-  'services.intro': 'Houston runs on a deep network of services and organizations. Browse by category, explore the map, or search by topic to find what\u2019s in your corner of the city.',
+  'services.intro': 'Your community runs on a deep network of services and organizations. Browse by category, explore the map, or search by topic to find what\u2019s in your corner of the city.',
 
   // Officials page
   'officials.title': 'Who Runs This',
@@ -108,7 +108,7 @@ const en: Record<string, string> = {
 
   // Organizations page
   'organizations.title': 'Local Orgs',
-  'organizations.subtitle': 'The nonprofits, foundations, and community groups doing the work in Houston.',
+  'organizations.subtitle': 'The nonprofits, foundations, and community groups doing the work in your community.',
 
   // Opportunities page
   'opportunities.title': 'Get Involved',
@@ -1195,12 +1195,12 @@ const es: Record<string, string> = {
   'footer.privacy': 'Política de Privacidad',
   'footer.terms': 'Términos de Uso',
   'footer.accessibility': 'Accesibilidad',
-  'footer.tagline': 'Una plataforma cívica que conecta a los residentes de Houston con recursos, servicios y oportunidades de participación cívica.',
-  'footer.built_in': 'Hecho con cariño en Houston, TX',
+  'footer.tagline': 'Una plataforma cívica que conecta a los residentes con recursos, servicios y oportunidades de participación cívica.',
+  'footer.built_in': 'Hecho con cariño, para todos',
   'support.button': 'Apoya Este Proyecto',
 
   // Homepage
-  'home.location': 'Houston, Texas',
+  'home.location': 'Tu Ciudad',
   'home.subtitle': 'Cada houstoniano debe saber que su comunidad importa.',
   'home.cta_pathways': 'Explorar Caminos',
   'home.cta_help': 'Recursos Disponibles',
@@ -1238,12 +1238,12 @@ const es: Record<string, string> = {
   'help.urgency_high': 'Esta Semana',
   'help.urgency_medium': 'A Su Ritmo',
   'help.urgency_low': 'Cuando Est\u00e9 Listo',
-  'help.intro': 'Houston cuenta con una gran cantidad de recursos listos para usted. Explore por situaci\u00f3n de vida o plazo para encontrar servicios, apoyo y oportunidades.',
+  'help.intro': 'Tu comunidad cuenta con una gran cantidad de recursos listos para usted. Explore por situaci\u00f3n de vida o plazo para encontrar servicios, apoyo y oportunidades.',
 
   // Services page
   'services.title': 'Servicios',
-  'services.subtitle': 'Encuentre servicios comunitarios y organizaciones de apoyo en el área de Houston.',
-  'services.intro': 'Houston cuenta con una amplia red de servicios y organizaciones dedicadas a su bienestar. Busque por categoría, por necesidad o explore el mapa para encontrar lo que está cerca de usted.',
+  'services.subtitle': 'Encuentre servicios comunitarios y organizaciones de apoyo en tu comunidad.',
+  'services.intro': 'Tu comunidad cuenta con una amplia red de servicios y organizaciones dedicadas a su bienestar. Busque por categoría, por necesidad o explore el mapa para encontrar lo que está cerca de usted.',
 
   // Officials page
   'officials.title': 'Funcionarios Electos',
@@ -1251,7 +1251,7 @@ const es: Record<string, string> = {
 
   // Organizations page
   'organizations.title': 'Organizaciones',
-  'organizations.subtitle': 'Organizaciones sin fines de lucro, fundaciones y grupos comunitarios que sirven a Houston.',
+  'organizations.subtitle': 'Organizaciones sin fines de lucro, fundaciones y grupos comunitarios que sirven a tu comunidad.',
 
   // Opportunities page
   'opportunities.title': 'Oportunidades',
@@ -1277,7 +1277,7 @@ const es: Record<string, string> = {
 
   // Policies page
   'policies.title': 'Políticas y Legislación',
-  'policies.subtitle': 'Siga proyectos de ley, órdenes ejecutivas y políticas que afectan a las comunidades de Houston en todos los niveles de gobierno.',
+  'policies.subtitle': 'Siga proyectos de ley, órdenes ejecutivas y políticas que afectan a tu comunidad en todos los niveles de gobierno.',
 
   // Lookup page
   'lookup.address_or_zip': 'Ingrese su dirección o código postal',
@@ -1371,7 +1371,7 @@ const es: Record<string, string> = {
   'search.browse_pathways': 'Explorar Caminos',
   'search.find_reps': 'Encuentre a Sus Representantes',
   'search.view_resource': 'Ver recurso',
-  'search.intro': 'Explore todo lo que el Change Engine ha reunido para Houston — desde artículos y servicios hasta funcionarios electos y organizaciones comunitarias.',
+  'search.intro': 'Explore todo lo que el Change Engine ha reunido para tu comunidad — desde artículos y servicios hasta funcionarios electos y organizaciones comunitarias.',
 
   // Polling places page
   'polling.hook': 'Votar es lo único que nadie puede hacer por ti.',
@@ -1417,7 +1417,7 @@ const es: Record<string, string> = {
   'neighborhood.invalid_zip': 'Ingresa un c\u00f3digo postal de 5 d\u00edgitos',
 
   // Map
-  'map.houston_glance': 'Houston de un Vistazo',
+  'map.houston_glance': 'Tu Ciudad de un Vistazo',
 
   // ZIP input
   'zip.enter': 'Código postal',
@@ -1455,7 +1455,7 @@ const es: Record<string, string> = {
   'wayfinder.start_journey': 'Comienza Tu Camino',
   'wayfinder.explore': 'Explorar',
   'wayfinder.browse_all': 'Ver todos los caminos',
-  'wayfinder.explore_houston': 'Explorar Houston',
+  'wayfinder.explore_houston': 'Explorar Tu Ciudad',
   'wayfinder.whats_new': 'Novedades',
   'wayfinder.this_week': 'esta semana',
   'wayfinder.connected_to': 'Conectado a',
@@ -1475,7 +1475,7 @@ const es: Record<string, string> = {
   'sidebar.edition': 'Edición',
   'sidebar.change': 'cambiar',
   'sidebar.go': 'Ir',
-  'sidebar.explore_houston': 'Explorar Houston',
+  'sidebar.explore_houston': 'Explorar Tu Ciudad',
   'sidebar.your_guide': 'Tu Guía',
   'sidebar.your_journey': 'Tu Camino',
   'sidebar.discover': 'Descubrir',
@@ -1496,7 +1496,7 @@ const es: Record<string, string> = {
   'chat.title': 'Habla con Chance',
   'chat.subtitle': 'Tu guía del vecindario',
   'chat.welcome_title': 'Conoce a Chance',
-  'chat.placeholder': 'Pregúntale a Chance sobre Houston...',
+  'chat.placeholder': 'Pregúntale a Chance sobre tu comunidad...',
 
   // Your Guide links
   'discover.guide': 'La Guía Comunitaria',
@@ -1524,7 +1524,7 @@ const es: Record<string, string> = {
   'guide.neighborhood_prompt': 'Ingresa tu código postal para ver recursos locales',
   'guide.learn_grow': 'Aprende y Crece',
   'guide.learn_subtitle': 'Rutas de aprendizaje y guías para ampliar tu conocimiento',
-  'guide.life_houston': 'La Vida en Houston',
+  'guide.life_houston': 'La Vida en Tu Ciudad',
   'guide.life_subtitle': 'Recursos para cada situación',
   'guide.bigger_picture': 'El Panorama General',
   'guide.sdg_heading': 'Objetivos de Desarrollo Sostenible',
@@ -1573,7 +1573,7 @@ const es: Record<string, string> = {
 
   // Super neighborhoods
   'superNeighborhoods.title': 'Explore Su Vecindario',
-  'superNeighborhoods.subtitle': 'Houston está dividido en 88 súper vecindarios — áreas comunitarias para participación cívica y planificación de recursos.',
+  'superNeighborhoods.subtitle': 'Explora los vecindarios de tu ciudad — áreas comunitarias para participación cívica y planificación de recursos.',
   'superNeighborhoods.intro': 'Haga clic en un límite del mapa o en una tarjeta para explorar datos demográficos, recursos e información comunitaria de cada súper vecindario.',
   'superNeighborhoods.all_heading': 'Todos los Súper Vecindarios',
   'superNeighborhoods.population': 'Población',
@@ -1699,7 +1699,7 @@ const es: Record<string, string> = {
   // Compass
   'compass.title': 'La Brújula',
   'compass.subtitle': '¿Dónde estoy y qué hay a mi alrededor?',
-  'compass.tagline': 'Nacido en Houston. Hecho para todos.',
+  'compass.tagline': 'Hecho con cariño. Para todos.',
   'compass.show_all': 'Mostrar todo',
   'compass.understand': 'Quiero entender algo',
   'compass.help': 'Quiero ayudar',
@@ -1783,8 +1783,8 @@ const es: Record<string, string> = {
 
   // Community Guide (homepage)
   'guide.label': 'Guía Comunitaria',
-  'guide.houston': 'Houston, Texas',
-  'guide.title': 'Tu Guía de Houston',
+  'guide.houston': 'Tu Ciudad',
+  'guide.title': 'Tu Guía Comunitaria',
   'guide.subtitle': 'Encuentra servicios, conoce quién te representa y participa en tu comunidad. Un solo lugar, todos los niveles de gobierno, ayuda real.',
   'guide.search_placeholder': 'Buscar servicios, funcionarios, políticas...',
   'guide.stat_services': 'servicios',
@@ -1873,7 +1873,7 @@ const es: Record<string, string> = {
   'brand.description': 'Change Engine es una plataforma de descubrimiento comunitario creada por The Change Lab en Houston. Conectamos a los residentes con los funcionarios, servicios, organizaciones y oportunidades que ya existen — en su idioma, a su nivel, en su vecindario.',
   'brand.mission': 'No construimos nada nuevo. Solo hicimos encontrable lo que ya existe.',
   'brand.copyright': 'The Change Lab. Patrocinado fiscalmente por Impact Hub Houston, una organización 501(c)(3).',
-  'brand.built_in': 'Hecho en Houston. Para Houston.',
+  'brand.built_in': 'Hecho con cariño. Para todos.',
 
   // D2Nav menu labels
   'd2nav.community': 'Comunidad',
@@ -2015,7 +2015,7 @@ const es: Record<string, string> = {
 
   // Footer
   'footer.community_exchange': 'Intercambio Comunitario',
-  'footer.description': 'Una plataforma c\u00edvica que conecta a los residentes de Houston con los recursos, conocimientos y oportunidades que fortalecen las comunidades.',
+  'footer.description': 'Una plataforma c\u00edvica que conecta a los residentes con los recursos, conocimientos y oportunidades que fortalecen las comunidades.',
   'footer.navigate': 'Navegar',
   'footer.connect': 'Conectar',
   'footer.compass': 'Br\u00fajula',
@@ -2060,13 +2060,13 @@ const es: Record<string, string> = {
 
   // Splash page
   'splash.title': 'Change Engine',
-  'splash.subtitle': 'Conectando Vecinos de Houston',
+  'splash.subtitle': 'Conectando Vecinos',
   'splash.coming_soon': 'Próximamente',
   'splash.three_good_things': 'Tres Cosas Buenas',
   'splash.program_label': 'Una Actividad de Change Engine',
   'splash.shared_by_neighbors': 'compartidas por vecinos',
   'splash.coming_soon_vision': 'Cada comunidad tiene lo que necesita para prosperar.',
-  'splash.coming_soon_desc': 'Estamos construyendo una plataforma cívica que conecta a los residentes de Houston con los recursos, servicios y oportunidades que ya existen a su alrededor.',
+  'splash.coming_soon_desc': 'Estamos construyendo una plataforma cívica que conecta a los residentes con los recursos, servicios y oportunidades que ya existen a su alrededor.',
   'splash.what_to_expect': 'Qué esperar',
   'splash.expect_1': 'Sepa exactamente quién lo representa en cada nivel de gobierno — y cómo contactarlos',
   'splash.expect_2': 'Encuentre cada servicio, beneficio y recurso disponible en su código postal — en un solo lugar',
@@ -2136,7 +2136,7 @@ const es: Record<string, string> = {
   'tip.quiz_indicator': 'Una verificación corta al final. No se califica — solo para ayudar a recordar.',
   'tip.module_media_pills': 'Recursos de fuentes confiables — TED, PBS, organizaciones comunitarias. Enlazamos a ellos. No los reemplazamos.',
   'tip.ai_summary_badge': 'La IA escribió este resumen para facilitar la lectura. La fuente original está enlazada abajo — no la reemplazamos.',
-  'tip.chat_with_chance': 'Chance es un asistente de IA basado en datos cívicos de Houston. Pregunte lo que sea — funcionarios, servicios, políticas, cómo funcionan las cosas.',
+  'tip.chat_with_chance': 'Chance es un asistente de IA basado en datos cívicos de tu comunidad. Pregunte lo que sea — funcionarios, servicios, políticas, cómo funcionan las cosas.',
   'tip.source_attribution': 'Este contenido fue creado por esta organización. Lo resumimos. Haga clic para leer el original.',
   'tip.org_action_buttons': 'Enlaces directos a la página de voluntariado, donaciones o calendario de eventos de esta organización.',
   'tip.foundation_galaxy': 'Cada punto es una fundación. Más grande = más fondos. Color = tema principal. Haga clic en cualquier punto para saber más.',
@@ -2146,9 +2146,9 @@ const es: Record<string, string> = {
   'tip.time_commitment': 'Cuánto de su tiempo requiere — una vez, semanal, mensual o continuo. Sin sorpresas.',
   'tip.virtual_badge': 'Puede hacer esto desde casa. No necesita viajar.',
   'tip.spots_available': 'Cuántas vacantes quedan. Primero en llegar, primero en ser atendido.',
-  'tip.super_neighborhood_number': 'Houston tiene 88 súper vecindarios. Cada uno tiene un consejo que da opiniones al Ayuntamiento sobre decisiones locales.',
+  'tip.super_neighborhood_number': 'Tu ciudad tiene múltiples vecindarios. Cada uno tiene un consejo que da opiniones al Ayuntamiento sobre decisiones locales.',
   'tip.population_income': 'Datos del Censo de EE.UU. — usados para entender lo que las comunidades necesitan y cómo se distribuyen los recursos.',
-  'tip.geojson_boundaries': 'Límites del mapa del Departamento de Planificación de la Ciudad de Houston. Actualizados cuando cambian los límites oficiales.',
+  'tip.geojson_boundaries': 'Límites del mapa del Departamento de Planificación de tu ciudad. Actualizados cuando cambian los límites oficiales.',
   'tip.wayfinder_panel': 'Todo lo conectado a lo que está viendo — funcionarios, servicios, organizaciones, políticas y noticias que comparten las mismas áreas de enfoque.',
   'tip.focus_area_dots': 'Las áreas de enfoque son temas específicos dentro de un camino. Toque cualquier punto para explorar todo lo etiquetado con él.',
   'tip.engagement_tiers': 'Comprender: aprenda qué está pasando.  Participar: tome acción.  Profundizar: siga los sistemas que lo moldean.',
@@ -2168,7 +2168,7 @@ const es: Record<string, string> = {
   'home.chart_course': 'Trace Su Camino',
   'home.chart_course_sub': 'Explore su comunidad a través de datos cívicos.',
   'home.ask_chance': 'Pregunte a Chance',
-  'home.ask_chance_sub': 'Obtenga respuestas de datos cívicos de Houston.',
+  'home.ask_chance_sub': 'Obtenga respuestas de datos cívicos de tu comunidad.',
   'home.gap_responsible': 'se sienten responsables de ayudar a su comunidad',
   'home.gap_dont_know': 'no saben por dónde empezar',
   'home.gap_volunteer': 'realmente hacen voluntariado',
@@ -2257,20 +2257,20 @@ const es: Record<string, string> = {
   'nav.routes': 'Rutas',
   'nav.find_my_way': 'Encontrar mi camino',
   'nav.change_engine': 'Change Engine',
-  'nav.edition': 'Houston · 2026',
+  'nav.edition': '2026',
 
   // Reskin — homepage / guide additions
   'guide.pathways_label': '7 Caminos · Elige a dónde ir',
-  'guide.pathways_heading': 'Explora Houston, un lugar a la vez',
+  'guide.pathways_heading': 'Explora tu ciudad, un lugar a la vez',
   'guide.explore': 'Explorar',
   'guide.latest_label': 'Reciente · Qué hay de nuevo',
   'guide.dv_hotline': 'Línea de Violencia Doméstica',
   'guide.dv_hotline_desc': 'Línea Nacional de Violencia Doméstica',
 
   // Reskin — pathway page
-  'pathway.edition_label': 'Houston, TX',
+  'pathway.edition_label': 'Tu Ciudad',
   'pathway.edition_suffix': 'Edición 2026',
-  'pathway.state_of': 'El estado de {name} en Houston',
+  'pathway.state_of': 'El estado de {name} en tu comunidad',
   'pathway.destinations_label': 'Destinos · Elige a dónde ir',
   'pathway.explore_prefix': 'Explorar ',
   'pathway.connected': 'Caminos conectados',
@@ -2338,13 +2338,13 @@ const vi: Record<string, string> = {
   'footer.privacy': 'Chính Sách Bảo Mật',
   'footer.terms': 'Điều Khoản Sử Dụng',
   'footer.accessibility': 'Trợ Năng',
-  'footer.tagline': 'Nền tảng dân sự kết nối cư dân Houston với tài nguyên, dịch vụ và cơ hội tham gia cộng đồng.',
-  'footer.built_in': 'Được xây dựng tận tâm tại Houston, TX',
+  'footer.tagline': 'Nền tảng dân sự kết nối cư dân với tài nguyên, dịch vụ và cơ hội tham gia cộng đồng.',
+  'footer.built_in': 'Được xây dựng tận tâm cho mọi người',
   'support.button': 'Ủng Hộ Dự Án',
 
   // Homepage
-  'home.location': 'Houston, Texas',
-  'home.subtitle': 'Mỗi cư dân Houston nên biết cộng đồng của mình quan trọng.',
+  'home.location': 'Thành Phố Của Bạn',
+  'home.subtitle': 'Mỗi cư dân nên biết cộng đồng của mình quan trọng.',
   'home.cta_pathways': 'Khám Phá Lộ Trình',
   'home.cta_help': 'Tài Nguyên Có Sẵn',
   'home.cta_officials': 'Tìm Đại Diện',
@@ -2381,12 +2381,12 @@ const vi: Record<string, string> = {
   'help.urgency_high': 'Tu\u1ea7n N\u00e0y',
   'help.urgency_medium': 'Theo Nh\u1ecbp C\u1ee7a B\u1ea1n',
   'help.urgency_low': 'Khi B\u1ea1n S\u1eb5n S\u00e0ng',
-  'help.intro': 'Houston c\u00f3 nhi\u1ec1u t\u00e0i nguy\u00ean s\u1eb5n s\u00e0ng cho b\u1ea1n. Kh\u00e1m ph\u00e1 theo t\u00ecnh hu\u1ed1ng cu\u1ed9c s\u1ed1ng ho\u1eb7c th\u1eddi gian \u0111\u1ec3 t\u00ecm d\u1ecbch v\u1ee5, h\u1ed7 tr\u1ee3 v\u00e0 c\u01a1 h\u1ed9i.',
+  'help.intro': 'C\u1ed9ng \u0111\u1ed3ng c\u1ee7a b\u1ea1n c\u00f3 nhi\u1ec1u t\u00e0i nguy\u00ean s\u1eb5n s\u00e0ng cho b\u1ea1n. Kh\u00e1m ph\u00e1 theo t\u00ecnh hu\u1ed1ng cu\u1ed9c s\u1ed1ng ho\u1eb7c th\u1eddi gian \u0111\u1ec3 t\u00ecm d\u1ecbch v\u1ee5, h\u1ed7 tr\u1ee3 v\u00e0 c\u01a1 h\u1ed9i.',
 
   // Services page
   'services.title': 'Dịch Vụ',
-  'services.subtitle': 'Tìm dịch vụ cộng đồng và tổ chức hỗ trợ trong khu vực Houston.',
-  'services.intro': 'Houston có mạng lưới dịch vụ và tổ chức sâu rộng dành cho sức khỏe của bạn. Duyệt theo danh mục, tìm theo nhu cầu, hoặc khám phá bản đồ để tìm những gì gần bạn.',
+  'services.subtitle': 'Tìm dịch vụ cộng đồng và tổ chức hỗ trợ trong cộng đồng của bạn.',
+  'services.intro': 'Cộng đồng của bạn có mạng lưới dịch vụ và tổ chức sâu rộng dành cho sức khỏe của bạn. Duyệt theo danh mục, tìm theo nhu cầu, hoặc khám phá bản đồ để tìm những gì gần bạn.',
 
   // Officials page
   'officials.title': 'Quan Chức Dân Cử',
@@ -2394,7 +2394,7 @@ const vi: Record<string, string> = {
 
   // Organizations page
   'organizations.title': 'Tổ Chức',
-  'organizations.subtitle': 'Tổ chức phi lợi nhuận, quỹ và nhóm cộng đồng phục vụ Houston.',
+  'organizations.subtitle': 'Tổ chức phi lợi nhuận, quỹ và nhóm cộng đồng phục vụ cộng đồng của bạn.',
 
   // Opportunities page
   'opportunities.title': 'Cơ Hội',
@@ -2420,7 +2420,7 @@ const vi: Record<string, string> = {
 
   // Policies page
   'policies.title': 'Chính Sách & Luật Pháp',
-  'policies.subtitle': 'Theo dõi dự luật, lệnh hành pháp và chính sách ảnh hưởng đến cộng đồng Houston ở mọi cấp chính quyền.',
+  'policies.subtitle': 'Theo dõi dự luật, lệnh hành pháp và chính sách ảnh hưởng đến cộng đồng của bạn ở mọi cấp chính quyền.',
 
   // Lookup page
   'lookup.address_or_zip': 'Nhập địa chỉ hoặc mã bưu điện của bạn',
@@ -2514,7 +2514,7 @@ const vi: Record<string, string> = {
   'search.browse_pathways': 'Duyệt Lộ Trình',
   'search.find_reps': 'Tìm Đại Diện',
   'search.view_resource': 'Xem tài nguyên',
-  'search.intro': 'Khám phá mọi thứ Change Engine đã thu thập cho Houston — từ bài viết và dịch vụ đến quan chức dân cử và tổ chức cộng đồng.',
+  'search.intro': 'Khám phá mọi thứ Change Engine đã thu thập cho cộng đồng của bạn — từ bài viết và dịch vụ đến quan chức dân cử và tổ chức cộng đồng.',
 
   // Polling places page
   'polling.hook': 'Bỏ phiếu là điều duy nhất không ai có thể làm thay bạn.',
@@ -2560,7 +2560,7 @@ const vi: Record<string, string> = {
   'neighborhood.invalid_zip': 'Nh\u1eadp m\u00e3 ZIP 5 ch\u1eef s\u1ed1',
 
   // Map
-  'map.houston_glance': 'Houston M\u1ed9t C\u00e1i Nh\u00ecn',
+  'map.houston_glance': 'Th\u00e0nh Ph\u1ed1 M\u1ed9t C\u00e1i Nh\u00ecn',
 
   // ZIP input
   'zip.enter': 'Mã bưu điện',
@@ -2598,7 +2598,7 @@ const vi: Record<string, string> = {
   'wayfinder.start_journey': 'Bắt Đầu Hành Trình',
   'wayfinder.explore': 'Khám Phá',
   'wayfinder.browse_all': 'Xem tất cả lộ trình',
-  'wayfinder.explore_houston': 'Khám Phá Houston',
+  'wayfinder.explore_houston': 'Khám Phá Thành Phố',
   'wayfinder.whats_new': 'Tin Mới',
   'wayfinder.this_week': 'tuần này',
   'wayfinder.connected_to': 'Kết nối với',
@@ -2618,7 +2618,7 @@ const vi: Record<string, string> = {
   'sidebar.edition': 'Phiên Bản',
   'sidebar.change': 'đổi',
   'sidebar.go': 'Đi',
-  'sidebar.explore_houston': 'Khám Phá Houston',
+  'sidebar.explore_houston': 'Khám Phá Thành Phố',
   'sidebar.your_guide': 'Hướng Dẫn',
   'sidebar.your_journey': 'Hành Trình Của Bạn',
   'sidebar.discover': 'Khám Phá',
@@ -2639,7 +2639,7 @@ const vi: Record<string, string> = {
   'chat.title': 'Trò Chuyện với Chance',
   'chat.subtitle': 'Hướng dẫn viên khu phố',
   'chat.welcome_title': 'Gặp Chance',
-  'chat.placeholder': 'Hỏi Chance về Houston...',
+  'chat.placeholder': 'Hỏi Chance về cộng đồng của bạn...',
 
   // Your Guide links
   'discover.guide': 'Hướng Dẫn Cộng Đồng',
@@ -2667,7 +2667,7 @@ const vi: Record<string, string> = {
   'guide.neighborhood_prompt': 'Nhập mã ZIP để xem tài nguyên địa phương',
   'guide.learn_grow': 'Học Hỏi & Phát Triển',
   'guide.learn_subtitle': 'Lộ trình học tập và hướng dẫn để mở rộng kiến thức',
-  'guide.life_houston': 'Cuộc Sống Ở Houston',
+  'guide.life_houston': 'Cuộc Sống Ở Thành Phố',
   'guide.life_subtitle': 'Tài nguyên cho mọi tình huống',
   'guide.bigger_picture': 'Bức Tranh Lớn',
   'guide.sdg_heading': 'Mục Tiêu Phát Triển Bền Vững',
@@ -2716,7 +2716,7 @@ const vi: Record<string, string> = {
 
   // Super neighborhoods
   'superNeighborhoods.title': 'Khám Phá Khu Phố Của Bạn',
-  'superNeighborhoods.subtitle': 'Houston được chia thành 88 siêu khu phố — khu vực cộng đồng cho tham gia dân sự và lập kế hoạch tài nguyên.',
+  'superNeighborhoods.subtitle': 'Khám phá các khu phố trong thành phố của bạn — khu vực cộng đồng cho tham gia dân sự và lập kế hoạch tài nguyên.',
   'superNeighborhoods.intro': 'Nhấp vào ranh giới trên bản đồ hoặc thẻ bên dưới để khám phá nhân khẩu học, tài nguyên và thông tin cộng đồng cho mỗi siêu khu phố.',
   'superNeighborhoods.all_heading': 'Tất Cả Siêu Khu Phố',
   'superNeighborhoods.population': 'Dân Số',
@@ -2842,7 +2842,7 @@ const vi: Record<string, string> = {
   // Compass
   'compass.title': 'La Bàn',
   'compass.subtitle': 'Tôi đang ở đâu và xung quanh có gì?',
-  'compass.tagline': 'Sinh ra ở Houston. Xây dựng cho mọi người.',
+  'compass.tagline': 'Xây dựng với tình yêu. Cho mọi người.',
   'compass.show_all': 'Hiển thị tất cả',
   'compass.understand': 'Tôi muốn hiểu điều gì đó',
   'compass.help': 'Tôi muốn giúp đỡ',
@@ -2926,8 +2926,8 @@ const vi: Record<string, string> = {
 
   // Community Guide (homepage)
   'guide.label': 'Hướng Dẫn Cộng Đồng',
-  'guide.houston': 'Houston, Texas',
-  'guide.title': 'Hướng Dẫn Houston Của Bạn',
+  'guide.houston': 'Thành Phố Của Bạn',
+  'guide.title': 'Hướng Dẫn Cộng Đồng Của Bạn',
   'guide.subtitle': 'Tìm dịch vụ, biết ai đại diện cho bạn, và tham gia cộng đồng. Một nơi, mọi cấp chính quyền, hỗ trợ thực sự.',
   'guide.search_placeholder': 'Tìm dịch vụ, quan chức, chính sách...',
   'guide.stat_services': 'dịch vụ',
@@ -3016,7 +3016,7 @@ const vi: Record<string, string> = {
   'brand.description': 'Change Engine là nền tảng khám phá cộng đồng do The Change Lab tại Houston xây dựng. Chúng tôi kết nối cư dân với các quan chức, dịch vụ, tổ chức và cơ hội đã có sẵn — bằng ngôn ngữ của họ, ở cấp độ của họ, trong khu phố của họ.',
   'brand.mission': 'Chúng tôi không xây dựng điều gì mới. Chúng tôi chỉ làm cho những gì đã có trở nên dễ tìm.',
   'brand.copyright': 'The Change Lab. Được bảo trợ tài chính bởi Impact Hub Houston, tổ chức 501(c)(3).',
-  'brand.built_in': 'Xây dựng tại Houston. Cho Houston.',
+  'brand.built_in': 'Xây dựng với tình yêu. Cho mọi người.',
 
   // D2Nav menu labels
   'd2nav.community': 'Cộng Đồng',
@@ -3158,7 +3158,7 @@ const vi: Record<string, string> = {
 
   // Footer
   'footer.community_exchange': 'Sàn Giao Dịch Cộng Đồng',
-  'footer.description': 'Một nền tảng dân sự kết nối cư dân Houston với các nguồn lực, kiến thức và cơ hội củng cố cộng đồng.',
+  'footer.description': 'Một nền tảng dân sự kết nối cư dân với các nguồn lực, kiến thức và cơ hội củng cố cộng đồng.',
   'footer.navigate': 'Điều Hướng',
   'footer.connect': 'Kết Nối',
   'footer.compass': 'La Bàn',
@@ -3203,13 +3203,13 @@ const vi: Record<string, string> = {
 
   // Splash page
   'splash.title': 'Change Engine',
-  'splash.subtitle': 'Kết Nối Cư Dân Houston',
+  'splash.subtitle': 'Kết Nối Cư Dân',
   'splash.coming_soon': 'Sắp Ra Mắt',
   'splash.three_good_things': 'Ba Điều Tốt Đẹp',
   'splash.program_label': 'Hoạt Động của Change Engine',
   'splash.shared_by_neighbors': 'được chia sẻ bởi cư dân',
   'splash.coming_soon_vision': 'Mỗi cộng đồng đều có những gì cần thiết để phát triển.',
-  'splash.coming_soon_desc': 'Chúng tôi đang xây dựng một nền tảng dân sự kết nối cư dân Houston với các nguồn lực, dịch vụ và cơ hội đã có sẵn xung quanh họ.',
+  'splash.coming_soon_desc': 'Chúng tôi đang xây dựng một nền tảng dân sự kết nối cư dân với các nguồn lực, dịch vụ và cơ hội đã có sẵn xung quanh họ.',
   'splash.what_to_expect': 'Điều gì sẽ có',
   'splash.expect_1': 'Biết chính xác ai đại diện cho bạn ở mọi cấp chính quyền — và cách liên hệ với họ',
   'splash.expect_2': 'Tìm mọi dịch vụ, quyền lợi và nguồn lực có sẵn trong mã ZIP của bạn — tại một nơi',
@@ -3279,7 +3279,7 @@ const vi: Record<string, string> = {
   'tip.quiz_indicator': 'Kiểm tra ngắn ở cuối. Không chấm điểm — chỉ để giúp ghi nhớ.',
   'tip.module_media_pills': 'Tài nguyên từ nguồn đáng tin cậy — TED, PBS, tổ chức cộng đồng. Chúng tôi liên kết đến họ. Không thay thế họ.',
   'tip.ai_summary_badge': 'AI viết tóm tắt này để nội dung dễ đọc hơn. Nguồn gốc được liên kết bên dưới — chúng tôi không thay thế nó.',
-  'tip.chat_with_chance': 'Chance là trợ lý AI dựa trên dữ liệu dân sự Houston. Hỏi bất cứ điều gì — quan chức, dịch vụ, chính sách, cách mọi thứ hoạt động.',
+  'tip.chat_with_chance': 'Chance là trợ lý AI dựa trên dữ liệu dân sự cộng đồng. Hỏi bất cứ điều gì — quan chức, dịch vụ, chính sách, cách mọi thứ hoạt động.',
   'tip.source_attribution': 'Nội dung này được tạo bởi tổ chức này. Chúng tôi tóm tắt nó. Nhấp để đọc bản gốc.',
   'tip.org_action_buttons': 'Liên kết trực tiếp đến trang tình nguyện, quyên góp hoặc lịch sự kiện của tổ chức này.',
   'tip.foundation_galaxy': 'Mỗi chấm là một quỹ. Lớn hơn = nhiều tài trợ hơn. Màu sắc = chủ đề chính. Nhấp vào bất kỳ chấm nào để tìm hiểu thêm.',
@@ -3289,9 +3289,9 @@ const vi: Record<string, string> = {
   'tip.time_commitment': 'Cần bao nhiêu thời gian — một lần, hàng tuần, hàng tháng hoặc liên tục. Không bất ngờ.',
   'tip.virtual_badge': 'Bạn có thể làm điều này từ nhà. Không cần di chuyển.',
   'tip.spots_available': 'Còn bao nhiêu chỗ trống. Ai đến trước được phục vụ trước.',
-  'tip.super_neighborhood_number': 'Houston có 88 siêu khu phố. Mỗi khu có một hội đồng đóng góp ý kiến cho Tòa Thị Chính về các quyết định địa phương.',
+  'tip.super_neighborhood_number': 'Thành phố của bạn có nhiều khu phố. Mỗi khu có một hội đồng đóng góp ý kiến cho Tòa Thị Chính về các quyết định địa phương.',
   'tip.population_income': 'Dữ liệu Điều tra Dân số Hoa Kỳ — dùng để hiểu nhu cầu cộng đồng và cách phân bổ tài nguyên.',
-  'tip.geojson_boundaries': 'Ranh giới bản đồ từ Sở Quy hoạch Thành phố Houston. Cập nhật khi ranh giới chính thức thay đổi.',
+  'tip.geojson_boundaries': 'Ranh giới bản đồ từ Sở Quy hoạch thành phố. Cập nhật khi ranh giới chính thức thay đổi.',
   'tip.wayfinder_panel': 'Mọi thứ kết nối với những gì bạn đang xem — quan chức, dịch vụ, tổ chức, chính sách và tin tức có cùng lĩnh vực trọng tâm.',
   'tip.focus_area_dots': 'Lĩnh vực trọng tâm là chủ đề cụ thể trong một con đường. Nhấn vào bất kỳ chấm nào để khám phá mọi thứ được gắn thẻ.',
   'tip.engagement_tiers': 'Hiểu: tìm hiểu điều gì đang xảy ra.  Tham gia: hành động.  Đi sâu: theo dõi hệ thống định hình nó.',
@@ -3311,7 +3311,7 @@ const vi: Record<string, string> = {
   'home.chart_course': 'Vạch Ra Con Đường',
   'home.chart_course_sub': 'Khám phá cộng đồng qua dữ liệu dân sự.',
   'home.ask_chance': 'Hỏi Chance',
-  'home.ask_chance_sub': 'Nhận câu trả lời từ dữ liệu dân sự Houston.',
+  'home.ask_chance_sub': 'Nhận câu trả lời từ dữ liệu dân sự cộng đồng.',
   'home.gap_responsible': 'cảm thấy có trách nhiệm giúp đỡ cộng đồng',
   'home.gap_dont_know': 'không biết bắt đầu từ đâu',
   'home.gap_volunteer': 'thực sự làm tình nguyện',
@@ -3400,20 +3400,20 @@ const vi: Record<string, string> = {
   'nav.routes': 'Tuyến đường',
   'nav.find_my_way': 'Tìm đường',
   'nav.change_engine': 'Change Engine',
-  'nav.edition': 'Houston · 2026',
+  'nav.edition': '2026',
 
   // Reskin — homepage / guide additions
   'guide.pathways_label': '7 Lộ Trình · Chọn nơi bạn muốn đến',
-  'guide.pathways_heading': 'Khám phá Houston, từng nơi một',
+  'guide.pathways_heading': 'Khám phá thành phố, từng nơi một',
   'guide.explore': 'Khám phá',
   'guide.latest_label': 'Mới nhất · Có gì mới',
   'guide.dv_hotline': 'Đường dây Bạo lực Gia đình',
   'guide.dv_hotline_desc': 'Đường dây Bạo lực Gia đình Quốc gia',
 
   // Reskin — pathway page
-  'pathway.edition_label': 'Houston, TX',
+  'pathway.edition_label': 'Thành Phố Của Bạn',
   'pathway.edition_suffix': 'Ấn bản 2026',
-  'pathway.state_of': 'Tình hình {name} tại Houston',
+  'pathway.state_of': 'Tình hình {name} tại cộng đồng của bạn',
   'pathway.destinations_label': 'Điểm đến · Chọn nơi bạn muốn đến',
   'pathway.explore_prefix': 'Khám phá ',
   'pathway.connected': 'Lộ trình kết nối',

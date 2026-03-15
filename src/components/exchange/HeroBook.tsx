@@ -52,7 +52,7 @@ export function HeroBook() {
         <div className="max-w-[1080px] mx-auto px-4 sm:px-8 py-14 sm:py-20">
 
           {/* Location label */}
-          <p className="text-xs uppercase tracking-[0.3em] text-brand-muted font-semibold mb-6">
+          <p className="text-sm uppercase tracking-[0.3em] text-brand-muted font-semibold mb-6">
             {t('home.location')}
           </p>
 
@@ -118,7 +118,7 @@ export function HeroBook() {
                   </div>
                 )}
                 <div className="flex items-center justify-between mt-2">
-                  <p className="text-xs text-brand-muted">
+                  <p className="text-sm text-brand-muted">
                     {useAddressMode
                       ? 'Get exact district-level results for your address'
                       : 'See your representatives, local services, and neighborhood resources'}
@@ -126,7 +126,7 @@ export function HeroBook() {
                   <button
                     type="button"
                     onClick={function () { setUseAddressMode(!useAddressMode); setZipInput(''); setAddressInput('') }}
-                    className="text-xs text-brand-accent hover:underline whitespace-nowrap ml-3"
+                    className="text-sm text-brand-accent hover:underline whitespace-nowrap ml-3"
                   >
                     {useAddressMode ? 'Use ZIP' : 'Use address'}
                   </button>
@@ -146,7 +146,7 @@ export function HeroBook() {
                         {isLoading ? 'Finding your area...' : (neighborhood?.neighborhood_name || 'Houston Area')}
                       </h2>
                       {!isLoading && (
-                        <span className="inline-flex items-center gap-1 text-xs text-brand-success font-medium">
+                        <span className="inline-flex items-center gap-1 text-sm text-brand-success font-medium">
                           <Check size={12} /> ZIP {zip}
                         </span>
                       )}
@@ -158,7 +158,7 @@ export function HeroBook() {
                       <p className="text-sm text-brand-muted mb-1">Council District {councilDistrict}</p>
                     )}
                     {resolvedDistricts && locationMode === 'address' && (
-                      <p className="text-xs text-brand-muted mb-1">
+                      <p className="text-sm text-brand-muted mb-1">
                         {[
                           resolvedDistricts.congressionalDistrict ? 'Congressional ' + resolvedDistricts.congressionalDistrict : null,
                           resolvedDistricts.stateHouseDistrict ? 'State House ' + resolvedDistricts.stateHouseDistrict : null,
@@ -174,19 +174,19 @@ export function HeroBook() {
                     <div className="flex flex-wrap gap-2 mt-3">
                       <Link
                         href="/my-area"
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-accent text-white text-xs font-semibold hover:bg-brand-accent-hover transition-colors"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-accent text-white text-sm font-semibold hover:bg-brand-accent-hover transition-colors"
                       >
                         My Civic Profile <ArrowRight size={12} />
                       </Link>
                       <Link
                         href="/officials"
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-bg-alt border border-brand-border text-xs font-semibold text-brand-text hover:bg-white transition-colors"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-bg-alt border border-brand-border text-sm font-semibold text-brand-text hover:bg-white transition-colors"
                       >
                         Your Representatives <ArrowRight size={12} />
                       </Link>
                       <Link
                         href="/services"
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-bg-alt border border-brand-border text-xs font-semibold text-brand-text hover:bg-white transition-colors"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-bg-alt border border-brand-border text-sm font-semibold text-brand-text hover:bg-white transition-colors"
                       >
                         Nearby Services <ArrowRight size={12} />
                       </Link>
@@ -212,7 +212,7 @@ export function HeroBook() {
                 />
                 <button
                   type="submit"
-                  className="absolute right-1.5 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-brand-accent text-white text-xs font-semibold rounded-md hover:bg-brand-accent-hover transition-colors"
+                  className="absolute right-1.5 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-brand-accent text-white text-sm font-semibold rounded-md hover:bg-brand-accent-hover transition-colors"
                 >
                   Search
                 </button>

@@ -50,7 +50,7 @@ export function LibraryCard({
                 return (
                   <span
                     key={theme.name}
-                    className="inline-flex items-center gap-1.5 text-xs text-brand-muted"
+                    className="inline-flex items-center gap-1.5 text-sm text-brand-muted"
                   >
                     <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: theme.color }} />
                     {theme.name}
@@ -74,13 +74,13 @@ export function LibraryCard({
 
           {/* Meta footer */}
           <div className="flex items-center justify-between mt-4 pt-3 border-t border-brand-border">
-            <div className="flex items-center gap-1.5 text-xs text-brand-muted">
+            <div className="flex items-center gap-1.5 text-sm text-brand-muted">
               <FileText size={13} />
               <span>{page_count} {t('library.pages')}</span>
             </div>
 
             {tags.length > 0 && (
-              <div className="flex items-center gap-1 text-xs text-brand-muted">
+              <div className="flex items-center gap-1 text-sm text-brand-muted">
                 <Tag size={12} />
                 <span className="truncate max-w-[120px]">{tags.slice(0, 2).join(', ')}</span>
               </div>

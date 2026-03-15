@@ -36,24 +36,24 @@ export async function EnvironmentBar() {
         <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-brand-border">
           {/* Temperature */}
           <div className="py-2.5 px-3 text-center">
-            <p className="text-[10px] uppercase tracking-wider text-brand-muted font-semibold">Houston</p>
+            <p className="text-xs uppercase tracking-wider text-brand-muted font-semibold">Houston</p>
             {weather ? (
               <p className="text-sm font-bold text-brand-text">{weather.temperature}°F</p>
             ) : (
               <p className="text-xs text-brand-muted">—</p>
             )}
             {weather?.shortForecast && (
-              <p className="text-[10px] text-brand-muted truncate">{weather.shortForecast}</p>
+              <p className="text-xs text-brand-muted truncate">{weather.shortForecast}</p>
             )}
           </div>
 
           {/* Air Quality */}
           <div className="py-2.5 px-3 text-center">
-            <p className="text-[10px] uppercase tracking-wider text-brand-muted font-semibold">Air Quality</p>
+            <p className="text-xs uppercase tracking-wider text-brand-muted font-semibold">Air Quality</p>
             {aqi && airQuality ? (
               <>
                 <p className={'text-sm font-bold ' + aqi.color}>{airQuality.aqi} AQI</p>
-                <p className={'text-[10px] font-medium ' + aqi.color}>{aqi.label}</p>
+                <p className={'text-xs font-medium ' + aqi.color}>{aqi.label}</p>
               </>
             ) : (
               <p className="text-xs text-brand-muted">—</p>
@@ -62,11 +62,11 @@ export async function EnvironmentBar() {
 
           {/* Bayou Levels */}
           <div className="py-2.5 px-3 text-center">
-            <p className="text-[10px] uppercase tracking-wider text-brand-muted font-semibold">Bayou Levels</p>
+            <p className="text-xs uppercase tracking-wider text-brand-muted font-semibold">Bayou Levels</p>
             {bayou ? (
               <>
                 <p className={'text-sm font-bold ' + bayou.color}>{bayou.label}</p>
-                <p className="text-[10px] text-brand-muted">{bayouLevels.length} gauges</p>
+                <p className="text-xs text-brand-muted">{bayouLevels.length} gauges</p>
               </>
             ) : (
               <p className="text-xs text-brand-muted">—</p>
@@ -75,18 +75,18 @@ export async function EnvironmentBar() {
 
           {/* NWS Alerts */}
           <div className="py-2.5 px-3 text-center">
-            <p className="text-[10px] uppercase tracking-wider text-brand-muted font-semibold">Alerts</p>
+            <p className="text-xs uppercase tracking-wider text-brand-muted font-semibold">Alerts</p>
             {hasAlerts ? (
               <>
                 <p className={`text-sm font-bold ${alertSeverity === 'Extreme' || alertSeverity === 'Severe' ? 'text-red-700' : 'text-yellow-700'}`}>
                   {alerts.length} active
                 </p>
-                <p className="text-[10px] text-brand-muted truncate">{alerts[0].event}</p>
+                <p className="text-xs text-brand-muted truncate">{alerts[0].event}</p>
               </>
             ) : (
               <>
                 <p className="text-sm font-bold text-green-700">None</p>
-                <p className="text-[10px] text-green-600">All clear</p>
+                <p className="text-xs text-green-600">All clear</p>
               </>
             )}
           </div>

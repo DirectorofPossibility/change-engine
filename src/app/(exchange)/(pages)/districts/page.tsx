@@ -14,13 +14,13 @@ export const metadata: Metadata = {
 const DISTRICT_TYPES = [
   {
     title: 'City Council',
-    description: 'Houston is divided into 11 council districts plus 5 at-large positions. Your council member is your closest connection to city government.',
+    description: 'Your city council represents your interests at City Hall. Your council member is your closest connection to city government.',
     icon: Building2,
     href: '/officials',
   },
   {
     title: 'Congressional Districts',
-    description: 'Houston spans multiple U.S. congressional districts. Your representative carries your voice to Washington.',
+    description: 'Your area may span multiple U.S. congressional districts. Your representative carries your voice to Washington.',
     icon: Landmark,
     href: '/officials',
   },
@@ -38,13 +38,13 @@ const DISTRICT_TYPES = [
   },
   {
     title: 'County Precincts',
-    description: 'Harris County Commissioners Court oversees county roads, flood control, public health, and a multi-billion dollar budget.',
+    description: 'Your county commissioners court oversees county roads, flood control, public health, and the county budget.',
     icon: Users,
     href: '/officials',
   },
   {
-    title: 'HISD Trustee Districts',
-    description: 'Houston Independent School District trustees govern the largest school district in Texas, serving over 180,000 students.',
+    title: 'School District Trustees',
+    description: 'Your local school district trustees govern education policy, budgets, and programs for students in your community.',
     icon: GraduationCap,
     href: '/officials',
   },
@@ -204,7 +204,7 @@ export default function DistrictsPage() {
         <div style={{ height: 1, background: '#dde1e8' }} className="mb-4" />
 
         <p style={{ color: "#5c6474", fontSize: 15 }} className="leading-relaxed max-w-2xl mb-6">
-          Every person in Houston lives inside multiple overlapping political boundaries.
+          Every resident lives inside multiple overlapping political boundaries.
           Your home address determines which city council member, county commissioner,
           state representative, state senator, and congressional representative speaks for you.
           District lines are redrawn every ten years after the census.

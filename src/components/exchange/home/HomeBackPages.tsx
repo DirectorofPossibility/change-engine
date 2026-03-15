@@ -15,7 +15,7 @@ export function HomeBackPages() {
       {/* Don't miss */}
       <section className="bg-paper">
         <div className="max-w-[720px] mx-auto px-6 py-14">
-          <p className="font-mono text-[10px] tracking-[0.14em] text-blue uppercase mb-6 text-center">
+          <p className="font-mono text-xs tracking-[0.14em] text-blue uppercase mb-6 text-center">
             Don&rsquo;t miss
           </p>
 
@@ -30,7 +30,7 @@ export function HomeBackPages() {
                   <p className="font-body text-[15px] mb-0.5 group-hover:text-blue transition-colors">
                     {item.label}
                   </p>
-                  <p className="font-mono text-[10px] text-muted tracking-wider">
+                  <p className="font-mono text-xs text-muted tracking-wider">
                     {item.note}
                   </p>
                 </Link>
@@ -57,7 +57,7 @@ export function HomeBackPages() {
             <a href="tel:7135282121" className="hover:text-blue transition-colors"><strong>713-528-2121</strong> DV Hotline</a>
           </div>
 
-          <p className="font-mono text-[10px] tracking-[0.12em] text-muted uppercase">
+          <p className="font-mono text-xs tracking-[0.12em] text-muted uppercase">
             Built in Houston. For Houston.
           </p>
         </div>

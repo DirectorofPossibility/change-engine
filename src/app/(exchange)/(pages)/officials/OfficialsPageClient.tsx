@@ -8,6 +8,7 @@ import { createClient } from '@/lib/supabase/client'
 import { OfficialCard } from '@/components/exchange/OfficialCard'
 import { OfficialsClient } from './OfficialsClient'
 import { useNeighborhood } from '@/lib/contexts/NeighborhoodContext'
+import { useCity } from '@/lib/contexts/CityContext'
 import type { ElectedOfficial, GovernmentLevel, TranslationMap } from '@/lib/types/exchange'
 
 
@@ -18,12 +19,21 @@ interface ZipResults {
   city: ElectedOfficial[]
 }
 
-const LEVEL_CONFIG: { key: keyof ZipResults; label: string; subtitle: string; icon: LucideIcon }[] = [
-  { key: 'city', label: 'City of Houston', subtitle: 'Mayor, Council, Controller', icon: Building2 },
-  { key: 'county', label: 'Harris County', subtitle: 'Commissioners Court, County Officials', icon: Home },
-  { key: 'state', label: 'State of Texas', subtitle: 'Governor, Legislature, Statewide', icon: Star },
-  { key: 'federal', label: 'United States', subtitle: 'President, Congress, Senate', icon: Landmark },
-]
+const CITY_LEVEL_LABELS: Record<string, { city: string; county: string; state: string }> = {
+  houston: { city: 'City of Houston', county: 'Harris County', state: 'State of Texas' },
+  'san-francisco': { city: 'City of San Francisco', county: 'San Francisco County', state: 'State of California' },
+  berkeley: { city: 'City of Berkeley', county: 'Alameda County', state: 'State of California' },
+}
+
+function getLevelConfig(citySlug: string): { key: keyof ZipResults; label: string; subtitle: string; icon: LucideIcon }[] {
+  const labels = CITY_LEVEL_LABELS[citySlug] || CITY_LEVEL_LABELS.houston
+  return [
+    { key: 'city', label: labels.city, subtitle: 'Mayor, Council, Controller', icon: Building2 },
+    { key: 'county', label: labels.county, subtitle: 'County Officials', icon: Home },
+    { key: 'state', label: labels.state, subtitle: 'Governor, Legislature, Statewide', icon: Star },
+    { key: 'federal', label: 'United States', subtitle: 'President, Congress, Senate', icon: Landmark },
+  ]
+}
 
 interface Props {
   officials: ElectedOfficial[]
@@ -33,6 +43,8 @@ interface Props {
 }
 
 export function OfficialsPageClient({ officials, levels, translations = {}, linkedinProfiles = {} }: Props) {
+  const { citySlug } = useCity()
+  const LEVEL_CONFIG = getLevelConfig(citySlug)
   const { zip: savedZip } = useNeighborhood()
   const [zip, setZip] = useState('')
   const [zipResults, setZipResults] = useState<ZipResults | null>(null)
@@ -191,7 +203,7 @@ export function OfficialsPageClient({ officials, levels, translations = {}, link
                   </div>
                   <div>
                     <h3 className="font-display text-lg font-bold text-ink leading-tight">{label}</h3>
-                    <p className="font-mono text-[10px] uppercase tracking-widest text-muted">{subtitle}</p>
+                    <p className="font-mono text-xs uppercase tracking-widest text-muted">{subtitle}</p>
                   </div>
                   <span className="ml-auto font-mono text-xs text-faint">{group.length}</span>
                 </div>

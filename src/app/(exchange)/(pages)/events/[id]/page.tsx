@@ -102,7 +102,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
         )}
         <div className="max-w-[900px] mx-auto px-6 py-20 relative z-10 flex flex-col justify-end" style={{ minHeight: heroImage ? '400px' : undefined }}>
           {/* Breadcrumb on hero */}
-          <nav style={{ fontSize: '0.65rem', color: "rgba(255,255,255,0.6)", marginBottom: '1rem' }}>
+          <nav style={{ fontSize: '0.875rem', color: "rgba(255,255,255,0.6)", marginBottom: '1rem' }}>
             <Link href="/" className="hover:underline" style={{ color: "rgba(255,255,255,0.7)" }}>Home</Link>
             <span className="mx-1.5">/</span>
             <Link href="/events" className="hover:underline" style={{ color: "rgba(255,255,255,0.7)" }}>Events</Link>
@@ -112,15 +112,15 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
 
           <div className="flex flex-wrap items-center gap-3 mb-2">
             {event.event_type && (
-              <span className="px-2 py-0.5" style={{ fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.12em', color: '#fff', background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(4px)' }}>
+              <span className="px-2 py-0.5" style={{ fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '0.12em', color: '#fff', background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(4px)' }}>
                 {event.event_type}
               </span>
             )}
             {(event.is_free === 'true' || event.is_free === 'Yes') && (
-              <span className="px-2 py-0.5" style={{ fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.12em', fontWeight: 600, color: '#a3d9a3', background: 'rgba(163,217,163,0.12)' }}>Free</span>
+              <span className="px-2 py-0.5" style={{ fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '0.12em', fontWeight: 600, color: '#a3d9a3', background: 'rgba(163,217,163,0.12)' }}>Free</span>
             )}
             {event.is_virtual === 'true' && (
-              <span className="flex items-center gap-1 px-2 py-0.5" style={{ fontSize: '0.6rem', textTransform: 'uppercase', color: "rgba(255,255,255,0.8)", background: 'rgba(255,255,255,0.1)' }}>
+              <span className="flex items-center gap-1 px-2 py-0.5" style={{ fontSize: '0.875rem', textTransform: 'uppercase', color: "rgba(255,255,255,0.8)", background: 'rgba(255,255,255,0.1)' }}>
                 <Video className="w-3 h-3" /> Virtual
               </span>
             )}
@@ -163,21 +163,21 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
             {event.registration_url && (
               <a href={event.registration_url} target="_blank" rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-6 py-2.5 text-white transition-all hover:scale-[1.02] hover:shadow-lg"
-                style={{ fontSize: '0.8rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', background: '#C75B2A', borderRadius: '2px' }}>
+                style={{ fontSize: '0.875rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', background: '#C75B2A', borderRadius: '2px' }}>
                 Register Now <ArrowRight className="w-4 h-4" />
               </a>
             )}
             {calendarUrl && (
               <a href={calendarUrl} target="_blank" rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 px-4 py-2.5 transition-colors hover:bg-white/20"
-                style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.06em', color: '#fff', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '2px' }}>
+                style={{ fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '0.06em', color: '#fff', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '2px' }}>
                 <CalendarPlus className="w-4 h-4" /> Add to Calendar
               </a>
             )}
             {mapUrl && event.is_virtual !== 'true' && (
               <a href={mapUrl} target="_blank" rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 px-4 py-2.5 transition-colors hover:bg-white/20"
-                style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.06em', color: '#fff', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '2px' }}>
+                style={{ fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '0.06em', color: '#fff', border: '1px solid rgba(255,255,255,0.3)', borderRadius: '2px' }}>
                 <Navigation className="w-4 h-4" /> Directions
               </a>
             )}
@@ -239,12 +239,12 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
                           {org.org_name}
                         </Link>
                         {(org as any).mission_statement && (
-                          <p className="mt-1 italic" style={{ fontSize: '0.85rem', color: "#5c6474", lineHeight: 1.5 }}>
+                          <p className="mt-1 italic" style={{ fontSize: '0.9375rem', color: "#5c6474", lineHeight: 1.5 }}>
                             &ldquo;{(org as any).mission_statement}&rdquo;
                           </p>
                         )}
                         {!(org as any).mission_statement && (org as any).description_5th_grade && (
-                          <p className="line-clamp-3 mt-1" style={{ fontSize: '0.85rem', color: "#5c6474", lineHeight: 1.5 }}>
+                          <p className="line-clamp-3 mt-1" style={{ fontSize: '0.9375rem', color: "#5c6474", lineHeight: 1.5 }}>
                             {(org as any).description_5th_grade}
                           </p>
                         )}
@@ -252,16 +252,16 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
                     </div>
                     <div className="flex flex-wrap items-center gap-4 mt-4 pt-3" style={{ borderTop: '1px solid #eee' }}>
                       {org.website && (
-                        <a href={org.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:underline" style={{ fontSize: '0.75rem', color: "#1b5e8a", fontWeight: 500 }}>
+                        <a href={org.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:underline" style={{ fontSize: '0.875rem', color: "#1b5e8a", fontWeight: 500 }}>
                           <Globe className="w-3.5 h-3.5" /> Website
                         </a>
                       )}
                       {(org as any).phone && (
-                        <a href={'tel:' + (org as any).phone} className="flex items-center gap-1.5 hover:underline" style={{ fontSize: '0.75rem', color: "#1b5e8a", fontWeight: 500 }}>
+                        <a href={'tel:' + (org as any).phone} className="flex items-center gap-1.5 hover:underline" style={{ fontSize: '0.875rem', color: "#1b5e8a", fontWeight: 500 }}>
                           <Phone className="w-3.5 h-3.5" /> {(org as any).phone}
                         </a>
                       )}
-                      <Link href={'/organizations/' + org.org_id} className="flex items-center gap-1 hover:underline ml-auto" style={{ fontSize: '0.75rem', color: "#C75B2A", fontWeight: 600 }}>
+                      <Link href={'/organizations/' + org.org_id} className="flex items-center gap-1 hover:underline ml-auto" style={{ fontSize: '0.875rem', color: "#C75B2A", fontWeight: 600 }}>
                         View Organization <ArrowRight className="w-3.5 h-3.5" />
                       </Link>
                     </div>
@@ -276,12 +276,12 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
             <div className="sticky top-6 space-y-5">
               {/* When card */}
               <div className="p-5" style={{ background: '#f8f7f5', border: '1px solid #e8e5df', borderRadius: '4px' }}>
-                <h3 style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.12em', color: '#8a7f72', marginBottom: '0.75rem', fontWeight: 600 }}>When</h3>
+                <h3 style={{ fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '0.12em', color: '#8a7f72', marginBottom: '0.75rem', fontWeight: 600 }}>When</h3>
                 <div className="space-y-3">
                   {startDate && (
                     <div className="flex items-start gap-3">
                       <div className="text-center flex-shrink-0 pt-0.5" style={{ minWidth: '44px' }}>
-                        <div style={{ fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#C75B2A', fontWeight: 700 }}>
+                        <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#C75B2A', fontWeight: 700 }}>
                           {startDate.toLocaleDateString('en-US', { month: 'short' })}
                         </div>
                         <div style={{ fontSize: '1.5rem', fontWeight: 700, lineHeight: 1, color: '#2C2C2C' }}>
@@ -303,7 +303,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
                       <div style={{ borderLeft: '2px dotted #dde1e8', height: '16px', marginLeft: '21px' }} />
                       <div className="flex items-start gap-3">
                         <div className="text-center flex-shrink-0 pt-0.5" style={{ minWidth: '44px' }}>
-                          <div style={{ fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#C75B2A', fontWeight: 700 }}>
+                          <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#C75B2A', fontWeight: 700 }}>
                             {endDate.toLocaleDateString('en-US', { month: 'short' })}
                           </div>
                           <div style={{ fontSize: '1.5rem', fontWeight: 700, lineHeight: 1, color: '#2C2C2C' }}>
@@ -330,7 +330,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
 
               {/* Where card */}
               <div className="p-5" style={{ background: '#f8f7f5', border: '1px solid #e8e5df', borderRadius: '4px' }}>
-                <h3 style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.12em', color: '#8a7f72', marginBottom: '0.75rem', fontWeight: 600 }}>Where</h3>
+                <h3 style={{ fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '0.12em', color: '#8a7f72', marginBottom: '0.75rem', fontWeight: 600 }}>Where</h3>
                 {event.is_virtual === 'true' ? (
                   <div className="flex items-center gap-2">
                     <Video className="w-4 h-4" style={{ color: "#5c6474" }} />
@@ -345,7 +345,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
                     {mapUrl && (
                       <a href={mapUrl} target="_blank" rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 hover:underline ml-6"
-                        style={{ fontSize: '0.7rem', color: "#1b5e8a", fontWeight: 500 }}>
+                        style={{ fontSize: '0.875rem', color: "#1b5e8a", fontWeight: 500 }}>
                         <Navigation className="w-3 h-3" /> Open in Google Maps
                       </a>
                     )}
@@ -357,7 +357,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
 
               {/* Cost card */}
               <div className="p-5" style={{ background: '#f8f7f5', border: '1px solid #e8e5df', borderRadius: '4px' }}>
-                <h3 style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.12em', color: '#8a7f72', marginBottom: '0.75rem', fontWeight: 600 }}>Cost</h3>
+                <h3 style={{ fontSize: '0.875rem', textTransform: 'uppercase', letterSpacing: '0.12em', color: '#8a7f72', marginBottom: '0.75rem', fontWeight: 600 }}>Cost</h3>
                 <div className="flex items-center gap-2">
                   <Tag className="w-4 h-4" style={{ color: (event.is_free === 'true' || event.is_free === 'Yes') ? '#2d8a4e' : '#5c6474' }} />
                   <span style={{ fontSize: '0.9rem', fontWeight: 500, color: (event.is_free === 'true' || event.is_free === 'Yes') ? '#2d8a4e' : undefined }}>
@@ -370,7 +370,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
               {event.registration_url && (
                 <a href={event.registration_url} target="_blank" rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2 w-full py-3 text-white transition-all hover:opacity-90"
-                  style={{ fontSize: '0.8rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', background: '#C75B2A', borderRadius: '2px' }}>
+                  style={{ fontSize: '0.875rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', background: '#C75B2A', borderRadius: '2px' }}>
                   Register Now <ExternalLink className="w-4 h-4" />
                 </a>
               )}

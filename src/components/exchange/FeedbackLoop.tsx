@@ -81,7 +81,7 @@ export function FeedbackLoop({ entityType, entityId, entityName }: FeedbackLoopP
   if (!open) {
     return (
       <div className="border border-brand-border p-4 text-center">
-        <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted-light mb-2">Feedback Loop</p>
+        <p className="font-mono text-xs font-bold uppercase tracking-wider text-brand-muted-light mb-2">Feedback Loop</p>
         <button
           onClick={function () { setOpen(true) }}
           className="text-sm text-brand-accent hover:underline font-semibold"
@@ -98,7 +98,7 @@ export function FeedbackLoop({ entityType, entityId, entityName }: FeedbackLoopP
   return (
     <div className="border border-brand-border overflow-hidden">
       <div className="px-4 py-3 bg-brand-bg border-b border-brand-border flex items-center justify-between">
-        <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted-light">Feedback Loop</p>
+        <p className="font-mono text-xs font-bold uppercase tracking-wider text-brand-muted-light">Feedback Loop</p>
         <button onClick={reset} className="text-xs text-brand-muted hover:text-brand-accent">Cancel</button>
       </div>
 

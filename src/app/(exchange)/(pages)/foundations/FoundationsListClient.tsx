@@ -72,18 +72,18 @@ function FoundationCard({ f }: { f: Foundation }) {
                 {f.name}
               </h3>
               <div className="flex items-center gap-2 mt-1">
-                <span className="inline-flex items-center gap-1 text-[10px] font-medium" style={{ color: geo.color }}>
+                <span className="inline-flex items-center gap-1 text-xs font-medium" style={{ color: geo.color }}>
                   <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: geo.color }} />
                   {geo.short}
                 </span>
-                {f.type && <span className="text-[10px] text-brand-muted">{f.type}</span>}
+                {f.type && <span className="text-xs text-brand-muted">{f.type}</span>}
               </div>
             </div>
             {f.assets && (
               <div className="text-right shrink-0">
                 <span className="text-sm font-bold text-brand-accent">{f.assets}</span>
                 {f.annual_giving && (
-                  <div className="text-[10px] text-brand-muted">{f.annual_giving}/yr</div>
+                  <div className="text-xs text-brand-muted">{f.annual_giving}/yr</div>
                 )}
               </div>
             )}
@@ -146,18 +146,18 @@ function SpotlightCard({ f }: { f: Foundation }) {
               {f.name}
             </h3>
             <div className="flex items-center gap-2 mt-1">
-              <span className="inline-flex items-center gap-1 text-[10px] font-medium" style={{ color: geo.color }}>
+              <span className="inline-flex items-center gap-1 text-xs font-medium" style={{ color: geo.color }}>
                 <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: geo.color }} />
                 {geo.short}
               </span>
-              {f.city && <span className="text-[10px] text-brand-muted">{f.city}, {f.state_code}</span>}
+              {f.city && <span className="text-xs text-brand-muted">{f.city}, {f.state_code}</span>}
             </div>
           </div>
           {f.assets && (
             <div className="text-right shrink-0">
               <span className="text-lg font-bold text-brand-accent">{f.assets}</span>
               {f.annual_giving && (
-                <div className="text-[10px] text-brand-muted">{f.annual_giving}/yr</div>
+                <div className="text-xs text-brand-muted">{f.annual_giving}/yr</div>
               )}
             </div>
           )}
@@ -174,7 +174,7 @@ function SpotlightCard({ f }: { f: Foundation }) {
               const pw = PW[pid]
               if (!pw) return null
               return (
-                <span key={pid} className="inline-flex items-center gap-1 text-[10px] font-medium" style={{ color: pw.color }}>
+                <span key={pid} className="inline-flex items-center gap-1 text-xs font-medium" style={{ color: pw.color }}>
                   <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: pw.color }} />
                   {pw.name}
                 </span>
@@ -296,7 +296,7 @@ export default function FoundationsListClient({ foundations, totalCount }: Props
           {(geoF || pwF || q) && (
             <button
               onClick={() => { setGeoF(null); setPwF(null); setQ('') }}
-              className="text-[10px] font-medium text-brand-accent hover:underline"
+              className="text-xs font-medium text-brand-accent hover:underline"
             >
               Clear filters
             </button>
@@ -328,7 +328,7 @@ export default function FoundationsListClient({ foundations, totalCount }: Props
         <aside className="hidden lg:block space-y-6">
           {/* Geographic Level */}
           <div>
-            <h3 className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">Geographic Level</h3>
+            <h3 className="text-xs font-bold uppercase tracking-wider text-brand-muted mb-3">Geographic Level</h3>
             <div className="space-y-1">
               <button
                 onClick={() => setGeoF(null)}
@@ -336,7 +336,7 @@ export default function FoundationsListClient({ foundations, totalCount }: Props
               >
                 <span className={`w-1.5 h-1.5 rounded-full ${!geoF ? 'bg-brand-accent' : 'bg-brand-border'}`} />
                 All Levels
-                <span className="ml-auto text-[10px]">{totalCount}</span>
+                <span className="ml-auto text-xs">{totalCount}</span>
               </button>
               {geoCounts.map(g => (
                 <button
@@ -347,7 +347,7 @@ export default function FoundationsListClient({ foundations, totalCount }: Props
                 >
                   <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: g.color, opacity: geoF === g.id ? 1 : 0.5 }} />
                   {g.name}
-                  <span className="ml-auto text-[10px]">{g.count}</span>
+                  <span className="ml-auto text-xs">{g.count}</span>
                 </button>
               ))}
             </div>
@@ -355,7 +355,7 @@ export default function FoundationsListClient({ foundations, totalCount }: Props
 
           {/* Pathway */}
           <div>
-            <h3 className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-3">Pathway</h3>
+            <h3 className="text-xs font-bold uppercase tracking-wider text-brand-muted mb-3">Pathway</h3>
             <div className="space-y-1">
               <button
                 onClick={() => setPwF(null)}
@@ -373,7 +373,7 @@ export default function FoundationsListClient({ foundations, totalCount }: Props
                 >
                   <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: p.color, opacity: pwF === p.id ? 1 : 0.5 }} />
                   {p.name}
-                  <span className="ml-auto text-[10px]">{p.count}</span>
+                  <span className="ml-auto text-xs">{p.count}</span>
                 </button>
               ))}
             </div>

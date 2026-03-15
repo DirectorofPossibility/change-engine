@@ -320,7 +320,7 @@ export function GeographyClient({
                     </div>
                   )
                 })}
-                <p className="col-span-2 text-[10px] text-brand-muted-light mt-1">Toggle layers using the map control</p>
+                <p className="col-span-2 text-xs text-brand-muted-light mt-1">Toggle layers using the map control</p>
               </div>
             )}
           </div>
@@ -367,7 +367,7 @@ export function GeographyClient({
                   })}
                 </div>
                 {!selectedRegion && (
-                  <p className="text-[10px] text-brand-muted-light mt-2">Select a region first to filter by pathway</p>
+                  <p className="text-xs text-brand-muted-light mt-2">Select a region first to filter by pathway</p>
                 )}
               </div>
             )}
@@ -417,7 +417,7 @@ export function GeographyClient({
                           <Icon size={14} style={{ color: et.color }} />
                           <div>
                             <span className="block text-sm font-bold text-brand-text leading-none">{count}</span>
-                            <span className="text-[10px] text-brand-muted">{et.label}</span>
+                            <span className="text-xs text-brand-muted">{et.label}</span>
                           </div>
                         </div>
                       )
@@ -449,7 +449,7 @@ export function GeographyClient({
                             )}
                             <div className="min-w-0 flex-1">
                               <span className="block text-sm font-semibold text-brand-text truncate group-hover:text-brand-accent transition-colors">{o.official_name}</span>
-                              <span className="block text-[10px] text-brand-muted truncate">{o.title}{o.party ? ' (' + o.party + ')' : ''}</span>
+                              <span className="block text-xs text-brand-muted truncate">{o.title}{o.party ? ' (' + o.party + ')' : ''}</span>
                             </div>
                             <ChevronRight size={14} className="text-brand-muted flex-shrink-0" />
                           </Link>
@@ -484,7 +484,7 @@ export function GeographyClient({
                           <Building2 size={13} className="text-brand-accent" />
                           <span className="text-xs font-bold text-brand-text">Organizations</span>
                         </div>
-                        <span className="text-[10px] text-brand-muted">{organizations.length} found</span>
+                        <span className="text-xs text-brand-muted">{organizations.length} found</span>
                       </div>
 
                       {Array.from(grouped.entries()).map(function ([typeCode, orgs]) {
@@ -495,7 +495,7 @@ export function GeographyClient({
 
                         return (
                           <div key={typeCode} className="mb-3">
-                            <p className="text-[10px] font-bold uppercase tracking-wider text-brand-muted mb-1.5 px-0.5">
+                            <p className="text-xs font-bold uppercase tracking-wider text-brand-muted mb-1.5 px-0.5">
                               {label} <span className="font-normal">({orgs.length})</span>
                             </p>
                             <div className="space-y-1.5">
@@ -524,7 +524,7 @@ export function GeographyClient({
                                           </span>
                                         )}
                                         {org.address && (
-                                          <span className="flex items-center gap-1 text-[10px] text-brand-muted-light mt-1">
+                                          <span className="flex items-center gap-1 text-xs text-brand-muted-light mt-1">
                                             <MapPin size={9} />
                                             {org.address}
                                           </span>
@@ -541,7 +541,7 @@ export function GeographyClient({
                       })}
 
                       {organizations.length > MAX_SHOWN && (
-                        <p className="text-[10px] text-brand-muted text-center mt-2">
+                        <p className="text-xs text-brand-muted text-center mt-2">
                           + {organizations.length - MAX_SHOWN} more on the map
                         </p>
                       )}

@@ -8,7 +8,7 @@ export const revalidate = 300
 
 export const metadata: Metadata = {
   title: 'Chat with Chance | Change Engine',
-  description: 'Ask Chance about anything in Houston -- community resources, services, organizations, elected officials, policies, and more.',
+  description: 'Ask Chance about anything about your community -- resources, services, organizations, elected officials, policies, and more.',
 }
 
 export default function ChatPage() {
@@ -25,7 +25,7 @@ export default function ChatPage() {
             Chat with Chance
           </h1>
           <p style={{ color: "#5c6474" }} className="text-base mt-2">
-            Your neighborhood guide to everything Houston. Ask about services, organizations, officials, policies, community research, and more.
+            Your neighborhood guide to everything in your community. Ask about services, organizations, officials, policies, community research, and more.
           </p>
         </div>
         <div style={{ height: 1, background: '#dde1e8' }} />

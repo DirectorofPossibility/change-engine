@@ -45,7 +45,7 @@ export default async function NeighborhoodsPage() {
               >
                 <div className="h-1 w-8 rounded-full mb-2" style={{ background: '#d69e2e' }} />
                 <h3 className="font-serif text-[14px] font-semibold" style={{ color: '#1a1a1a' }}>{sn.sn_name}</h3>
-                <div className="text-[10px] uppercase tracking-wider mt-1" style={{ color: '#9B9590' }}>SN-{sn.sn_number}</div>
+                <div className="text-xs uppercase tracking-wider mt-1" style={{ color: '#9B9590' }}>SN-{sn.sn_number}</div>
                 {sn.population && <div className="text-[11px] mt-1" style={{ color: '#6B6560' }}>{Number(sn.population).toLocaleString()} residents</div>}
               </Link>
             )

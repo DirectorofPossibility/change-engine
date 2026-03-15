@@ -30,8 +30,8 @@ export function ZipPersonalization({ zip, neighborhood, clearZip, isLoading, onL
           <span className="font-bold text-brand-text">
             {neighborhood.neighborhood_name ?? 'Your'} {t('sidebar.edition')}
           </span>
-          <span className="text-brand-muted ml-1.5 text-xs">{zip}</span>
-          <button onClick={clearZip} className="text-brand-accent hover:underline ml-1.5 text-xs">
+          <span className="text-brand-muted ml-1.5 text-sm">{zip}</span>
+          <button onClick={clearZip} className="text-brand-accent hover:underline ml-1.5 text-sm">
             {t('sidebar.change')}
           </button>
         </div>
@@ -48,7 +48,7 @@ export function ZipPersonalization({ zip, neighborhood, clearZip, isLoading, onL
             className="flex-1 text-sm px-3 py-1.5 border border-brand-border bg-white focus:outline-none focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent placeholder:text-brand-muted/60"
           />
           <button type="submit" disabled={zipInput.length !== 5 || isLoading}
-            className="text-xs font-bold uppercase tracking-wider px-3 py-1.5 bg-brand-accent text-white disabled:opacity-40 hover:opacity-90 transition-opacity">
+            className="text-sm font-bold uppercase tracking-wider px-3 py-1.5 bg-brand-accent text-white disabled:opacity-40 hover:opacity-90 transition-opacity">
             {t('sidebar.go')}
           </button>
         </form>

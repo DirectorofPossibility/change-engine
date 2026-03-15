@@ -78,12 +78,12 @@ export default async function ElectionDetailPage({ params }: { params: Promise<{
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
-          <p style={{ fontSize: '0.7rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
+          <p style={{ fontSize: '0.875rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
             The Change Engine
           </p>
           <div className="flex flex-wrap items-center gap-3 mt-3">
             {election.election_type && (
-              <span style={{ fontSize: '0.65rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: "#1b5e8a" }}>{election.election_type}</span>
+              <span style={{ fontSize: '0.875rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: "#1b5e8a" }}>{election.election_type}</span>
             )}
           </div>
           <h1 style={{ fontSize: '2.2rem', lineHeight: 1.15, marginTop: '0.5rem' }}>
@@ -95,7 +95,7 @@ export default async function ElectionDetailPage({ params }: { params: Promise<{
             </p>
           )}
           {election.election_date && (
-            <p style={{ fontSize: '0.7rem', color: "#5c6474", marginTop: '1rem' }}>
+            <p style={{ fontSize: '0.875rem', color: "#5c6474", marginTop: '1rem' }}>
               {new Date(election.election_date + 'T00:00:00').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
             </p>
           )}
@@ -104,7 +104,7 @@ export default async function ElectionDetailPage({ params }: { params: Promise<{
 
       {/* Breadcrumb */}
       <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontSize: '0.7rem', color: "#5c6474" }}>
+        <nav style={{ fontSize: '0.875rem', color: "#5c6474" }}>
           <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
           <Link href="/elections" className="hover:underline" style={{ color: "#1b5e8a" }}>Elections</Link>
@@ -153,7 +153,7 @@ export default async function ElectionDetailPage({ params }: { params: Promise<{
         {canRegister && (
           <div className="p-6 mb-8" style={{ border: '1px solid #dde1e8', background: "#f4f5f7" }}>
             <p style={{ fontSize: '1.05rem', marginBottom: '0.5rem' }}>Make sure you&apos;re registered to vote</p>
-            <p style={{ fontSize: '0.7rem', color: "#5c6474", marginBottom: '1rem' }}>
+            <p style={{ fontSize: '0.875rem', color: "#5c6474", marginBottom: '1rem' }}>
               Registration deadline: {new Date(election.registration_deadline! + 'T00:00:00').toLocaleDateString()}
             </p>
             <Link
@@ -161,7 +161,7 @@ export default async function ElectionDetailPage({ params }: { params: Promise<{
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block px-5 py-2 text-white transition-opacity hover:opacity-90"
-              style={{ background: '#1b5e8a', fontSize: '0.7rem', letterSpacing: '0.06em', textTransform: 'uppercase' }}
+              style={{ background: '#1b5e8a', fontSize: '0.875rem', letterSpacing: '0.06em', textTransform: 'uppercase' }}
             >
               Register to Vote
             </Link>
@@ -173,7 +173,7 @@ export default async function ElectionDetailPage({ params }: { params: Promise<{
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
               <h2 style={{ fontSize: '1.5rem',  }}>Election Results</h2>
-              <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{Object.keys(candidateGroups).length} race{Object.keys(candidateGroups).length !== 1 ? 's' : ''}</span>
+              <span style={{ fontSize: '0.875rem', color: "#5c6474" }}>{Object.keys(candidateGroups).length} race{Object.keys(candidateGroups).length !== 1 ? 's' : ''}</span>
             </div>
             <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -208,7 +208,7 @@ export default async function ElectionDetailPage({ params }: { params: Promise<{
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
               <h2 style={{ fontSize: '1.5rem',  }}>Who&apos;s Running</h2>
-              <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{candidates.length} candidate{candidates.length !== 1 ? 's' : ''}</span>
+              <span style={{ fontSize: '0.875rem', color: "#5c6474" }}>{candidates.length} candidate{candidates.length !== 1 ? 's' : ''}</span>
             </div>
             <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
             <div className="space-y-6">
@@ -249,7 +249,7 @@ export default async function ElectionDetailPage({ params }: { params: Promise<{
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
               <h2 style={{ fontSize: '1.5rem',  }}>What&apos;s on the Ballot</h2>
-              <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{ballotItems.length} item{ballotItems.length !== 1 ? 's' : ''}</span>
+              <span style={{ fontSize: '0.875rem', color: "#5c6474" }}>{ballotItems.length} item{ballotItems.length !== 1 ? 's' : ''}</span>
             </div>
             <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -285,7 +285,7 @@ export default async function ElectionDetailPage({ params }: { params: Promise<{
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
               <h2 style={{ fontSize: '1.5rem',  }}>Where to Vote</h2>
-              <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{votingLocations.length} location{votingLocations.length !== 1 ? 's' : ''}</span>
+              <span style={{ fontSize: '0.875rem', color: "#5c6474" }}>{votingLocations.length} location{votingLocations.length !== 1 ? 's' : ''}</span>
             </div>
             <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
             <VotingLocationsMap locations={votingLocations} />

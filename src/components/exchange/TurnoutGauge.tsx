@@ -16,7 +16,7 @@ export function TurnoutGauge({ turnoutPct, electionName }: TurnoutGaugeProps) {
   return (
     <div className="bg-white border border-brand-border p-5">
       {electionName && (
-        <p className="text-xs text-brand-muted mb-1">{electionName}</p>
+        <p className="text-sm text-brand-muted mb-1">{electionName}</p>
       )}
       <div className="flex items-end justify-between mb-2">
         <h4 className="font-semibold text-brand-text text-sm">Voter Turnout</h4>

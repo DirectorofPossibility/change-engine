@@ -4,7 +4,7 @@ import { useState, useCallback, useMemo, useEffect } from 'react'
 import { useMap } from 'react-leaflet'
 import L from 'leaflet'
 import MarkerClusterGroup from 'react-leaflet-cluster'
-import { HoustonMap } from './HoustonMap'
+import { BaseMap } from './BaseMap'
 import { MapMarker, type MarkerData, type MarkerType } from './MapMarker'
 import { MapLegend } from './MapLegend'
 import { GeoJsonLayer } from './GeoJsonLayer'
@@ -199,7 +199,7 @@ function InteractiveMapInner({
   return (
     <div>
       <div className="relative">
-        <HoustonMap
+        <BaseMap
           className={className || 'w-full h-[450px]'}
           zoom={initialZoom}
           center={center}
@@ -235,7 +235,7 @@ function InteractiveMapInner({
               <MapMarker key={m.id} marker={m} onClick={onMarkerClick} />
             ))}
           </MarkerClusterGroup>
-        </HoustonMap>
+        </BaseMap>
 
         {/* Layer toggle control */}
         {layerOptions.length > 0 && (

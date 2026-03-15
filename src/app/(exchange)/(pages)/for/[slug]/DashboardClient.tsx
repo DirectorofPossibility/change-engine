@@ -192,13 +192,13 @@ export function DashboardClient({ slug, config, data, quote, pathways }: Props) 
                     <path strokeLinecap="round" strokeLinejoin="round" d={meta.icon} />
                   </svg>
                   {meta.label.replace(' Center', '')}
-                  <span className="text-[10px] opacity-50">({count})</span>
+                  <span className="text-xs opacity-50">({count})</span>
                 </button>
               )
             })}
             <div className="ml-auto flex items-center gap-1 pl-3 flex-shrink-0">
               <button onClick={function () { setPathwayFilter(null) }}
-                className={'px-2 py-1 text-[10px] font-semibold rounded transition-colors ' +
+                className={'px-2 py-1 text-xs font-semibold rounded transition-colors ' +
                   (!pathwayFilter ? 'bg-brand-text text-white' : 'text-brand-muted hover:bg-brand-bg-alt')}>
                 All
               </button>
@@ -248,7 +248,7 @@ export function DashboardClient({ slug, config, data, quote, pathways }: Props) 
                           className="flex items-center gap-2 px-3 py-2 hover:bg-brand-bg-alt/50 transition-colors">
                           {o.photo_url && <Image src={o.photo_url} alt="" className="w-7 h-7 rounded-full object-cover flex-shrink-0"  width={80} height={28} />}
                           <span className="text-xs font-medium text-brand-text flex-1 min-w-0 truncate">{o.official_name}</span>
-                          <span className="text-[10px] text-brand-muted flex-shrink-0">{o.title}</span>
+                          <span className="text-xs text-brand-muted flex-shrink-0">{o.title}</span>
                         </Link>
                       )
                     }}
@@ -261,7 +261,7 @@ export function DashboardClient({ slug, config, data, quote, pathways }: Props) 
                         <Link key={p.policy_id} href={'/policies/' + p.policy_id}
                           className="flex items-center gap-2 px-3 py-2 hover:bg-brand-bg-alt/50 transition-colors">
                           <span className="text-xs font-medium text-brand-text flex-1 min-w-0 truncate">{p.policy_name}</span>
-                          {p.status && <span className="text-[10px] font-medium" style={{ color: centerMeta.color }}>{p.status}</span>}
+                          {p.status && <span className="text-xs font-medium" style={{ color: centerMeta.color }}>{p.status}</span>}
                         </Link>
                       )
                     }}
@@ -277,7 +277,7 @@ export function DashboardClient({ slug, config, data, quote, pathways }: Props) 
                     <Link key={s.service_id} href={'/services/' + s.service_id}
                       className="flex items-center gap-2 px-3 py-2 hover:bg-brand-bg-alt/50 transition-colors">
                       <span className="text-xs font-medium text-brand-text flex-1 min-w-0 truncate">{s.service_name}</span>
-                      {s.category && <span className="text-[10px] text-brand-muted flex-shrink-0">{s.category}</span>}
+                      {s.category && <span className="text-xs text-brand-muted flex-shrink-0">{s.category}</span>}
                     </Link>
                   )
                 }}
@@ -291,7 +291,7 @@ export function DashboardClient({ slug, config, data, quote, pathways }: Props) 
                     <Link key={o.opportunity_id} href={'/opportunities/' + o.opportunity_id}
                       className="flex items-center gap-2 px-3 py-2 hover:bg-brand-bg-alt/50 transition-colors">
                       <span className="text-xs font-medium text-brand-text flex-1 min-w-0 truncate">{o.title}</span>
-                      {o.org_name && <span className="text-[10px] text-brand-muted flex-shrink-0">{o.org_name}</span>}
+                      {o.org_name && <span className="text-xs text-brand-muted flex-shrink-0">{o.org_name}</span>}
                     </Link>
                   )
                 }}
@@ -313,8 +313,8 @@ export function DashboardClient({ slug, config, data, quote, pathways }: Props) 
                       <div className="flex-1 min-w-0">
                         <span className="text-xs font-medium text-brand-text line-clamp-1">{lp.path_name}</span>
                         <div className="flex gap-2">
-                          {lp.estimated_minutes && <span className="text-[10px] text-brand-muted">~{lp.estimated_minutes} min</span>}
-                          {lp.difficulty_level && <span className="text-[10px]" style={{ color: pw?.color || config.color }}>{lp.difficulty_level}</span>}
+                          {lp.estimated_minutes && <span className="text-xs text-brand-muted">~{lp.estimated_minutes} min</span>}
+                          {lp.difficulty_level && <span className="text-xs" style={{ color: pw?.color || config.color }}>{lp.difficulty_level}</span>}
                         </div>
                       </div>
                     </Link>
@@ -372,7 +372,7 @@ export function DashboardClient({ slug, config, data, quote, pathways }: Props) 
                       className="flex items-center gap-2 px-2 py-1 rounded text-xs font-medium text-brand-text hover:bg-brand-bg-alt transition-colors">
                       <span className="w-2 h-2 rounded-sm flex-shrink-0" style={{ backgroundColor: pw.color }} />
                       <span className="flex-1">{pw.name}</span>
-                      {count > 0 && <span className="text-[10px] text-brand-muted">{count}</span>}
+                      {count > 0 && <span className="text-xs text-brand-muted">{count}</span>}
                     </Link>
                   )
                 })}
@@ -385,7 +385,7 @@ export function DashboardClient({ slug, config, data, quote, pathways }: Props) 
                 <blockquote>
                   <p className="font-display text-xs italic text-brand-text leading-relaxed">"{quote.quote_text}"</p>
                   {quote.attribution && (
-                    <footer className="mt-1.5 text-[10px] font-semibold" style={{ color: config.color }}>
+                    <footer className="mt-1.5 text-xs font-semibold" style={{ color: config.color }}>
                       — {quote.attribution}
                     </footer>
                   )}
@@ -408,7 +408,7 @@ export function DashboardClient({ slug, config, data, quote, pathways }: Props) 
                         <OtherIcon size={14} color={p.color} />
                       </div>
                       <span className="text-xs font-medium text-brand-text">{p.name}</span>
-                      <span className="text-[10px] text-brand-muted ml-auto">{p.desc}</span>
+                      <span className="text-xs text-brand-muted ml-auto">{p.desc}</span>
                     </Link>
                   )
                 })}
@@ -416,7 +416,7 @@ export function DashboardClient({ slug, config, data, quote, pathways }: Props) 
             </div>
 
             {/* Crisis line — minimal */}
-            <p className="text-[10px] text-brand-muted px-1">
+            <p className="text-xs text-brand-muted px-1">
               24/7 lines: <span className="font-bold text-brand-text">211</span> / <span className="font-bold text-brand-text">311</span> / <span className="font-bold text-brand-text">988</span>
             </p>
           </aside>
@@ -438,7 +438,7 @@ function ContentTypeSection({ type, items, typeInfo, centerColor }: {
         <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: centerColor }} />
         <span className="font-semibold text-xs text-brand-text flex-1">{typeInfo.label}</span>
         <span className="text-[9px] text-brand-muted bg-brand-bg-alt px-1.5 py-0.5 rounded">{typeInfo.effort}</span>
-        <span className="text-[10px] font-bold" style={{ color: centerColor }}>{items.length}</span>
+        <span className="text-xs font-bold" style={{ color: centerColor }}>{items.length}</span>
         {open ? <ChevronDown size={12} className="text-brand-muted" /> : <ChevronRight size={12} className="text-brand-muted" />}
       </button>
       {open && (
@@ -467,7 +467,7 @@ function ContentTypeSection({ type, items, typeInfo, centerColor }: {
           })}
           {items.length > 6 && (
             <div className="px-3 py-1.5">
-              <Link href={'/news?center=' + type} className="text-[10px] font-medium hover:underline" style={{ color: centerColor }}>
+              <Link href={'/news?center=' + type} className="text-xs font-medium hover:underline" style={{ color: centerColor }}>
                 View all {items.length} {typeInfo.label.toLowerCase()}
               </Link>
             </div>
@@ -490,14 +490,14 @@ function EntityPanel({ title, items, color, seeAllHref, children }: {
         className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-brand-bg-alt/30 transition-colors">
         <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
         <span className="font-semibold text-xs text-brand-text flex-1">{title}</span>
-        <span className="text-[10px] font-bold" style={{ color }}>{items.length}</span>
+        <span className="text-xs font-bold" style={{ color }}>{items.length}</span>
         {open ? <ChevronDown size={12} className="text-brand-muted" /> : <ChevronRight size={12} className="text-brand-muted" />}
       </button>
       {open && (
         <div className="border-t border-brand-border divide-y divide-brand-border/40">
           {items.map(children)}
           <div className="px-3 py-1.5">
-            <Link href={seeAllHref} className="text-[10px] font-medium hover:underline" style={{ color }}>
+            <Link href={seeAllHref} className="text-xs font-medium hover:underline" style={{ color }}>
               View all {title.toLowerCase()}
             </Link>
           </div>

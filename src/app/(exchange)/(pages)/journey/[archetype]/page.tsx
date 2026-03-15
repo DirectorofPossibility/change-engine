@@ -341,7 +341,7 @@ export default async function JourneyPage({ params }: { params: Promise<{ archet
 
         {/* ═══ TRAIL MARKERS ═══ */}
         <section className="py-10">
-          <p className="text-[10px] uppercase tracking-[0.2em] font-bold mb-4" style={{ color: '#9B9590' }}>Where to Start</p>
+          <p className="text-xs uppercase tracking-[0.2em] font-bold mb-4" style={{ color: '#9B9590' }}>Where to Start</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {guide.trailMarkers.map(function (marker) {
               const Icon = marker.icon
@@ -383,7 +383,7 @@ export default async function JourneyPage({ params }: { params: Promise<{ archet
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      {theme && <span className="text-[10px] uppercase tracking-wider font-semibold mb-0.5 block" style={{ color: theme.color }}>{theme.name}</span>}
+                      {theme && <span className="text-xs uppercase tracking-wider font-semibold mb-0.5 block" style={{ color: theme.color }}>{theme.name}</span>}
                       <h3 className="text-[15px] font-bold leading-snug group-hover:underline" style={{ color: '#2D2D2A' }}>{org.org_name}</h3>
                       {org.description_5th_grade && <p className="text-[13px] mt-1 line-clamp-1" style={{ color: '#6B6560' }}>{org.description_5th_grade}</p>}
                     </div>
@@ -450,7 +450,7 @@ export default async function JourneyPage({ params }: { params: Promise<{ archet
                           <div className="flex-1 min-w-0">
                             <h3 className="text-[15px] font-bold leading-snug group-hover:underline" style={{ color: '#2D2D2A' }}>{p.title_6th_grade || p.policy_name}</h3>
                             {(p.summary_6th_grade || p.summary_5th_grade) && <p className="text-[13px] mt-1 line-clamp-2 leading-relaxed" style={{ color: '#6B6560' }}>{p.summary_6th_grade || p.summary_5th_grade}</p>}
-                            <div className="flex items-center gap-2 mt-2 text-[10px] font-mono uppercase" style={{ color: '#9B9590' }}>
+                            <div className="flex items-center gap-2 mt-2 text-xs font-mono uppercase" style={{ color: '#9B9590' }}>
                               {[p.authoring_body || p.level, p.status, p.bill_number].filter(Boolean).join(' \u00b7 ')}
                             </div>
                           </div>
@@ -475,7 +475,7 @@ export default async function JourneyPage({ params }: { params: Promise<{ archet
                       if (!group || group.length === 0) return null
                       return (
                         <div key={level}>
-                          <p className="text-[10px] uppercase tracking-[0.15em] font-bold mb-2" style={{ color: '#9B9590' }}>{level}</p>
+                          <p className="text-xs uppercase tracking-[0.15em] font-bold mb-2" style={{ color: '#9B9590' }}>{level}</p>
                           <div className="space-y-1.5">
                             {group.slice(0, 4).map(function (o: any) {
                               return (
@@ -532,7 +532,7 @@ export default async function JourneyPage({ params }: { params: Promise<{ archet
                             </div>
                           )}
                           <h4 className="text-[14px] font-bold leading-snug line-clamp-2 group-hover:underline" style={{ color: '#2D2D2A' }}>{item.title_6th_grade}</h4>
-                          <span className="text-[10px] font-mono mt-1 block" style={{ color: '#9B9590' }}>{item.source_domain}{item.content_type ? ` \u00b7 ${item.content_type}` : ''}</span>
+                          <span className="text-xs font-mono mt-1 block" style={{ color: '#9B9590' }}>{item.source_domain}{item.content_type ? ` \u00b7 ${item.content_type}` : ''}</span>
                         </div>
                       </Link>
                     )
@@ -543,7 +543,7 @@ export default async function JourneyPage({ params }: { params: Promise<{ archet
               {/* Sidebar: pathways + opportunities */}
               <div className="space-y-8">
                 <div>
-                  <p className="text-[10px] uppercase tracking-[0.2em] font-bold mb-3" style={{ color: '#9B9590' }}>Pathways for You</p>
+                  <p className="text-xs uppercase tracking-[0.2em] font-bold mb-3" style={{ color: '#9B9590' }}>Pathways for You</p>
                   <div className="space-y-2">
                     {recommendedThemes.map(function (t) {
                       const Icon = PATHWAY_ICONS[t.id] || Heart
@@ -575,7 +575,7 @@ export default async function JourneyPage({ params }: { params: Promise<{ archet
                             </div>
                             <div className="flex-1 min-w-0">
                               <h4 className="text-[13px] font-bold leading-snug line-clamp-2 group-hover:underline" style={{ color: '#2D2D2A' }}>{evt.opportunity_name}</h4>
-                              <span className="text-[10px] font-mono mt-0.5 block" style={{ color: '#9B9590' }}>
+                              <span className="text-xs font-mono mt-0.5 block" style={{ color: '#9B9590' }}>
                                 {evt.start_date && new Date(evt.start_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                                 {evt.city && ` \u00b7 ${evt.city}`}
                               </span>
@@ -609,7 +609,7 @@ export default async function JourneyPage({ params }: { params: Promise<{ archet
             </div>
 
             <div className="mt-8 pt-6 relative z-10" style={{ borderTop: '1px solid #E2DDD5' }}>
-              <p className="text-[10px] uppercase tracking-[0.2em] font-bold mb-3" style={{ color: '#9B9590' }}>Other Guides</p>
+              <p className="text-xs uppercase tracking-[0.2em] font-bold mb-3" style={{ color: '#9B9590' }}>Other Guides</p>
               <div className="flex items-center gap-3 flex-wrap">
                 {VALID_ARCHETYPES.filter(a => a !== archetype).map(function (a) {
                   const g = GUIDES[a]

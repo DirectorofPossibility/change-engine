@@ -509,17 +509,17 @@ export function TeenHubClient({ missions, content, orgs, events, services, stats
                       {/* Date block */}
                       {date && (
                         <div className="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-orange-500/20 to-red-500/20 flex flex-col items-center justify-center border border-white/5">
-                          <span className="text-[10px] font-bold uppercase text-orange-400">{date.toLocaleDateString('en-US', { month: 'short' })}</span>
+                          <span className="text-xs font-bold uppercase text-orange-400">{date.toLocaleDateString('en-US', { month: 'short' })}</span>
                           <span className="text-xl font-black text-white leading-none">{date.getDate()}</span>
                         </div>
                       )}
                       <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-center gap-2 mb-1">
                           {event.isFree && (
-                            <span className="text-[10px] font-bold uppercase tracking-wider text-green-400 bg-green-400/10 px-2 py-0.5 rounded-md">Free</span>
+                            <span className="text-xs font-bold uppercase tracking-wider text-green-400 bg-green-400/10 px-2 py-0.5 rounded-md">Free</span>
                           )}
                           {event.isVirtual && (
-                            <span className="text-[10px] font-bold uppercase tracking-wider text-blue-400 bg-blue-400/10 px-2 py-0.5 rounded-md">Virtual</span>
+                            <span className="text-xs font-bold uppercase tracking-wider text-blue-400 bg-blue-400/10 px-2 py-0.5 rounded-md">Virtual</span>
                           )}
                         </div>
                         <h3 className="text-sm font-bold text-white leading-snug group-hover:text-orange-200 transition-colors">{event.name}</h3>
@@ -702,7 +702,7 @@ function SectionLabel({ text }: { text: string }) {
   return (
     <div className="flex items-center gap-3">
       <div className="w-6 h-px bg-gradient-to-r from-purple-500 to-transparent" />
-      <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-purple-400/60">{text}</span>
+      <span className="text-xs font-bold uppercase tracking-[0.25em] text-purple-400/60">{text}</span>
     </div>
   )
 }
@@ -750,9 +750,9 @@ function MissionCard({ mission, index, isHovered, onHover }: {
             <div className="w-7 h-7 flex items-center justify-center" style={{ backgroundColor: cat.border + '15' }}>
               <Icon className="w-3.5 h-3.5" style={{ color: cat.border }} />
             </div>
-            <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: cat.border }}>{cat.label}</span>
+            <span className="text-xs font-bold uppercase tracking-wider" style={{ color: cat.border }}>{cat.label}</span>
           </div>
-          <span className="text-[10px] font-medium text-white/20 flex items-center gap-1">
+          <span className="text-xs font-medium text-white/20 flex items-center gap-1">
             <Clock className="w-3 h-3" /> {mission.effort}
           </span>
         </div>

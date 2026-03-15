@@ -124,7 +124,7 @@ export function ZipLookupForm() {
                       href={'/tirz/' + zone.tirz_id}
                       className="flex items-center gap-2 text-sm hover:text-brand-accent transition-colors"
                     >
-                      <span className="w-6 h-6 rounded flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0" style={{ backgroundColor: '#C75B2A' }}>
+                      <span className="w-6 h-6 rounded flex items-center justify-center text-white text-xs font-bold flex-shrink-0" style={{ backgroundColor: '#C75B2A' }}>
                         {zone.site_number}
                       </span>
                       <span className="text-brand-text font-medium">{zone.name}</span>

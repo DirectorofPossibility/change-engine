@@ -41,11 +41,11 @@ export function TickerTape({ election, className }: TickerTapeProps) {
 
   return (
     <div className={`bg-brand-bg-alt border-y border-brand-border overflow-hidden relative${className ? ' ' + className : ''}`}>
-      <div className="flex items-center">
+      <div className="max-w-[1080px] mx-auto px-6 flex items-center">
         {/* Label */}
-        <div className="flex-shrink-0 bg-brand-bg-alt z-10 flex items-center gap-2 px-4 py-2.5 border-r border-brand-border">
+        <div className="flex-shrink-0 bg-brand-bg-alt z-10 flex items-center gap-2 pr-4 py-2.5 border-r border-brand-border">
           <FlowerOfLifeIcon size={14} color="#C75B2A" />
-          <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted">{t('ticker.announcements')}</span>
+          <span className="font-mono text-xs font-bold uppercase tracking-wider text-brand-muted">{t('ticker.announcements')}</span>
         </div>
 
         {/* Scrolling announcement */}

@@ -77,10 +77,10 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
-          <p style={{ fontSize: '0.7rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
+          <p style={{ fontSize: '0.875rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
             The Change Engine
           </p>
-          <p style={{ fontSize: '0.65rem', letterSpacing: '0.15em', color: "#1b5e8a", textTransform: 'uppercase', marginTop: '0.5rem' }}>
+          <p style={{ fontSize: '0.875rem', letterSpacing: '0.15em', color: "#1b5e8a", textTransform: 'uppercase', marginTop: '0.5rem' }}>
             Neighborhood
             {hood.neighborhood_type && <> -- {hood.neighborhood_type}</>}
             {hood.city && <> -- {hood.city}</>}
@@ -100,13 +100,13 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
             {hood.population != null && (
               <div>
                 <span style={{ fontSize: '1.5rem', fontWeight: 700 }}>{hood.population.toLocaleString()}</span>
-                <span style={{ fontSize: '0.6875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem', textTransform: 'uppercase' }}>{t('neighborhoods.population')}</span>
+                <span style={{ fontSize: '0.875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem', textTransform: 'uppercase' }}>{t('neighborhoods.population')}</span>
               </div>
             )}
             {hood.median_income != null && (
               <div>
                 <span style={{ fontSize: '1.5rem', fontWeight: 700 }}>${hood.median_income.toLocaleString()}</span>
-                <span style={{ fontSize: '0.6875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem', textTransform: 'uppercase' }}>{t('neighborhoods.median_income')}</span>
+                <span style={{ fontSize: '0.875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem', textTransform: 'uppercase' }}>{t('neighborhoods.median_income')}</span>
               </div>
             )}
           </div>
@@ -115,7 +115,7 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
 
       {/* Breadcrumb */}
       <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontSize: '0.7rem', color: "#5c6474" }}>
+        <nav style={{ fontSize: '0.875rem', color: "#5c6474" }}>
           <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
           <Link href="/neighborhoods" className="hover:underline" style={{ color: "#1b5e8a" }}>Neighborhoods</Link>
@@ -145,7 +145,7 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
         {/* ZIP codes */}
         {zips.length > 0 && (
           <div className="p-4 mb-8" style={{ background: "#f4f5f7", border: '1px solid #dde1e8' }}>
-            <p style={{ fontSize: '0.75rem',  }}>
+            <p style={{ fontSize: '0.875rem',  }}>
               ZIP codes: {zips.join(', ')} --{' '}
               <Link href="/officials/lookup" className="hover:underline" style={{ color: "#1b5e8a", fontWeight: 600 }}>
                 {t('neighborhoods.find_reps')}
@@ -156,7 +156,7 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
 
         {/* Civic data reference */}
         <div className="p-4 mb-8" style={{ border: '1px solid #dde1e8' }}>
-          <p style={{ fontSize: '0.65rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase', marginBottom: '0.5rem' }}>Neighborhood data</p>
+          <p style={{ fontSize: '0.875rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase', marginBottom: '0.5rem' }}>Neighborhood data</p>
           <a
             href="https://www.understandinghouston.org/topic/demographics"
             target="_blank"
@@ -166,7 +166,7 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
           >
             Understanding Houston
           </a>
-          <p style={{ fontSize: '0.75rem', color: "#5c6474", marginTop: '0.25rem' }}>
+          <p style={{ fontSize: '0.875rem', color: "#5c6474", marginTop: '0.25rem' }}>
             Tract-level data on demographics, health, economy, and housing across the Houston region.
           </p>
         </div>
@@ -176,7 +176,7 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
           <section className="mb-10">
             <div className="flex items-baseline justify-between mb-1">
               <h2 style={{ fontSize: '1.5rem',  }}>{t('neighborhoods.services_area')}</h2>
-              <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{services.length} services</span>
+              <span style={{ fontSize: '0.875rem', color: "#5c6474" }}>{services.length} services</span>
             </div>
             <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
 
@@ -193,7 +193,7 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
                       {serviceTranslations[svc.service_id]?.title || svc.service_name}
                     </h4>
                     {(serviceTranslations[svc.service_id]?.summary || svc.description_5th_grade) && (
-                      <p style={{ fontSize: '0.85rem', color: "#5c6474", lineHeight: 1.5, marginTop: '0.25rem' }} className="line-clamp-2">
+                      <p style={{ fontSize: '0.875rem', color: "#5c6474", lineHeight: 1.5, marginTop: '0.25rem' }} className="line-clamp-2">
                         {serviceTranslations[svc.service_id]?.summary || svc.description_5th_grade}
                       </p>
                     )}
@@ -220,7 +220,7 @@ export default async function NeighborhoodDetailPage({ params }: { params: Promi
                           {serviceTranslations[svc.service_id]?.title || svc.service_name}
                         </h4>
                         {(serviceTranslations[svc.service_id]?.summary || svc.description_5th_grade) && (
-                          <p style={{ fontSize: '0.85rem', color: "#5c6474", lineHeight: 1.5, marginTop: '0.25rem' }} className="line-clamp-2">
+                          <p style={{ fontSize: '0.875rem', color: "#5c6474", lineHeight: 1.5, marginTop: '0.25rem' }} className="line-clamp-2">
                             {serviceTranslations[svc.service_id]?.summary || svc.description_5th_grade}
                           </p>
                         )}

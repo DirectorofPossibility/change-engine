@@ -21,7 +21,7 @@
  * `ssr: false` so consumers get SSR safety automatically.
  */
 export { MapProvider } from './MapProvider'
-export { HoustonMap } from './HoustonMap'
+export { BaseMap, HoustonMap } from './BaseMap'
 export { MapMarker, type MarkerData, type MarkerType } from './MapMarker'
 export { ClusteredMap, InteractiveMap, SingleLocationMap } from './dynamic'
 export { MapLegend } from './MapLegend'

@@ -26,7 +26,7 @@ export async function EntityMesh({ entityType, entityId }: EntityMeshProps) {
       {/* Focus areas — comma-separated italic text */}
       {hasFocusAreas && (
         <div className="mb-6">
-          <span className="text-xs italic text-brand-muted leading-relaxed">
+          <span className="text-sm italic text-brand-muted leading-relaxed">
             {mesh.focusAreas.map(function (fa, i) {
               const themeKey = fa.theme_id as keyof typeof THEMES | null
               const color = themeKey ? THEMES[themeKey]?.color : '#8B7E74'
@@ -57,7 +57,7 @@ export async function EntityMesh({ entityType, entityId }: EntityMeshProps) {
                 href={'/content/' + c.id}
                 className="block bg-white border border-brand-border p-4 hover:border-ink transition-shadow"
               >
-                <span className="text-[10px] uppercase tracking-wider text-brand-muted font-semibold">
+                <span className="text-sm uppercase tracking-wider text-brand-muted font-semibold">
                   {c.center || 'Resource'}
                 </span>
                 <p className="text-sm font-medium mt-1 line-clamp-2">{c.title_6th_grade || 'Untitled'}</p>
@@ -72,11 +72,11 @@ export async function EntityMesh({ entityType, entityId }: EntityMeshProps) {
                 href={'/officials/' + o.official_id}
                 className="block bg-white border border-brand-border p-4 hover:border-ink transition-shadow"
               >
-                <span className="text-[10px] uppercase tracking-wider text-teal-600 font-semibold">
+                <span className="text-sm uppercase tracking-wider text-teal-600 font-semibold">
                   {o.level || 'Official'}
                 </span>
                 <p className="text-sm font-medium mt-1">{o.official_name}</p>
-                {o.title && <p className="text-xs text-brand-muted mt-0.5">{o.title}</p>}
+                {o.title && <p className="text-sm text-brand-muted mt-0.5">{o.title}</p>}
               </Link>
             )
           })}
@@ -88,7 +88,7 @@ export async function EntityMesh({ entityType, entityId }: EntityMeshProps) {
                 href={'/policies/' + p.policy_id}
                 className="block bg-white border border-brand-border p-4 hover:border-ink transition-shadow"
               >
-                <span className="text-[10px] uppercase tracking-wider text-amber-600 font-semibold">
+                <span className="text-sm uppercase tracking-wider text-amber-600 font-semibold">
                   {p.status || 'Policy'}
                 </span>
                 <p className="text-sm font-medium mt-1 line-clamp-2">{p.policy_name}</p>
@@ -103,7 +103,7 @@ export async function EntityMesh({ entityType, entityId }: EntityMeshProps) {
                 href={'/services/' + s.service_id}
                 className="block bg-white border border-brand-border p-4 hover:border-ink transition-shadow"
               >
-                <span className="text-[10px] uppercase tracking-wider text-green-600 font-semibold">
+                <span className="text-sm uppercase tracking-wider text-green-600 font-semibold">
                   Service
                 </span>
                 <p className="text-sm font-medium mt-1 line-clamp-2">{s.service_name}</p>

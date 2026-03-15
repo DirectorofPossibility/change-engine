@@ -9,7 +9,7 @@ import { requirePageEnabled } from '@/lib/data/page-gate'
 
 export const metadata: Metadata = {
   title: 'Community Calendar — Change Engine',
-  description: 'Upcoming events, civic meetings, volunteer opportunities, and community gatherings in Houston.',
+  description: 'Upcoming events, civic meetings, volunteer opportunities, and community gatherings in your community.',
 }
 
 export const revalidate = 3600
@@ -32,7 +32,7 @@ export default async function CalendarPage({
     <div className="bg-paper min-h-screen">
       <IndexPageHero
         title="Community Calendar"
-        subtitle="From volunteer days to town halls -- see what is happening in Houston and show up for your community."
+        subtitle="From volunteer days to town halls -- see what is happening in your community and show up."
         color="#6a4e10"
         stats={items.length > 0 ? [{ value: items.length, label: 'Events' }] : undefined}
       />

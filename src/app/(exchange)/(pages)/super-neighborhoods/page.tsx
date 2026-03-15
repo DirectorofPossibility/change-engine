@@ -11,7 +11,7 @@ export const revalidate = 300
 
 export const metadata: Metadata = {
   title: 'Super Neighborhoods — Change Engine',
-  description: 'Explore Houston\'s 88 super neighborhoods. View boundaries, demographics, and community resources.',
+  description: 'Explore super neighborhoods. View boundaries, demographics, and community resources.',
 }
 
 // ── Design tokens ─────────────────────────────────────────────────────
@@ -38,7 +38,7 @@ export default async function SuperNeighborhoodsPage() {
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="relative max-w-[900px] mx-auto px-6 py-16">
-          <p style={{ fontSize: '0.65rem', letterSpacing: '0.2em', color: "#5c6474" }} className="uppercase mb-4">
+          <p style={{ fontSize: '0.875rem', letterSpacing: '0.2em', color: "#5c6474" }} className="uppercase mb-4">
             Change Engine
           </p>
           <h1 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', lineHeight: 1.1 }}>
@@ -52,7 +52,7 @@ export default async function SuperNeighborhoodsPage() {
 
       {/* ── Breadcrumb ── */}
       <div className="max-w-[900px] mx-auto px-6 pt-6 pb-2">
-        <nav style={{ fontSize: '0.65rem', letterSpacing: '0.12em', color: "#5c6474" }} className="uppercase">
+        <nav style={{ fontSize: '0.875rem', letterSpacing: '0.12em', color: "#5c6474" }} className="uppercase">
           <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
           <span>Super Neighborhoods</span>
@@ -80,7 +80,7 @@ export default async function SuperNeighborhoodsPage() {
               {t('superNeighborhoods.all_heading')}
             </h2>
             <div className="flex-1" style={{ height: 1, borderBottom: '1px dotted', borderColor: '#dde1e8' }} />
-            <span style={{ fontSize: '0.6875rem', color: "#5c6474", letterSpacing: '0.1em' }} className="uppercase">{superNeighborhoods.length} total</span>
+            <span style={{ fontSize: '0.875rem', color: "#5c6474", letterSpacing: '0.1em' }} className="uppercase">{superNeighborhoods.length} total</span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-0" style={{ border: '1px solid #dde1e8' }}>
@@ -104,12 +104,12 @@ export default async function SuperNeighborhoodsPage() {
                     </h3>
                     <div className="flex items-center gap-3 mt-1">
                       {sn.population != null && (
-                        <span style={{ fontSize: '0.6875rem', color: "#5c6474" }}>
+                        <span style={{ fontSize: '0.875rem', color: "#5c6474" }}>
                           Pop. {sn.population.toLocaleString()}
                         </span>
                       )}
                       {sn.median_income != null && (
-                        <span style={{ fontSize: '0.6875rem', color: "#5c6474" }}>
+                        <span style={{ fontSize: '0.875rem', color: "#5c6474" }}>
                           ${sn.median_income.toLocaleString()}
                         </span>
                       )}
@@ -122,7 +122,7 @@ export default async function SuperNeighborhoodsPage() {
 
           {superNeighborhoods.length > VISIBLE_COUNT && (
             <details className="mt-4">
-              <summary style={{ fontSize: '0.65rem', color: "#1b5e8a", letterSpacing: '0.1em', cursor: 'pointer' }} className="uppercase hover:underline py-2">
+              <summary style={{ fontSize: '0.875rem', color: "#1b5e8a", letterSpacing: '0.1em', cursor: 'pointer' }} className="uppercase hover:underline py-2">
                 Show all {superNeighborhoods.length} super neighborhoods
               </summary>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-0 mt-2" style={{ border: '1px solid #dde1e8' }}>
@@ -146,12 +146,12 @@ export default async function SuperNeighborhoodsPage() {
                         </h3>
                         <div className="flex items-center gap-3 mt-1">
                           {sn.population != null && (
-                            <span style={{ fontSize: '0.6875rem', color: "#5c6474" }}>
+                            <span style={{ fontSize: '0.875rem', color: "#5c6474" }}>
                               Pop. {sn.population.toLocaleString()}
                             </span>
                           )}
                           {sn.median_income != null && (
-                            <span style={{ fontSize: '0.6875rem', color: "#5c6474" }}>
+                            <span style={{ fontSize: '0.875rem', color: "#5c6474" }}>
                               ${sn.median_income.toLocaleString()}
                             </span>
                           )}
@@ -169,7 +169,7 @@ export default async function SuperNeighborhoodsPage() {
 
         {/* ── Footer link ── */}
         <div className="text-center py-4">
-          <Link href="/" style={{ fontSize: '0.7rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline">
+          <Link href="/" style={{ fontSize: '0.875rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline">
             Back to Home
           </Link>
         </div>

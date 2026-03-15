@@ -408,16 +408,16 @@ export default function PromotionsAdmin() {
                 )}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-1.5 py-0.5 rounded" style={{ color: tc.color, backgroundColor: tc.color + '15' }}>
+                    <span className="text-xs font-mono font-bold uppercase tracking-wider px-1.5 py-0.5 rounded" style={{ color: tc.color, backgroundColor: tc.color + '15' }}>
                       {tc.label}
                     </span>
                     {!p.is_active && (
-                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-danger">Inactive</span>
+                      <span className="text-xs font-mono font-bold uppercase tracking-wider text-brand-danger">Inactive</span>
                     )}
                   </div>
                   <p className="text-sm font-semibold text-brand-text">{p.title}</p>
                   {p.subtitle && <p className="text-xs text-brand-muted mt-0.5">{p.subtitle}</p>}
-                  <div className="flex items-center gap-3 mt-2 text-[10px] font-mono text-brand-muted-light">
+                  <div className="flex items-center gap-3 mt-2 text-xs font-mono text-brand-muted-light">
                     {org && <span>{org.org_name}</span>}
                     {p.start_date && <span>{p.start_date}{p.end_date ? ' to ' + p.end_date : '+'}</span>}
                     <span>#{p.display_order}</span>
@@ -456,7 +456,7 @@ export default function PromotionsAdmin() {
           <div className="grid grid-cols-7 gap-px bg-brand-border rounded-lg overflow-hidden">
             {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(function (d) {
               return (
-                <div key={d} className="text-[10px] font-mono font-bold uppercase tracking-wider text-center py-2 bg-brand-bg text-brand-muted">
+                <div key={d} className="text-xs font-mono font-bold uppercase tracking-wider text-center py-2 bg-brand-bg text-brand-muted">
                   {d}
                 </div>
               )
@@ -524,7 +524,7 @@ function PromoPreview({ title, subtitle, description, promoType, orgName, logoUr
         <p className="text-sm font-bold text-brand-text">{title}</p>
         {subtitle && <p className="text-xs text-brand-muted mt-0.5">{subtitle}</p>}
         {description && <p className="text-xs text-brand-muted mt-1.5 line-clamp-2">{description}</p>}
-        {orgName && <p className="text-[10px] font-mono text-brand-muted-light mt-2">{orgName}</p>}
+        {orgName && <p className="text-xs font-mono text-brand-muted-light mt-2">{orgName}</p>}
         <div className="mt-3">
           <span className="text-xs font-semibold px-3 py-1.5 rounded-lg" style={{ backgroundColor: color, color: '#fff' }}>
             {ctaText || 'Learn More'}

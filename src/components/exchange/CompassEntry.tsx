@@ -43,7 +43,7 @@ export function CompassEntry({ centerCounts }: CompassEntryProps) {
       <div className="flex items-center gap-3 mb-5">
         <BookOpen size={20} className="text-brand-accent" />
         <div>
-          <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-brand-muted">Choose Your Adventure</p>
+          <p className="text-xs font-mono font-bold uppercase tracking-widest text-brand-muted">Choose Your Adventure</p>
           <p className="text-sm text-brand-muted mt-0.5">Every choice leads somewhere meaningful. Where will you start?</p>
         </div>
       </div>
@@ -96,7 +96,7 @@ export function CompassEntry({ centerCounts }: CompassEntryProps) {
                     Chapter: {key}
                   </span>
                   {count > 0 && (
-                    <span className="text-[10px] font-mono font-bold px-2 py-0.5" style={{ backgroundColor: color + '20', color: color }}>
+                    <span className="text-xs font-mono font-bold px-2 py-0.5" style={{ backgroundColor: color + '20', color: color }}>
                       {count} resources
                     </span>
                   )}

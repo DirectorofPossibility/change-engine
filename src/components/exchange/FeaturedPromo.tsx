@@ -111,7 +111,7 @@ export function FeaturedPromo({ variant = 'card' }: { variant?: 'card' | 'banner
             <span className="text-[9px] font-mono font-bold uppercase tracking-widest text-blue">{typeLabel}</span>
             <h3 className="text-base font-bold text-ink mt-0.5">{promo.title}</h3>
             {promo.subtitle && <p className="text-sm text-muted mt-0.5">{promo.subtitle}</p>}
-            {promo.org_name && <p className="text-[10px] font-mono text-faint mt-1">{promo.org_name}</p>}
+            {promo.org_name && <p className="text-xs font-mono text-faint mt-1">{promo.org_name}</p>}
           </div>
           {promo.cta_href && (
             <Link
@@ -142,7 +142,7 @@ export function FeaturedPromo({ variant = 'card' }: { variant?: 'card' | 'banner
             {promo.logo_url && (
               <Image src={promo.logo_url} alt="" className="w-10 h-10 object-contain bg-white p-0.5 border border-rule"  width={48} height={40} />
             )}
-            <span className="text-[10px] font-mono font-bold uppercase tracking-widest" style={{ color }}>{typeLabel}</span>
+            <span className="text-xs font-mono font-bold uppercase tracking-widest" style={{ color }}>{typeLabel}</span>
           </div>
           <h3 className="font-display text-xl font-bold text-ink">{promo.title}</h3>
           {promo.subtitle && <p className="text-sm text-muted mt-1">{promo.subtitle}</p>}
@@ -182,7 +182,7 @@ export function FeaturedPromo({ variant = 'card' }: { variant?: 'card' | 'banner
         <h4 className="text-sm font-bold text-ink">{promo.title}</h4>
         {promo.subtitle && <p className="text-xs text-muted mt-0.5">{promo.subtitle}</p>}
         {promo.description && <p className="text-xs text-muted mt-1.5 line-clamp-2 leading-relaxed">{promo.description}</p>}
-        {promo.org_name && <p className="text-[10px] font-mono text-faint mt-2">{promo.org_name}</p>}
+        {promo.org_name && <p className="text-xs font-mono text-faint mt-2">{promo.org_name}</p>}
         {promo.cta_href && (
           <Link
             href={href}

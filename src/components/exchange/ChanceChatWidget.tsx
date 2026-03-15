@@ -51,7 +51,7 @@ export function ChanceChatWidget() {
           </div>
           {/* Pulse ring removed — too distracting */}
           {/* Label */}
-          <div className="absolute bottom-full right-0 mb-2 px-3 py-1.5 bg-brand-text text-white text-xs font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity shadow-md pointer-events-none">
+          <div className="absolute bottom-full right-0 mb-2 px-3 py-1.5 bg-brand-text text-white text-sm font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity shadow-md pointer-events-none">
             Chat with Chance
             <div className="absolute top-full right-4 w-2 h-2 bg-brand-text rotate-45 -mt-1" />
           </div>
@@ -102,7 +102,7 @@ export function ChanceChatWidget() {
             </div>
             <div>
               <h2 className="font-display font-bold text-white text-sm">Chat with Chance</h2>
-              <p className="text-[10px] text-white/70">Your neighborhood guide</p>
+              <p className="text-xs text-white/70">Your neighborhood guide</p>
             </div>
           </div>
           <div className="flex items-center gap-1">

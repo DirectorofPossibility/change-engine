@@ -17,13 +17,13 @@
  * Colors are used for pills, charts, and pathway cards across the UI.
  */
 export const THEMES = {
-  THEME_01: { name: 'Health', color: '#1a6b56', slug: 'health', emoji: '', description: 'Wellness, healing, and care for every Houstonian. Explore clinics, mental health support, nutrition programs, and insurance options that keep our communities strong.' },
-  THEME_02: { name: 'Families', color: '#1e4d7a', slug: 'families', emoji: '', description: 'Strong foundations for every family. Find schools, childcare, youth programs, and safety resources that help Houston families grow and thrive.' },
-  THEME_03: { name: 'Neighborhood', color: '#4a2870', slug: 'neighborhood', emoji: '', description: 'The places we share and call home. Discover housing resources, parks, libraries, and neighborhood initiatives that make Houston a better place to live.' },
+  THEME_01: { name: 'Health', color: '#1a6b56', slug: 'health', emoji: '', description: 'Wellness, healing, and care for every resident. Explore clinics, mental health support, nutrition programs, and insurance options that keep our communities strong.' },
+  THEME_02: { name: 'Families', color: '#1e4d7a', slug: 'families', emoji: '', description: 'Strong foundations for every family. Find schools, childcare, youth programs, and safety resources that help families grow and thrive.' },
+  THEME_03: { name: 'Neighborhood', color: '#4a2870', slug: 'neighborhood', emoji: '', description: 'The places we share and call home. Discover housing resources, parks, libraries, and neighborhood initiatives that make your community a better place to live.' },
   THEME_04: { name: 'Voice', color: '#7a2018', slug: 'voice', emoji: '', description: 'Your civic power, amplified. Get informed about voting, advocacy, town halls, and organizing opportunities that put your community in charge.' },
   THEME_05: { name: 'Money', color: '#6a4e10', slug: 'money', emoji: '', description: 'Financial opportunity for everyone. Explore jobs, benefits, credit-building, and small business resources that strengthen economic well-being.' },
-  THEME_06: { name: 'Planet', color: '#1a5030', slug: 'planet', emoji: '', description: 'Climate, environment, and sustainability in our region. Learn about air quality, flooding, energy programs, and green initiatives shaping Houston\'s future.' },
-  THEME_07: { name: 'The Bigger We', color: '#1a3460', slug: 'the-bigger-we', emoji: '', description: 'Building across difference, together. Explore resources for bridging, dialogue, inclusion, and trust that connect all of Houston\'s communities.' },
+  THEME_06: { name: 'Planet', color: '#1a5030', slug: 'planet', emoji: '', description: 'Climate, environment, and sustainability in our region. Learn about air quality, energy programs, and green initiatives shaping our future.' },
+  THEME_07: { name: 'The Bigger We', color: '#1a3460', slug: 'the-bigger-we', emoji: '', description: 'Building across difference, together. Explore resources for bridging, dialogue, inclusion, and trust that connect our communities.' },
 } as const;
 
 /**
@@ -31,13 +31,13 @@ export const THEMES = {
  * Consumed by PageHero for warm, asset-based page introductions.
  */
 export const PAGE_INTROS = {
-  services: 'Houston has a deep network of services and organizations dedicated to your well-being. Browse by category, search by need, or explore the map to find what is near you.',
+  services: 'Your community has a deep network of services and organizations dedicated to your well-being. Browse by category, search by need, or explore the map to find what is near you.',
   search: 'Search everything — officials, services, organizations, news, policies, opportunities. Use the tabs to narrow it down, or search across all of it at once.',
   explore: 'Every topic connects to something bigger. Browse focus areas across all seven pathways, filter by global goals, and discover how community issues interrelate.',
   elections: 'Your voting dashboard — see what just happened, what\'s coming up, who represents you, and where to vote. Start with your ZIP code to personalize your experience.',
-  availableResources: 'Houston has resources ready for you. Browse by urgency or life situation to find services, support, and next steps.',
-  organizations: 'Houston is powered by hundreds of nonprofits, foundations, agencies, and community groups working to strengthen neighborhoods. Browse, search, and connect with the organizations serving your community.',
-  geography: 'Explore Houston through its neighborhoods, districts, and civic boundaries. Toggle boundary layers, click any area, or search by ZIP code to discover services, officials, organizations, and foundations near you.',
+  availableResources: 'Your community has resources ready for you. Browse by urgency or life situation to find services, support, and next steps.',
+  organizations: 'Your community is powered by hundreds of nonprofits, foundations, agencies, and community groups working to strengthen neighborhoods. Browse, search, and connect with the organizations serving your area.',
+  geography: 'Explore your city through its neighborhoods, districts, and civic boundaries. Toggle boundary layers, click any area, or search by ZIP code to discover services, officials, organizations, and foundations near you.',
 } as const;
 
 /**
@@ -92,7 +92,7 @@ export const CENTERS: Record<string, { question: string; emoji: string; slug: st
 export const BRAND = {
   name: 'Community Exchange',
   tagline: 'Powered by The Change Lab',
-  origin: 'Built with love in Houston, for everyone',
+  origin: 'Built with love, for everyone',
   background: '#ffffff',
   text: '#0d1117',
   accent: '#1b5e8a',
@@ -106,7 +106,7 @@ export const BRAND = {
 } as const;
 
 /**
- * Supported UI languages. Houston's top 3 languages.
+ * Supported UI languages.
  * `langId` maps to the `languages` table PK in Supabase (null = English, no translation needed).
  * Used by LanguageContext for client-side toggling and by the translation pipeline.
  */
@@ -135,8 +135,9 @@ export interface GeoLayerConfig {
  * GeoJSON files live in /public/geo/ and are loaded client-side by GeoJsonLayer.
  * Layers can be toggled on/off via LayerControl in the InteractiveMap component.
  *
- * Houston layers: /public/geo/*.geojson
+ * Houston layers: /public/geo/houston/*.geojson
  * San Francisco layers: /public/geo/sf/*.geojson
+ * Berkeley layers: /public/geo/berkeley/*.geojson
  *
  * idProperty — which GeoJSON feature property uniquely identifies a polygon
  *              (used for highlighting and linking to detail pages)
@@ -146,7 +147,7 @@ export const GEO_LAYERS: Record<string, GeoLayerConfig> = {
   superNeighborhoods: {
     id: 'superNeighborhoods',
     label: 'Super Neighborhoods',
-    url: '/geo/super-neighborhoods.geojson',
+    url: '/geo/houston/super-neighborhoods.geojson',
     color: '#4a2870',
     idProperty: 'SN_ID',
     detailPath: '/super-neighborhoods/',
@@ -154,7 +155,7 @@ export const GEO_LAYERS: Record<string, GeoLayerConfig> = {
   councilDistricts: {
     id: 'councilDistricts',
     label: 'Council Districts',
-    url: '/geo/council-districts.geojson',
+    url: '/geo/houston/council-districts.geojson',
     color: '#1a6b56',
     idProperty: 'DISTRICT',
     detailPath: '/officials/',
@@ -162,7 +163,7 @@ export const GEO_LAYERS: Record<string, GeoLayerConfig> = {
   congressionalDistricts: {
     id: 'congressionalDistricts',
     label: 'Congressional Districts',
-    url: '/geo/congressional-districts.geojson',
+    url: '/geo/houston/congressional-districts.geojson',
     color: '#1b5e8a',
     idProperty: 'CD',
     detailPath: null,
@@ -170,7 +171,7 @@ export const GEO_LAYERS: Record<string, GeoLayerConfig> = {
   stateSenate: {
     id: 'stateSenate',
     label: 'State Senate Districts',
-    url: '/geo/state-senate-districts.geojson',
+    url: '/geo/houston/state-senate-districts.geojson',
     color: '#7a2018',
     idProperty: 'SD',
     detailPath: null,
@@ -178,7 +179,7 @@ export const GEO_LAYERS: Record<string, GeoLayerConfig> = {
   stateHouse: {
     id: 'stateHouse',
     label: 'State House Districts',
-    url: '/geo/state-house-districts.geojson',
+    url: '/geo/houston/state-house-districts.geojson',
     color: '#1e4d7a',
     idProperty: 'HD',
     detailPath: null,
@@ -186,7 +187,7 @@ export const GEO_LAYERS: Record<string, GeoLayerConfig> = {
   schoolDistricts: {
     id: 'schoolDistricts',
     label: 'School Districts',
-    url: '/geo/school-districts.geojson',
+    url: '/geo/houston/school-districts.geojson',
     color: '#6a4e10',
     idProperty: 'SD_ID',
     detailPath: null,
@@ -194,7 +195,7 @@ export const GEO_LAYERS: Record<string, GeoLayerConfig> = {
   zipCodes: {
     id: 'zipCodes',
     label: 'ZIP Codes',
-    url: '/geo/zip-codes.geojson',
+    url: '/geo/houston/zip-codes.geojson',
     color: '#1a5030',
     idProperty: 'ZCTA5CE20',
     detailPath: null,
@@ -202,7 +203,7 @@ export const GEO_LAYERS: Record<string, GeoLayerConfig> = {
   censusTracts: {
     id: 'censusTracts',
     label: 'Census Tracts',
-    url: '/geo/census-tracts.geojson',
+    url: '/geo/houston/census-tracts.geojson',
     color: '#718096',
     idProperty: 'GEOID',
     detailPath: null,
@@ -210,7 +211,7 @@ export const GEO_LAYERS: Record<string, GeoLayerConfig> = {
   tirzZones: {
     id: 'tirzZones',
     label: 'TIRZ Zones',
-    url: '/geo/tirz-zones.geojson',
+    url: '/geo/houston/tirz-zones.geojson',
     color: '#b03a2a',
     idProperty: 'SITENO',
     detailPath: '/tirz/',
@@ -274,11 +275,68 @@ export const SF_GEO_LAYERS: Record<string, GeoLayerConfig> = {
 } as const;
 
 /**
- * Map center coordinates by city.
+ * Berkeley geographic boundary layers.
+ * GeoJSON files live in /public/geo/berkeley/.
  */
-export const MAP_CENTERS = {
+export const BERKELEY_GEO_LAYERS: Record<string, GeoLayerConfig> = {
+  berkeleyCouncilDistricts: {
+    id: 'berkeleyCouncilDistricts',
+    label: 'Council Districts',
+    url: '/geo/berkeley/council-districts.geojson',
+    color: '#1a6b56',
+    idProperty: 'DISTRICT',
+    detailPath: null,
+  },
+  berkeleyNeighborhoods: {
+    id: 'berkeleyNeighborhoods',
+    label: 'Neighborhoods',
+    url: '/geo/berkeley/neighborhoods.geojson',
+    color: '#4a2870',
+    idProperty: 'NAME',
+    detailPath: null,
+  },
+  berkeleyParks: {
+    id: 'berkeleyParks',
+    label: 'Parks',
+    url: '/geo/berkeley/parks.geojson',
+    color: '#2D8659',
+    idProperty: 'PARK_NAME',
+    detailPath: null,
+  },
+  berkeleyZipCodes: {
+    id: 'berkeleyZipCodes',
+    label: 'ZIP Codes',
+    url: '/geo/berkeley/zip-codes.geojson',
+    color: '#1a5030',
+    idProperty: 'zip',
+    detailPath: null,
+  },
+};
+
+/**
+ * All geo layers indexed by city slug.
+ * Use `getGeoLayers(citySlug)` to retrieve layers for a given city.
+ */
+export const GEO_LAYERS_BY_CITY: Record<string, Record<string, GeoLayerConfig>> = {
+  houston: GEO_LAYERS,
+  'san-francisco': SF_GEO_LAYERS,
+  berkeley: BERKELEY_GEO_LAYERS,
+};
+
+/**
+ * Returns geo layers for a given city. Falls back to Houston if city not found.
+ */
+export function getGeoLayers(citySlug: string): Record<string, GeoLayerConfig> {
+  return GEO_LAYERS_BY_CITY[citySlug] ?? GEO_LAYERS;
+}
+
+/**
+ * Map center coordinates by city slug.
+ */
+export const MAP_CENTERS: Record<string, { lat: number; lng: number; zoom: number }> = {
   houston: { lat: 29.76, lng: -95.37, zoom: 10 },
-  sanFrancisco: { lat: 37.7749, lng: -122.4194, zoom: 12 },
+  'san-francisco': { lat: 37.7749, lng: -122.4194, zoom: 12 },
+  berkeley: { lat: 37.8716, lng: -122.2727, zoom: 13 },
 } as const;
 
 // ── Shared color systems ─────────────────────────────────────────────
@@ -344,7 +402,7 @@ export const THREE_CENTERS = {
     name: 'Learning Center',
     slug: 'learning',
     tagline: 'Understand what\'s happening',
-    description: 'News, research, policies, and context — the story behind community life in Houston.',
+    description: 'News, research, policies, and context — the story behind community life in your city.',
     color: '#2563eb',
     href: '/learning',
     geoType: 'flower_of_life',
@@ -362,7 +420,7 @@ export const THREE_CENTERS = {
     name: 'Resource Center',
     slug: 'resources',
     tagline: 'What\'s available to you',
-    description: 'Services, benefits, organizations, and support systems ready for Houston families.',
+    description: 'Services, benefits, organizations, and support systems ready for your community.',
     color: '#16a34a',
     href: '/resources',
     geoType: 'seed_of_life',

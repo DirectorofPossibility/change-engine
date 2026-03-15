@@ -9,7 +9,7 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
     <div className="max-w-[1080px] mx-auto px-6 py-20">
       <p
         className="font-mono uppercase tracking-[0.2em] mb-3"
-        style={{ fontSize: '0.6875rem', color: '#5c6474' }}
+        style={{ fontSize: '0.875rem', color: '#5c6474' }}
       >
         {t('error.label')}
       </p>
@@ -29,14 +29,14 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
         <button
           onClick={reset}
           className="font-mono uppercase tracking-[0.1em] px-6 py-3 transition-opacity hover:opacity-80"
-          style={{ fontSize: '0.68rem', background: '#0d1117', color: '#ffffff' }}
+          style={{ fontSize: '0.875rem', background: '#0d1117', color: '#ffffff' }}
         >
           {t('error.retry')}
         </button>
         <Link
           href="/exchange"
           className="font-mono uppercase tracking-[0.1em] px-6 py-3 transition-colors hover:bg-[#f4f5f7]"
-          style={{ fontSize: '0.68rem', color: '#0d1117', border: '1px solid #dde1e8' }}
+          style={{ fontSize: '0.875rem', color: '#0d1117', border: '1px solid #dde1e8' }}
         >
           {t('error.back')}
         </Link>

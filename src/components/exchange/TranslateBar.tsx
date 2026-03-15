@@ -23,21 +23,21 @@ export function TranslateBar({ contentType, contentId, isTranslated }: Translate
     <div className="w-full bg-brand-bg-alt border-b border-brand-border">
       <div className="max-w-[1080px] mx-auto px-8 py-2.5 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted">
+          <span className="font-mono text-xs font-bold uppercase tracking-wider text-brand-muted">
             {t('translate.viewing_in')} {langName}
           </span>
           {contentType && contentId && !isTranslated && (
             <TranslateNowButton contentType={contentType} contentId={contentId} lang={language} t={t} />
           )}
           {isTranslated && (
-            <span className="inline-block font-mono text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded bg-brand-success/10 text-brand-success">
+            <span className="inline-block font-mono text-xs font-bold uppercase tracking-wide px-2 py-0.5 rounded bg-brand-success/10 text-brand-success">
               {t('translate.translated')}
             </span>
           )}
         </div>
         <button
           onClick={function () { setLanguage('en') }}
-          className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted hover:text-brand-accent transition-colors"
+          className="font-mono text-xs font-bold uppercase tracking-wider text-brand-muted hover:text-brand-accent transition-colors"
         >
           {t('translate.back_to_english')}
         </button>
@@ -74,7 +74,7 @@ function TranslateNowButton({ contentType, contentId, lang, t }: { contentType: 
     <button
       onClick={handleTranslate}
       disabled={status === 'loading'}
-      className="inline-block font-mono text-[10px] font-bold uppercase tracking-wide px-2.5 py-1 rounded border border-brand-accent text-brand-accent hover:bg-brand-accent hover:text-white transition-colors disabled:opacity-50"
+      className="inline-block font-mono text-xs font-bold uppercase tracking-wide px-2.5 py-1 rounded border border-brand-accent text-brand-accent hover:bg-brand-accent hover:text-white transition-colors disabled:opacity-50"
     >
       {status === 'loading' ? t('translate.translating') : status === 'error' ? t('translate.retry') : t('translate.translate_now')}
     </button>

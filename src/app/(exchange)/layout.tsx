@@ -27,11 +27,13 @@ import { ScrollToTop } from '@/components/exchange/ScrollToTop'
 import { getNextElection } from '@/lib/data/exchange'
 import { getSiteConfig } from '@/lib/data/site-config'
 import { SiteConfigProvider } from '@/lib/contexts/SiteConfigContext'
+import { CityProvider } from '@/lib/contexts/CityContext'
 
 export default async function ExchangeLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies()
   const lang = cookieStore.get('lang')?.value
   const zip = cookieStore.get('zip')?.value
+  const city = cookieStore.get('ce_city')?.value
   const [nextElection, siteConfig] = await Promise.all([
     getNextElection(),
     getSiteConfig(),
@@ -45,7 +47,7 @@ export default async function ExchangeLayout({ children }: { children: React.Rea
         '@type': 'Organization',
         name: 'Change Engine',
         url: 'https://www.changeengine.us',
-        description: 'A civic platform connecting Houston residents with resources, services, and civic participation opportunities.',
+        description: 'A civic platform connecting residents with resources, services, and civic participation opportunities.',
       },
       {
         '@type': 'WebSite',
@@ -61,6 +63,7 @@ export default async function ExchangeLayout({ children }: { children: React.Rea
   }
 
   return (
+    <CityProvider initialCity={city}>
     <LanguageProvider initialLang={lang}>
       <NeighborhoodProvider initialZip={zip}>
         <SiteConfigProvider config={siteConfig}>
@@ -89,5 +92,6 @@ export default async function ExchangeLayout({ children }: { children: React.Rea
         </SiteConfigProvider>
       </NeighborhoodProvider>
     </LanguageProvider>
+    </CityProvider>
   )
 }

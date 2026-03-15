@@ -38,7 +38,7 @@ export default async function KnowledgeBasePage() {
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="relative max-w-[900px] mx-auto px-6 py-16">
-          <p style={{ fontSize: '0.65rem', letterSpacing: '0.2em', color: "#5c6474" }} className="uppercase mb-4">
+          <p style={{ fontSize: '0.875rem', letterSpacing: '0.2em', color: "#5c6474" }} className="uppercase mb-4">
             Change Engine
           </p>
           <h1 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', lineHeight: 1.1 }}>
@@ -52,7 +52,7 @@ export default async function KnowledgeBasePage() {
 
       {/* ── Breadcrumb ── */}
       <div className="max-w-[900px] mx-auto px-6 pt-6 pb-2">
-        <nav style={{ fontSize: '0.65rem', letterSpacing: '0.12em', color: "#5c6474" }} className="uppercase">
+        <nav style={{ fontSize: '0.875rem', letterSpacing: '0.12em', color: "#5c6474" }} className="uppercase">
           <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
           <Link href="/explore" className="hover:underline" style={{ color: "#1b5e8a" }}>Explore</Link>
@@ -66,19 +66,19 @@ export default async function KnowledgeBasePage() {
         <div className="flex items-center gap-6 mb-8">
           <Link
             href="/library"
-            style={{ fontSize: '0.7rem', letterSpacing: '0.08em', color: "#1b5e8a" }}
+            style={{ fontSize: '0.875rem', letterSpacing: '0.08em', color: "#1b5e8a" }}
             className="uppercase hover:underline"
           >
             Research Library
           </Link>
           <Link
             href="/library/chat"
-            style={{ fontSize: '0.7rem', letterSpacing: '0.08em', color: "#1b5e8a" }}
+            style={{ fontSize: '0.875rem', letterSpacing: '0.08em', color: "#1b5e8a" }}
             className="uppercase hover:underline"
           >
             Ask AI
           </Link>
-          <span style={{ fontSize: '0.65rem', color: "#5c6474" }} className="ml-auto">
+          <span style={{ fontSize: '0.875rem', color: "#5c6474" }} className="ml-auto">
             {items.length} item{items.length !== 1 ? 's' : ''} in knowledge base
           </span>
         </div>
@@ -93,7 +93,7 @@ export default async function KnowledgeBasePage() {
 
         {/* ── Footer link ── */}
         <div className="text-center py-4">
-          <Link href="/explore" style={{ fontSize: '0.7rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline">
+          <Link href="/explore" style={{ fontSize: '0.875rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline">
             Back to Explore
           </Link>
         </div>

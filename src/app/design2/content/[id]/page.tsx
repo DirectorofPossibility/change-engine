@@ -149,7 +149,7 @@ export default async function ContentDetailPage({
               {wayfinder.content.length > 0 && (
                 <div className="mb-5">
                   <h3
-                    className="text-[10px] font-bold uppercase tracking-wider mb-2"
+                    className="text-xs font-bold uppercase tracking-wider mb-2"
                     style={{ color: '#6B6560' }}
                   >
                     More to read
@@ -185,7 +185,7 @@ export default async function ContentDetailPage({
               {wayfinder.officials.length > 0 && (
                 <div className="mb-5">
                   <h3
-                    className="text-[10px] font-bold uppercase tracking-wider mb-2"
+                    className="text-xs font-bold uppercase tracking-wider mb-2"
                     style={{ color: '#6B6560' }}
                   >
                     Officials
@@ -235,7 +235,7 @@ export default async function ContentDetailPage({
               {wayfinder.policies.length > 0 && (
                 <div>
                   <h3
-                    className="text-[10px] font-bold uppercase tracking-wider mb-2"
+                    className="text-xs font-bold uppercase tracking-wider mb-2"
                     style={{ color: '#6B6560' }}
                   >
                     Policies

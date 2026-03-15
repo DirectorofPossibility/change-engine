@@ -211,7 +211,7 @@ export default function SplashPage() {
             <p className="text-xs text-brand-muted leading-relaxed">
               {t('splash.coming_soon_desc')}
             </p>
-            <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-accent mt-2">{t('splash.what_to_expect')}</p>
+            <p className="text-xs font-mono font-bold uppercase tracking-wider text-brand-accent mt-2">{t('splash.what_to_expect')}</p>
             <ul className="space-y-2 text-xs text-brand-text leading-relaxed">
               {[t('splash.expect_1'), t('splash.expect_2'), t('splash.expect_3'), t('splash.expect_4')].map(function (text, i) {
                 return (
@@ -294,7 +294,7 @@ export default function SplashPage() {
         <div className="flex justify-center">
           <LanguageSwitcher />
         </div>
-        <p className="text-[10px] text-brand-muted-light font-mono text-center">
+        <p className="text-xs text-brand-muted-light font-mono text-center">
           {t('splash.project_of')}{' '}
           <a href="https://www.thechangelab.net/about2" target="_blank" rel="noopener noreferrer" className="hover:text-brand-accent transition-colors underline">
             The Change Lab

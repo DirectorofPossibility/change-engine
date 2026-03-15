@@ -23,10 +23,10 @@ import { CollapsibleSidebarSection } from '@/components/exchange/CollapsibleSide
 import { BookmarkButton } from '@/components/exchange/BookmarkButton'
 
 /* ── Design Tokens ── */
-const RULE = '#dde1e8'
-const DIM = '#5c6474'
-const INK = '#0d1117'
-const SIDEBAR_BG = '#f4f5f7'
+const RULE = '#e5e7eb'
+const DIM = '#6b7280'
+const INK = '#1a1a1a'
+const SIDEBAR_BG = '#f9fafb'
 
 
 /** Strip scraped page chrome */
@@ -389,7 +389,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
           <div className="flex flex-col lg:flex-row gap-8 items-center">
             <div className="flex-1 min-w-0">
               {/* Breadcrumb + type in one line */}
-              <nav className="text-xs uppercase tracking-wider text-white/60 mb-4 flex items-center gap-2">
+              <nav className="text-sm uppercase tracking-wider text-white/60 mb-4 flex items-center gap-2">
                 <Link href="/guide" className="hover:text-white transition-colors">Guide</Link>
                 {themeEntry && (
                   <>
@@ -431,7 +431,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                   title={item.title_6th_grade || item.title}
                   imageUrl={item.image_url}
                 />
-                <span className="text-xs text-white/40">
+                <span className="text-sm text-white/60">
                   {[
                     item.published_at ? new Date(item.published_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : null,
                     orgData?.org_name,
@@ -454,7 +454,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
           TWO-COLUMN LAYOUT — Tabs + Taxonomy Wayfinder Sidebar
          ══════════════════════════════════════════════════════════════════ */}
       <section className="bg-white">
-        <div className="max-w-[1200px] mx-auto px-6 py-8 sm:py-10">
+        <div className="max-w-[1200px] mx-auto px-6 py-10">
           <div className="flex flex-col lg:flex-row gap-10">
 
             {/* ── LEFT: Content Tabs ── */}
@@ -520,12 +520,12 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                 {/* Focus Areas */}
                 {focusAreas.length > 0 && (
                   <div className="px-5 py-3" style={{ borderBottom: `3px solid ${RULE}` }}>
-                    <p className="text-xs font-bold text-muted uppercase tracking-wider mb-2">Focus Areas</p>
+                    <p className="text-sm font-bold text-muted uppercase tracking-wider mb-2">Focus Areas</p>
                     <div className="flex flex-wrap gap-1.5">
                       {focusAreas.map(function (fa: any) {
                         return (
                           <Link key={fa.focus_id} href={'/explore/focus/' + fa.focus_id}
-                            className="text-xs px-2.5 py-1 hover:opacity-80 transition-opacity"
+                            className="text-sm px-2.5 py-1 hover:opacity-80 transition-opacity"
                             style={{ background: themeColor + '12', color: themeColor }}
                           >
                             {fa.focus_area_name}
@@ -573,7 +573,7 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
                             {matchedSDGs.map(function (sdg) {
                               return (
                                 <Link key={sdg.sdg_number} href={'/explore?sdg=SDG-' + String(sdg.sdg_number).padStart(2, '0')}
-                                  className="w-6 h-6 flex items-center justify-center text-white text-[0.55rem] font-bold hover:opacity-80"
+                                  className="w-6 h-6 flex items-center justify-center text-white text-xs font-bold hover:opacity-80"
                                   style={{ background: sdg.sdg_color || themeColor }}
                                   title={sdg.sdg_name}
                                 >
@@ -629,8 +629,8 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
         <div className="max-w-[820px] mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
           <Link
             href="/explore"
-            className="inline-flex items-center gap-2 transition-colors hover:text-[#1b5e8a]"
-            style={{ fontSize: '0.7rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: DIM }}
+            className="inline-flex items-center gap-2 transition-colors hover:text-[#1b5e8a] text-sm font-semibold uppercase tracking-wider"
+            style={{ color: DIM }}
           >
             <ArrowRight size={14} className="rotate-180" /> Back to the Exchange
           </Link>

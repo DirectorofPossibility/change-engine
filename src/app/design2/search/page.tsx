@@ -65,7 +65,7 @@ export default function SearchPage() {
                 <a key={i} href={r.url || '#'} className="block bg-white rounded-xl border p-4 transition-all hover:shadow-md" style={{ borderColor: '#E2DDD5' }}>
                   <h3 className="font-serif text-[15px] font-semibold" style={{ color: '#1a1a1a' }}>{r.title}</h3>
                   {r.summary && <p className="text-[12px] mt-1 line-clamp-2" style={{ color: '#6B6560' }}>{r.summary}</p>}
-                  <span className="text-[10px] uppercase tracking-wider mt-2 inline-block" style={{ color: '#9B9590' }}>{r.type}</span>
+                  <span className="text-xs uppercase tracking-wider mt-2 inline-block" style={{ color: '#9B9590' }}>{r.type}</span>
                 </a>
               )
             })}

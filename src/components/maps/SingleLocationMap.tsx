@@ -8,7 +8,7 @@
 'use client'
 
 import { MapProvider } from './MapProvider'
-import { HoustonMap } from './HoustonMap'
+import { BaseMap } from './BaseMap'
 import { MapMarker, type MarkerData } from './MapMarker'
 
 interface SingleLocationMapProps {
@@ -17,13 +17,13 @@ interface SingleLocationMapProps {
 
 function SingleLocationMapInner({ marker }: SingleLocationMapProps) {
   return (
-    <HoustonMap
+    <BaseMap
       className="w-full h-[250px]"
       zoom={14}
       center={{ lat: marker.lat, lng: marker.lng }}
     >
       <MapMarker marker={marker} />
-    </HoustonMap>
+    </BaseMap>
   )
 }
 

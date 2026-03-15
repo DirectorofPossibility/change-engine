@@ -215,7 +215,7 @@ export function ServicesClient({ services, translations = {}, categories, initia
           {/* ── Category Quick-Jump ── */}
           <nav className="w-full md:w-48 flex-shrink-0">
             <div className="md:sticky md:top-24 space-y-0.5 mb-6 md:mb-0">
-              <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-brand-muted mb-2">Categories</p>
+              <p className="font-mono text-xs font-bold uppercase tracking-widest text-brand-muted mb-2">Categories</p>
               {categoryList.map(cat => (
                 <button
                   key={cat.id}

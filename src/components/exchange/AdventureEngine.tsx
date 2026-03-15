@@ -714,7 +714,7 @@ export function AdventureEngine({ adventure }: { adventure: Adventure }) {
             style={{ width: `${Math.min((progress / 8) * 100, 100)}%`, backgroundColor: adventure.color }}
           />
         </div>
-        <span className="text-[10px] font-mono text-brand-muted">Step {progress + 1}</span>
+        <span className="text-xs font-mono text-brand-muted">Step {progress + 1}</span>
       </div>
 
       {/* Scene illustration */}
@@ -773,7 +773,7 @@ export function AdventureEngine({ adventure }: { adventure: Adventure }) {
                 <div key={s.key} className="bg-white border border-brand-border p-3 text-center">
                   <p className="text-lg mb-1">{s.emoji}</p>
                   <p className="font-display font-bold text-brand-text">{stats[s.key as keyof typeof stats]}</p>
-                  <p className="text-[10px] font-mono text-brand-muted uppercase tracking-wider">{s.label}</p>
+                  <p className="text-xs font-mono text-brand-muted uppercase tracking-wider">{s.label}</p>
                 </div>
               ))}
             </div>

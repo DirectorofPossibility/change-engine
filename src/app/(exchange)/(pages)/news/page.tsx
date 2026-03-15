@@ -149,7 +149,7 @@ export default async function NewsPage({
                   href={href}
                   className="hover:opacity-80"
                   style={{
-                                        fontSize: '0.65rem',
+                                        fontSize: '0.875rem',
                     textTransform: 'uppercase' as const,
                     letterSpacing: '0.05em',
                     padding: '4px 10px',
@@ -170,7 +170,7 @@ export default async function NewsPage({
                   key={id}
                   href={active ? '/news' + (type ? '?type=' + type : '') : href}
                   className="flex items-center gap-1.5 hover:opacity-80"
-                  style={{ fontSize: '0.65rem', color: active ? theme.color : '#5c6474' }}
+                  style={{ fontSize: '0.875rem', color: active ? theme.color : '#5c6474' }}
                 >
                   <span className="w-2 h-2 flex-shrink-0" style={{ backgroundColor: theme.color, opacity: active ? 1 : 0.5 }} />
                   {active ? theme.name : ''}
@@ -178,7 +178,7 @@ export default async function NewsPage({
               )
             })}
             {pathway && (
-              <Link href={'/news' + (type ? '?type=' + type : '')} style={{ fontSize: '0.6875rem', color: "#5c6474" }} className="hover:underline ml-1">clear</Link>
+              <Link href={'/news' + (type ? '?type=' + type : '')} style={{ fontSize: '0.875rem', color: "#5c6474" }} className="hover:underline ml-1">clear</Link>
             )}
           </div>
         </div>
@@ -203,17 +203,17 @@ export default async function NewsPage({
                   )}
                   <div className="flex items-center gap-2 mb-2">
                     {getTheme(hero) && (
-                      <span style={{ fontSize: '0.6875rem', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.08em', color: getTheme(hero)!.color }}>
+                      <span style={{ fontSize: '0.875rem', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.08em', color: getTheme(hero)!.color }}>
                         {getTheme(hero)!.name}
                       </span>
                     )}
                     {hero.content_type && hero.content_type !== 'article' && (
-                      <span style={{ fontSize: '0.6875rem', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.08em', color: "#5c6474" }}>
+                      <span style={{ fontSize: '0.875rem', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.08em', color: "#5c6474" }}>
                         {hero.content_type}
                       </span>
                     )}
                     {isPastEvent(hero) && (
-                      <span style={{ fontSize: '0.6875rem', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.08em', color: "#5c6474" }}>Past</span>
+                      <span style={{ fontSize: '0.875rem', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.08em', color: "#5c6474" }}>Past</span>
                     )}
                   </div>
                   <h2 className="group-hover:underline" style={{ fontSize: '2rem', fontWeight: 700, lineHeight: 1.2 }}>
@@ -225,8 +225,8 @@ export default async function NewsPage({
                     </p>
                   )}
                   <div className="flex items-center gap-3 mt-3">
-                    {hero.source_domain && <span style={{ fontSize: '0.6875rem', fontWeight: 500, color: "#5c6474" }}>{hero.source_domain}</span>}
-                    <span style={{ fontSize: '0.6875rem', color: "#5c6474" }}>{formatDate(hero.published_at)}</span>
+                    {hero.source_domain && <span style={{ fontSize: '0.875rem', fontWeight: 500, color: "#5c6474" }}>{hero.source_domain}</span>}
+                    <span style={{ fontSize: '0.875rem', color: "#5c6474" }}>{formatDate(hero.published_at)}</span>
                   </div>
                 </Link>
               )}
@@ -245,7 +245,7 @@ export default async function NewsPage({
                       )}
                       <div className="flex-1 min-w-0">
                         {theme && (
-                          <span style={{ fontSize: '0.6875rem', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.08em', color: theme.color }}>
+                          <span style={{ fontSize: '0.875rem', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.08em', color: theme.color }}>
                             {theme.name}
                           </span>
                         )}
@@ -253,8 +253,8 @@ export default async function NewsPage({
                           {item.title_6th_grade}
                         </h3>
                         <div className="flex items-center gap-2 mt-1.5">
-                          {item.source_domain && <span style={{ fontSize: '0.6875rem', color: "#5c6474" }}>{item.source_domain}</span>}
-                          <span style={{ fontSize: '0.6875rem', color: "#5c6474" }}>{shortDate(item.published_at)}</span>
+                          {item.source_domain && <span style={{ fontSize: '0.875rem', color: "#5c6474" }}>{item.source_domain}</span>}
+                          <span style={{ fontSize: '0.875rem', color: "#5c6474" }}>{shortDate(item.published_at)}</span>
                         </div>
                       </div>
                     </Link>
@@ -272,7 +272,7 @@ export default async function NewsPage({
                       <h2 style={{ fontSize: '1.5rem',  }}>
                         {section.label}
                       </h2>
-                      <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{section.items.length}</span>
+                      <span style={{ fontSize: '0.875rem', color: "#5c6474" }}>{section.items.length}</span>
                     </div>
                     <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '1rem' }} />
 
@@ -295,10 +295,10 @@ export default async function NewsPage({
                               {theme && (
                                 <span className="w-1.5 h-1.5 flex-shrink-0" style={{ backgroundColor: theme.color }} />
                               )}
-                              {item.source_domain && <span style={{ fontSize: '0.6875rem', color: "#5c6474" }}>{item.source_domain}</span>}
-                              <span style={{ fontSize: '0.6875rem', color: "#5c6474" }}>{shortDate(item.published_at)}</span>
+                              {item.source_domain && <span style={{ fontSize: '0.875rem', color: "#5c6474" }}>{item.source_domain}</span>}
+                              <span style={{ fontSize: '0.875rem', color: "#5c6474" }}>{shortDate(item.published_at)}</span>
                               {isPastEvent(item) && (
-                                <span style={{ fontSize: '0.6875rem', color: "#5c6474", fontWeight: 700, textTransform: 'uppercase' }}>Past</span>
+                                <span style={{ fontSize: '0.875rem', color: "#5c6474", fontWeight: 700, textTransform: 'uppercase' }}>Past</span>
                               )}
                             </div>
                           </div>
@@ -318,7 +318,7 @@ export default async function NewsPage({
                                 <Image src={item.image_url!} alt="" className="w-20 h-14 object-cover flex-shrink-0" width={80} height={56} />
                               ) : (
                                 <div className="w-20 h-14 flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f4f5f7' }}>
-                                  <span style={{ fontSize: '0.6875rem', color: "#5c6474", textTransform: 'uppercase' }}>{item.content_type || 'item'}</span>
+                                  <span style={{ fontSize: '0.875rem', color: "#5c6474", textTransform: 'uppercase' }}>{item.content_type || 'item'}</span>
                                 </div>
                               )}
                               <div className="flex-1 min-w-0">
@@ -327,10 +327,10 @@ export default async function NewsPage({
                                 </h3>
                                 <div className="flex items-center gap-2 mt-1">
                                   {theme && <span className="w-1.5 h-1.5 flex-shrink-0" style={{ backgroundColor: theme.color }} />}
-                                  {item.source_domain && <span style={{ fontSize: '0.6875rem', color: "#5c6474" }}>{item.source_domain}</span>}
-                                  <span style={{ fontSize: '0.6875rem', color: "#5c6474" }}>{shortDate(item.published_at)}</span>
+                                  {item.source_domain && <span style={{ fontSize: '0.875rem', color: "#5c6474" }}>{item.source_domain}</span>}
+                                  <span style={{ fontSize: '0.875rem', color: "#5c6474" }}>{shortDate(item.published_at)}</span>
                                   {isPastEvent(item) && (
-                                    <span style={{ fontSize: '0.6875rem', color: "#5c6474", fontWeight: 700, textTransform: 'uppercase' }}>Past</span>
+                                    <span style={{ fontSize: '0.875rem', color: "#5c6474", fontWeight: 700, textTransform: 'uppercase' }}>Past</span>
                                   )}
                                 </div>
                               </div>

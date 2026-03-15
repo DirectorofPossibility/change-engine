@@ -196,24 +196,24 @@ export default function QuotesAdmin() {
                 </p>
                 <div className="flex items-center gap-3 mt-2">
                   {q.attribution && (
-                    <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted">
+                    <span className="font-mono text-xs font-bold uppercase tracking-wider text-brand-muted">
                       {q.attribution}
                     </span>
                   )}
                   {q.pathway_id && (() => {
                     const pw = PATHWAY_OPTIONS.find(function (p) { return p.id === q.pathway_id })
                     return (
-                      <span className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wide text-brand-muted-light">
+                      <span className="flex items-center gap-1.5 font-mono text-xs uppercase tracking-wide text-brand-muted-light">
                         <span className="w-2 h-2 rounded-sm flex-shrink-0" style={{ background: pw?.color || '#999' }} />
                         {pw?.name || q.pathway_id}
                       </span>
                     )
                   })()}
-                  <span className="font-mono text-[10px] text-brand-muted-light">
+                  <span className="font-mono text-xs text-brand-muted-light">
                     #{q.display_order}
                   </span>
                   {!q.is_active && (
-                    <span className="font-mono text-[10px] font-bold uppercase tracking-wide text-brand-danger">
+                    <span className="font-mono text-xs font-bold uppercase tracking-wide text-brand-danger">
                       Inactive
                     </span>
                   )}

@@ -39,7 +39,7 @@ export function DashboardHeader({ displayName, role, orgName, reviewCount = 0 }:
           <span className="text-sm font-medium text-brand-text truncate">
             {displayName}
           </span>
-          <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-brand-accent/10 text-brand-accent whitespace-nowrap">
+          <span className="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-brand-accent/10 text-brand-accent whitespace-nowrap">
             {ROLE_LABELS[role] || role}
           </span>
           {orgName && (
@@ -58,7 +58,7 @@ export function DashboardHeader({ displayName, role, orgName, reviewCount = 0 }:
             >
               <Search size={15} />
               <span className="hidden md:inline">Review</span>
-              <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full leading-none">
+              <span className="bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full leading-none">
                 {reviewCount}
               </span>
             </Link>

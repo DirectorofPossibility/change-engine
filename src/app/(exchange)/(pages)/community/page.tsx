@@ -69,7 +69,7 @@ export default async function CommunityIndexPage() {
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="relative max-w-[900px] mx-auto px-6 py-16">
-          <p style={{ fontSize: '0.65rem', letterSpacing: '0.2em', color: "#5c6474" }} className="uppercase mb-4">
+          <p style={{ fontSize: '0.875rem', letterSpacing: '0.2em', color: "#5c6474" }} className="uppercase mb-4">
             Change Engine
           </p>
           <h1 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', lineHeight: 1.1 }}>
@@ -81,16 +81,16 @@ export default async function CommunityIndexPage() {
           <div className="flex flex-wrap gap-6 mt-6">
             <div>
               <span style={{ fontSize: '1.5rem', fontWeight: 700 }}>{counts.neighborhoods}</span>
-              <span style={{ fontSize: '0.6875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Neighborhoods</span>
+              <span style={{ fontSize: '0.875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Neighborhoods</span>
             </div>
             <div>
               <span style={{ fontSize: '1.5rem', fontWeight: 700 }}>{counts.organizations}</span>
-              <span style={{ fontSize: '0.6875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Organizations</span>
+              <span style={{ fontSize: '0.875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Organizations</span>
             </div>
             {counts.events > 0 && (
               <div>
                 <span style={{ fontSize: '1.5rem', fontWeight: 700 }}>{counts.events}</span>
-                <span style={{ fontSize: '0.6875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Upcoming Events</span>
+                <span style={{ fontSize: '0.875rem', color: "#5c6474", letterSpacing: '0.1em', marginLeft: '0.5rem' }} className="uppercase">Upcoming Events</span>
               </div>
             )}
           </div>
@@ -99,7 +99,7 @@ export default async function CommunityIndexPage() {
 
       {/* ── Breadcrumb ── */}
       <div className="max-w-[900px] mx-auto px-6 pt-6 pb-2">
-        <nav style={{ fontSize: '0.65rem', letterSpacing: '0.12em', color: "#5c6474" }} className="uppercase">
+        <nav style={{ fontSize: '0.875rem', letterSpacing: '0.12em', color: "#5c6474" }} className="uppercase">
           <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
           <span>Community</span>
@@ -112,7 +112,7 @@ export default async function CommunityIndexPage() {
           <div className="flex items-baseline gap-4 mb-6">
             <h2 style={{ fontSize: '1.5rem',  }}>Explore</h2>
             <div className="flex-1" style={{ height: 1, borderBottom: '1px dotted', borderColor: '#dde1e8' }} />
-            <span style={{ fontSize: '0.6875rem', color: "#5c6474", letterSpacing: '0.1em' }} className="uppercase">{SECTIONS.length} sections</span>
+            <span style={{ fontSize: '0.875rem', color: "#5c6474", letterSpacing: '0.1em' }} className="uppercase">{SECTIONS.length} sections</span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-0" style={{ border: '1px solid #dde1e8' }}>
@@ -132,7 +132,7 @@ export default async function CommunityIndexPage() {
                         {section.label}
                       </h3>
                       {count > 0 && (
-                        <p style={{ fontSize: '0.6875rem', color: "#5c6474", letterSpacing: '0.08em' }} className="mt-0.5 uppercase">
+                        <p style={{ fontSize: '0.875rem', color: "#5c6474", letterSpacing: '0.08em' }} className="mt-0.5 uppercase">
                           {count.toLocaleString()} available
                         </p>
                       )}
@@ -160,7 +160,7 @@ export default async function CommunityIndexPage() {
 
         {/* ── Footer link ── */}
         <div className="text-center py-4">
-          <Link href="/" style={{ fontSize: '0.7rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline">
+          <Link href="/" style={{ fontSize: '0.875rem', color: "#1b5e8a", letterSpacing: '0.1em' }} className="uppercase hover:underline">
             Back to Home
           </Link>
         </div>

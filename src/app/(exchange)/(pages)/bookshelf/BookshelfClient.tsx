@@ -128,7 +128,7 @@ export function BookshelfClient({ books }: BookshelfClientProps) {
       {isFiltering ? (
         /* ── Search / Filter Results ── */
         <div>
-          <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-brand-muted-light mb-4">
+          <p className="font-mono text-xs font-bold uppercase tracking-wider text-brand-muted-light mb-4">
             {searchResults!.length} book{searchResults!.length !== 1 ? 's' : ''} found
           </p>
           {searchResults!.length > 0 ? (
@@ -150,7 +150,7 @@ export function BookshelfClient({ books }: BookshelfClientProps) {
             <section className="mb-12">
               <div className="flex items-center gap-2 mb-5">
                 <Star size={14} className="text-brand-accent" />
-                <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-brand-accent">Staff Picks</p>
+                <p className="font-mono text-xs font-bold uppercase tracking-widest text-brand-accent">Staff Picks</p>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                 {featured.map(function (book) { return <BookCard key={book.id} book={book} featured /> })}
@@ -160,7 +160,7 @@ export function BookshelfClient({ books }: BookshelfClientProps) {
 
           {/* ── Full Shelf ── */}
           <section className="mb-12">
-            <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-brand-muted-light mb-5">
+            <p className="font-mono text-xs font-bold uppercase tracking-widest text-brand-muted-light mb-5">
               Full Collection &mdash; {books.length} books
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -171,7 +171,7 @@ export function BookshelfClient({ books }: BookshelfClientProps) {
           {/* ── By Pathway ── */}
           {themeGroups.length > 1 && (
             <section>
-              <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-brand-muted-light mb-5">By Pathway</p>
+              <p className="font-mono text-xs font-bold uppercase tracking-widest text-brand-muted-light mb-5">By Pathway</p>
               <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 {themeGroups.map(function (g) {
                   return (
@@ -243,7 +243,7 @@ function BookCard({ book, featured }: { book: BookshelfItem; featured?: boolean 
             </span>
           )}
           {theme && (
-            <span className="flex items-center gap-1 text-[10px] font-medium" style={{ color: theme.color }}>
+            <span className="flex items-center gap-1 text-xs font-medium" style={{ color: theme.color }}>
               <span className="w-1.5 h-1.5 rounded-sm" style={{ backgroundColor: theme.color }} />
               {theme.name}
             </span>
@@ -290,7 +290,7 @@ function BookCard({ book, featured }: { book: BookshelfItem; featured?: boolean 
               href={book.purchase_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-brand-accent hover:underline"
+              className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-brand-accent hover:underline"
             >
               Get this book <ExternalLink size={10} />
             </a>
@@ -300,7 +300,7 @@ function BookCard({ book, featured }: { book: BookshelfItem; featured?: boolean 
               href={book.free_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-brand-text hover:underline"
+              className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-brand-text hover:underline"
             >
               Read free <ChevronRight size={10} />
             </a>
@@ -310,7 +310,7 @@ function BookCard({ book, featured }: { book: BookshelfItem; featured?: boolean 
               href={'https://www.worldcat.org/isbn/' + book.isbn}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-brand-muted hover:text-brand-accent hover:underline"
+              className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-brand-muted hover:text-brand-accent hover:underline"
             >
               Find at library <ExternalLink size={10} />
             </a>

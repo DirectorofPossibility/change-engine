@@ -1619,6 +1619,80 @@ export type Database = {
         }
         Relationships: []
       }
+      cities: {
+        Row: {
+          activated_at: string | null
+          agenda_rss_url: string | null
+          agenda_system: string | null
+          city_name: string
+          city_slug: string
+          council_structure: Json | null
+          county_id: string | null
+          created_at: string | null
+          default_zoom: number | null
+          features: Json | null
+          geo_layers: Json | null
+          is_active: boolean | null
+          languages: Json | null
+          lat: number
+          legistar_client: string | null
+          lng: number
+          metro_area: string | null
+          open_states_jurisdiction: string | null
+          state_code: string
+        }
+        Insert: {
+          activated_at?: string | null
+          agenda_rss_url?: string | null
+          agenda_system?: string | null
+          city_name: string
+          city_slug: string
+          council_structure?: Json | null
+          county_id?: string | null
+          created_at?: string | null
+          default_zoom?: number | null
+          features?: Json | null
+          geo_layers?: Json | null
+          is_active?: boolean | null
+          languages?: Json | null
+          lat: number
+          legistar_client?: string | null
+          lng: number
+          metro_area?: string | null
+          open_states_jurisdiction?: string | null
+          state_code: string
+        }
+        Update: {
+          activated_at?: string | null
+          agenda_rss_url?: string | null
+          agenda_system?: string | null
+          city_name?: string
+          city_slug?: string
+          council_structure?: Json | null
+          county_id?: string | null
+          created_at?: string | null
+          default_zoom?: number | null
+          features?: Json | null
+          geo_layers?: Json | null
+          is_active?: boolean | null
+          languages?: Json | null
+          lat?: number
+          legistar_client?: string | null
+          lng?: number
+          metro_area?: string | null
+          open_states_jurisdiction?: string | null
+          state_code?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cities_county_id_fkey"
+            columns: ["county_id"]
+            isOneToOne: false
+            referencedRelation: "counties"
+            referencedColumns: ["county_id"]
+          },
+        ]
+      }
       civic_calendar: {
         Row: {
           county_id: string | null
@@ -2017,6 +2091,7 @@ export type Database = {
           last_error: string | null
           last_retry_at: string | null
           org_id: string | null
+          parent_inbox_id: string | null
           referral_url: string | null
           retry_count: number | null
           scraped_at: string | null
@@ -2036,6 +2111,7 @@ export type Database = {
           last_error?: string | null
           last_retry_at?: string | null
           org_id?: string | null
+          parent_inbox_id?: string | null
           referral_url?: string | null
           retry_count?: number | null
           scraped_at?: string | null
@@ -2055,6 +2131,7 @@ export type Database = {
           last_error?: string | null
           last_retry_at?: string | null
           org_id?: string | null
+          parent_inbox_id?: string | null
           referral_url?: string | null
           retry_count?: number | null
           scraped_at?: string | null
@@ -2071,6 +2148,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "organizations"
             referencedColumns: ["org_id"]
+          },
+          {
+            foreignKeyName: "content_inbox_parent_inbox_id_fkey"
+            columns: ["parent_inbox_id"]
+            isOneToOne: false
+            referencedRelation: "content_inbox"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -2127,6 +2211,27 @@ export type Database = {
           },
         ]
       }
+      content_organizations: {
+        Row: {
+          content_id: string
+          created_at: string | null
+          org_id: string
+          relationship: string
+        }
+        Insert: {
+          content_id: string
+          created_at?: string | null
+          org_id: string
+          relationship?: string
+        }
+        Update: {
+          content_id?: string
+          created_at?: string | null
+          org_id?: string
+          relationship?: string
+        }
+        Relationships: []
+      }
       content_pathways: {
         Row: {
           content_id: string
@@ -2171,19 +2276,26 @@ export type Database = {
           action_type_ids: string[] | null
           action_volunteer: string | null
           audience_segments: string[] | null
+          author: string | null
           body: string | null
           center: string | null
+          city_slug: string | null
           classification_reasoning: string | null
           confidence: number | null
           content_type: string | null
+          cost: string | null
           curator_org_id: string | null
+          download_url: string | null
           engagement_level: string | null
           event_end_date: string | null
           event_start_date: string | null
+          expires_at: string | null
           focus_area_ids: string[] | null
           fts: unknown
           geographic_scope: string | null
           gov_level_id: string | null
+          hero_quote: string | null
+          hero_quote_attribution: string | null
           id: string
           image_url: string | null
           inbox_id: string | null
@@ -2194,8 +2306,10 @@ export type Database = {
           life_situations: string[] | null
           object_type: string | null
           org_id: string | null
+          parent_inbox_id: string | null
           pathway_primary: string | null
           pathway_secondary: string[] | null
+          publication_date: string | null
           published_at: string | null
           resource_type: string | null
           sdg_ids: string[] | null
@@ -2204,6 +2318,7 @@ export type Database = {
           source_domain: string | null
           source_org_name: string | null
           source_url: string
+          subtitle: string | null
           summary_6th_grade: string
           time_commitment_id: string | null
           time_duration: string | null
@@ -2220,19 +2335,26 @@ export type Database = {
           action_type_ids?: string[] | null
           action_volunteer?: string | null
           audience_segments?: string[] | null
+          author?: string | null
           body?: string | null
           center?: string | null
+          city_slug?: string | null
           classification_reasoning?: string | null
           confidence?: number | null
           content_type?: string | null
+          cost?: string | null
           curator_org_id?: string | null
+          download_url?: string | null
           engagement_level?: string | null
           event_end_date?: string | null
           event_start_date?: string | null
+          expires_at?: string | null
           focus_area_ids?: string[] | null
           fts?: unknown
           geographic_scope?: string | null
           gov_level_id?: string | null
+          hero_quote?: string | null
+          hero_quote_attribution?: string | null
           id?: string
           image_url?: string | null
           inbox_id?: string | null
@@ -2243,8 +2365,10 @@ export type Database = {
           life_situations?: string[] | null
           object_type?: string | null
           org_id?: string | null
+          parent_inbox_id?: string | null
           pathway_primary?: string | null
           pathway_secondary?: string[] | null
+          publication_date?: string | null
           published_at?: string | null
           resource_type?: string | null
           sdg_ids?: string[] | null
@@ -2253,6 +2377,7 @@ export type Database = {
           source_domain?: string | null
           source_org_name?: string | null
           source_url: string
+          subtitle?: string | null
           summary_6th_grade: string
           time_commitment_id?: string | null
           time_duration?: string | null
@@ -2269,19 +2394,26 @@ export type Database = {
           action_type_ids?: string[] | null
           action_volunteer?: string | null
           audience_segments?: string[] | null
+          author?: string | null
           body?: string | null
           center?: string | null
+          city_slug?: string | null
           classification_reasoning?: string | null
           confidence?: number | null
           content_type?: string | null
+          cost?: string | null
           curator_org_id?: string | null
+          download_url?: string | null
           engagement_level?: string | null
           event_end_date?: string | null
           event_start_date?: string | null
+          expires_at?: string | null
           focus_area_ids?: string[] | null
           fts?: unknown
           geographic_scope?: string | null
           gov_level_id?: string | null
+          hero_quote?: string | null
+          hero_quote_attribution?: string | null
           id?: string
           image_url?: string | null
           inbox_id?: string | null
@@ -2292,8 +2424,10 @@ export type Database = {
           life_situations?: string[] | null
           object_type?: string | null
           org_id?: string | null
+          parent_inbox_id?: string | null
           pathway_primary?: string | null
           pathway_secondary?: string[] | null
+          publication_date?: string | null
           published_at?: string | null
           resource_type?: string | null
           sdg_ids?: string[] | null
@@ -2302,6 +2436,7 @@ export type Database = {
           source_domain?: string | null
           source_org_name?: string | null
           source_url?: string
+          subtitle?: string | null
           summary_6th_grade?: string
           time_commitment_id?: string | null
           time_duration?: string | null
@@ -2309,6 +2444,13 @@ export type Database = {
           video_url?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "content_published_city_slug_fkey"
+            columns: ["city_slug"]
+            isOneToOne: false
+            referencedRelation: "cities"
+            referencedColumns: ["city_slug"]
+          },
           {
             foreignKeyName: "content_published_inbox_id_fkey"
             columns: ["inbox_id"]
@@ -2730,11 +2872,48 @@ export type Database = {
           },
         ]
       }
+      domain_profiles: {
+        Row: {
+          content_patterns: Json | null
+          created_at: string | null
+          default_geographic_scope: string | null
+          domain: string
+          last_crawled_at: string | null
+          org_id: string | null
+          org_name: string | null
+          site_type: string | null
+          trust_level: string | null
+        }
+        Insert: {
+          content_patterns?: Json | null
+          created_at?: string | null
+          default_geographic_scope?: string | null
+          domain: string
+          last_crawled_at?: string | null
+          org_id?: string | null
+          org_name?: string | null
+          site_type?: string | null
+          trust_level?: string | null
+        }
+        Update: {
+          content_patterns?: Json | null
+          created_at?: string | null
+          default_geographic_scope?: string | null
+          domain?: string
+          last_crawled_at?: string | null
+          org_id?: string | null
+          org_name?: string | null
+          site_type?: string | null
+          trust_level?: string | null
+        }
+        Relationships: []
+      }
       elected_officials: {
         Row: {
           address: string | null
           bio: string | null
           bioguide_id: string | null
+          city_slug: string | null
           classification_v2: Json | null
           counties_served: string | null
           data_source: string | null
@@ -2765,6 +2944,7 @@ export type Database = {
           address?: string | null
           bio?: string | null
           bioguide_id?: string | null
+          city_slug?: string | null
           classification_v2?: Json | null
           counties_served?: string | null
           data_source?: string | null
@@ -2795,6 +2975,7 @@ export type Database = {
           address?: string | null
           bio?: string | null
           bioguide_id?: string | null
+          city_slug?: string | null
           classification_v2?: Json | null
           counties_served?: string | null
           data_source?: string | null
@@ -2821,7 +3002,15 @@ export type Database = {
           title?: string | null
           website?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "elected_officials_city_slug_fkey"
+            columns: ["city_slug"]
+            isOneToOne: false
+            referencedRelation: "cities"
+            referencedColumns: ["city_slug"]
+          },
+        ]
       }
       election_reminder_log: {
         Row: {
@@ -5084,6 +5273,7 @@ export type Database = {
           registration_url: string | null
           review_status: string | null
           skill_ids: string | null
+          slug: string | null
           spots_available: number | null
           start_date: string | null
           state: string | null
@@ -5113,6 +5303,7 @@ export type Database = {
           registration_url?: string | null
           review_status?: string | null
           skill_ids?: string | null
+          slug?: string | null
           spots_available?: number | null
           start_date?: string | null
           state?: string | null
@@ -5142,6 +5333,7 @@ export type Database = {
           registration_url?: string | null
           review_status?: string | null
           skill_ids?: string | null
+          slug?: string | null
           spots_available?: number | null
           start_date?: string | null
           state?: string | null
@@ -5611,6 +5803,7 @@ export type Database = {
           annual_budget: number | null
           app_store_url: string | null
           city: string | null
+          city_slug: string | null
           classification_v2: Json | null
           county_id: string | null
           crawl_frequency_days: number | null
@@ -5619,18 +5812,21 @@ export type Database = {
           data_source: string | null
           description_5th_grade: string | null
           description_full: string | null
+          district_data: Json | null
           ein: string | null
           email: string | null
           engagement_level: string | null
           entities_found: number | null
           focus_area_ids: string | null
           fts: unknown
+          geocoded_at: string | null
           google_play_url: string | null
           hero_image_url: string | null
           hours_of_operation: Json | null
           irs_subsection: string | null
           is_verified: string | null
           last_crawled_at: string | null
+          last_profiled_at: string | null
           last_updated: string | null
           latitude: number | null
           logo_url: string | null
@@ -5638,14 +5834,18 @@ export type Database = {
           map_link: string | null
           mission_statement: string | null
           ntee_code: string | null
+          objects_cataloged: number | null
           org_id: string
           org_name: string
           org_type: string | null
           pages_found: number | null
+          parent_org_id: string | null
           partner_count: number | null
           people_served: string | null
           phone: string | null
           phone_secondary: string | null
+          profile_completeness: number | null
+          profile_status: string | null
           service_area: string | null
           social_media: Json | null
           state: string | null
@@ -5662,6 +5862,7 @@ export type Database = {
           annual_budget?: number | null
           app_store_url?: string | null
           city?: string | null
+          city_slug?: string | null
           classification_v2?: Json | null
           county_id?: string | null
           crawl_frequency_days?: number | null
@@ -5670,18 +5871,21 @@ export type Database = {
           data_source?: string | null
           description_5th_grade?: string | null
           description_full?: string | null
+          district_data?: Json | null
           ein?: string | null
           email?: string | null
           engagement_level?: string | null
           entities_found?: number | null
           focus_area_ids?: string | null
           fts?: unknown
+          geocoded_at?: string | null
           google_play_url?: string | null
           hero_image_url?: string | null
           hours_of_operation?: Json | null
           irs_subsection?: string | null
           is_verified?: string | null
           last_crawled_at?: string | null
+          last_profiled_at?: string | null
           last_updated?: string | null
           latitude?: number | null
           logo_url?: string | null
@@ -5689,14 +5893,18 @@ export type Database = {
           map_link?: string | null
           mission_statement?: string | null
           ntee_code?: string | null
+          objects_cataloged?: number | null
           org_id: string
           org_name: string
           org_type?: string | null
           pages_found?: number | null
+          parent_org_id?: string | null
           partner_count?: number | null
           people_served?: string | null
           phone?: string | null
           phone_secondary?: string | null
+          profile_completeness?: number | null
+          profile_status?: string | null
           service_area?: string | null
           social_media?: Json | null
           state?: string | null
@@ -5713,6 +5921,7 @@ export type Database = {
           annual_budget?: number | null
           app_store_url?: string | null
           city?: string | null
+          city_slug?: string | null
           classification_v2?: Json | null
           county_id?: string | null
           crawl_frequency_days?: number | null
@@ -5721,18 +5930,21 @@ export type Database = {
           data_source?: string | null
           description_5th_grade?: string | null
           description_full?: string | null
+          district_data?: Json | null
           ein?: string | null
           email?: string | null
           engagement_level?: string | null
           entities_found?: number | null
           focus_area_ids?: string | null
           fts?: unknown
+          geocoded_at?: string | null
           google_play_url?: string | null
           hero_image_url?: string | null
           hours_of_operation?: Json | null
           irs_subsection?: string | null
           is_verified?: string | null
           last_crawled_at?: string | null
+          last_profiled_at?: string | null
           last_updated?: string | null
           latitude?: number | null
           logo_url?: string | null
@@ -5740,14 +5952,18 @@ export type Database = {
           map_link?: string | null
           mission_statement?: string | null
           ntee_code?: string | null
+          objects_cataloged?: number | null
           org_id?: string
           org_name?: string
           org_type?: string | null
           pages_found?: number | null
+          parent_org_id?: string | null
           partner_count?: number | null
           people_served?: string | null
           phone?: string | null
           phone_secondary?: string | null
+          profile_completeness?: number | null
+          profile_status?: string | null
           service_area?: string | null
           social_media?: Json | null
           state?: string | null
@@ -5759,11 +5975,28 @@ export type Database = {
           year_founded?: number | null
           zip_code?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "organizations_city_slug_fkey"
+            columns: ["city_slug"]
+            isOneToOne: false
+            referencedRelation: "cities"
+            referencedColumns: ["city_slug"]
+          },
+          {
+            foreignKeyName: "organizations_parent_org_id_fkey"
+            columns: ["parent_org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["org_id"]
+          },
+        ]
       }
       policies: {
         Row: {
+          authoring_body: string | null
           bill_number: string | null
+          city_slug: string | null
           classification_v2: Json | null
           data_source: string | null
           engagement_level: string | null
@@ -5777,6 +6010,7 @@ export type Database = {
           last_updated: string | null
           level: string | null
           official_ids: string | null
+          org_id: string | null
           policy_id: string
           policy_name: string
           policy_type: string | null
@@ -5789,7 +6023,9 @@ export type Database = {
           title_6th_grade: string | null
         }
         Insert: {
+          authoring_body?: string | null
           bill_number?: string | null
+          city_slug?: string | null
           classification_v2?: Json | null
           data_source?: string | null
           engagement_level?: string | null
@@ -5803,6 +6039,7 @@ export type Database = {
           last_updated?: string | null
           level?: string | null
           official_ids?: string | null
+          org_id?: string | null
           policy_id: string
           policy_name: string
           policy_type?: string | null
@@ -5815,7 +6052,9 @@ export type Database = {
           title_6th_grade?: string | null
         }
         Update: {
+          authoring_body?: string | null
           bill_number?: string | null
+          city_slug?: string | null
           classification_v2?: Json | null
           data_source?: string | null
           engagement_level?: string | null
@@ -5829,6 +6068,7 @@ export type Database = {
           last_updated?: string | null
           level?: string | null
           official_ids?: string | null
+          org_id?: string | null
           policy_id?: string
           policy_name?: string
           policy_type?: string | null
@@ -5840,7 +6080,15 @@ export type Database = {
           summary_6th_grade?: string | null
           title_6th_grade?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "policies_city_slug_fkey"
+            columns: ["city_slug"]
+            isOneToOne: false
+            referencedRelation: "cities"
+            referencedColumns: ["city_slug"]
+          },
+        ]
       }
       policy_action_types: {
         Row: {
@@ -7003,6 +7251,36 @@ export type Database = {
         }
         Relationships: []
       }
+      site_config: {
+        Row: {
+          category: string
+          description: string | null
+          enabled: boolean
+          key: string
+          label: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          category?: string
+          description?: string | null
+          enabled?: boolean
+          key: string
+          label: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          category?: string
+          description?: string | null
+          enabled?: boolean
+          key?: string
+          label?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       skills: {
         Row: {
           description_5th_grade: string | null
@@ -7499,6 +7777,36 @@ export type Database = {
         }
         Relationships: []
       }
+      user_bookmarks: {
+        Row: {
+          content_id: string
+          content_type: string
+          created_at: string
+          id: string
+          image_url: string | null
+          title: string | null
+          user_id: string
+        }
+        Insert: {
+          content_id: string
+          content_type: string
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          title?: string | null
+          user_id: string
+        }
+        Update: {
+          content_id?: string
+          content_type?: string
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          title?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_journeys: {
         Row: {
           description: string | null
@@ -7533,6 +7841,7 @@ export type Database = {
           age_range: string | null
           archetype_id: string | null
           auth_id: string | null
+          avatar_url: string | null
           county_id: string | null
           created_at: string | null
           display_name: string | null
@@ -7556,6 +7865,7 @@ export type Database = {
           age_range?: string | null
           archetype_id?: string | null
           auth_id?: string | null
+          avatar_url?: string | null
           county_id?: string | null
           created_at?: string | null
           display_name?: string | null
@@ -7579,6 +7889,7 @@ export type Database = {
           age_range?: string | null
           archetype_id?: string | null
           auth_id?: string | null
+          avatar_url?: string | null
           county_id?: string | null
           created_at?: string | null
           display_name?: string | null
@@ -7858,6 +8169,7 @@ export type Database = {
           congressional_district: string | null
           county_id: string | null
           neighborhood_id: number | null
+          state_code: string | null
           state_house_district: string | null
           state_senate_district: string | null
           zip_code: number
@@ -7867,6 +8179,7 @@ export type Database = {
           congressional_district?: string | null
           county_id?: string | null
           neighborhood_id?: number | null
+          state_code?: string | null
           state_house_district?: string | null
           state_senate_district?: string | null
           zip_code: number
@@ -7876,6 +8189,7 @@ export type Database = {
           congressional_district?: string | null
           county_id?: string | null
           neighborhood_id?: number | null
+          state_code?: string | null
           state_house_district?: string | null
           state_senate_district?: string | null
           zip_code?: number
@@ -8193,37 +8507,21 @@ export type Database = {
           semantic_score: number
         }[]
       }
-      multi_source_search:
-        | {
-            Args: {
-              match_count?: number
-              query_embedding: string
-              query_text: string
-            }
-            Returns: {
-              content: string
-              metadata: Json
-              score: number
-              source_id: string
-              source_type: string
-              title: string
-            }[]
-          }
-        | {
-            Args: {
-              embedding_text?: string
-              match_count?: number
-              search_query: string
-            }
-            Returns: {
-              content: string
-              metadata: Json
-              score: number
-              source_id: string
-              source_type: string
-              title: string
-            }[]
-          }
+      multi_source_search: {
+        Args: {
+          match_count?: number
+          query_embedding: string
+          query_text: string
+        }
+        Returns: {
+          content: string
+          metadata: Json
+          score: number
+          source_id: string
+          source_type: string
+          title: string
+        }[]
+      }
       text_to_bytea: { Args: { data: string }; Returns: string }
       upsert_translation: {
         Args: {

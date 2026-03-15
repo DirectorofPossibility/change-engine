@@ -68,7 +68,7 @@ export function GoodThingsWidget({ variant = 'card' }: { variant?: 'card' | 'inl
           <FlowerOfLifeIcon size={14} color="#4a2870" />
           <span className="font-display font-bold text-brand-text flex-shrink-0">Three Good Things</span>
           <span className={'text-brand-muted truncate transition-opacity duration-300 italic ' + (fade ? 'opacity-100' : 'opacity-0')}>&ldquo;{thing}&rdquo;</span>
-          {attribution && <span className="text-brand-muted-light text-xs flex-shrink-0">&mdash; {attribution}</span>}
+          {attribution && <span className="text-brand-muted-light text-sm flex-shrink-0">&mdash; {attribution}</span>}
           <Link
             href="/goodthings"
             className="ml-auto flex-shrink-0 px-3 py-1 bg-brand-accent text-white text-[11px] font-bold hover:bg-brand-accent-hover transition-colors"

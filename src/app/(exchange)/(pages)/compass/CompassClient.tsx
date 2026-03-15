@@ -137,7 +137,7 @@ export function CompassClient({
                   {s.num < 3 && <div className="w-8 sm:w-12 h-[2px]" style={{ background: step > s.num ? '#0d1117' : '#dde1e8', transition: 'background 0.2s ease' }} />}
                 </div>
               ))}
-              <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted ml-3">
+              <span className="font-mono text-xs uppercase tracking-[0.15em] text-muted ml-3">
                 {step === 1 ? 'Pick your topics' : step === 2 ? 'Set your location' : 'Choose your style'}
               </span>
             </div>
@@ -145,7 +145,7 @@ export function CompassClient({
 
           {step === 1 && (
             <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted mb-2">Calibrate Your Compass</p>
+              <p className="font-mono text-xs uppercase tracking-[0.15em] text-muted mb-2">Calibrate Your Compass</p>
               <h1 className="font-display text-3xl sm:text-4xl font-bold text-ink leading-tight">What matters to you?</h1>
               <p className="text-base text-muted mt-3 mb-8 leading-relaxed">
                 Pick up to <strong>three threads</strong>. We&rsquo;ll build a guide around the organizations, policies, leaders, and services working on those issues.
@@ -181,7 +181,7 @@ export function CompassClient({
 
           {step === 2 && (
             <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted mb-2">Your Location</p>
+              <p className="font-mono text-xs uppercase tracking-[0.15em] text-muted mb-2">Your Location</p>
               <h1 className="font-display text-3xl sm:text-4xl font-bold text-ink leading-tight">Where are you?</h1>
               <p className="text-base text-muted mt-3 mb-8 leading-relaxed">Your ZIP code connects you to local leaders and services.</p>
               <div className="p-6 bg-white border-2 border-rule">
@@ -197,7 +197,7 @@ export function CompassClient({
 
           {step === 3 && (
             <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted mb-2">Your Style</p>
+              <p className="font-mono text-xs uppercase tracking-[0.15em] text-muted mb-2">Your Style</p>
               <h1 className="font-display text-3xl sm:text-4xl font-bold text-ink leading-tight">How do you engage?</h1>
               <p className="text-base text-muted mt-3 mb-8 leading-relaxed">No wrong answer — this helps us prioritize what we show you.</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -260,7 +260,7 @@ export function CompassClient({
         <div className="max-w-[760px] mx-auto px-4 sm:px-6 pt-10 pb-6">
           <div className="flex items-start justify-between gap-6">
             <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted mb-3">Your Civic Compass</p>
+              <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted mb-3">Your Civic Compass</p>
               <h1 className="font-display text-3xl sm:text-[2.5rem] font-bold text-ink leading-[1.1]">
                 {greeting}, {neighborhoodName || 'Houston'}
               </h1>
@@ -285,7 +285,7 @@ export function CompassClient({
             </div>
             <div className="hidden sm:flex flex-col items-center gap-2 flex-shrink-0 pt-2">
               <FlowerOfLife size={64} color="#0d1117" opacity={0.06} />
-              <button onClick={() => { setEditing(true); setStep(1) }} className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.08em] text-blue hover:underline">
+              <button onClick={() => { setEditing(true); setStep(1) }} className="inline-flex items-center gap-1 font-mono text-xs uppercase tracking-[0.08em] text-blue hover:underline">
                 <Settings2 size={11} /> Edit
               </button>
             </div>
@@ -308,7 +308,7 @@ export function CompassClient({
                 <a
                   key={js.num}
                   href={'#step-' + js.num}
-                  className={'flex items-center gap-2 px-3 py-3.5 font-mono text-[10px] uppercase tracking-[0.08em] border-b-2 transition-colors whitespace-nowrap ' + (hasContent ? 'text-ink border-transparent hover:border-ink' : 'text-faint border-transparent')}
+                  className={'flex items-center gap-2 px-3 py-3.5 font-mono text-xs uppercase tracking-[0.08em] border-b-2 transition-colors whitespace-nowrap ' + (hasContent ? 'text-ink border-transparent hover:border-ink' : 'text-faint border-transparent')}
                 >
                   <span className="w-5 h-5 flex items-center justify-center text-[9px] font-bold flex-shrink-0" style={{ background: hasContent ? js.color : '#dde1e8', color: '#fff' }}>{js.num}</span>
                   {js.name}
@@ -335,7 +335,7 @@ export function CompassClient({
                 <h2 className="font-display text-lg font-bold text-ink">Understand</h2>
                 <p className="text-[12px] text-muted">The latest from your pathways — news, analysis, and context.</p>
               </div>
-              <Link href="/news" className="font-mono text-[10px] uppercase tracking-[0.1em] text-blue hover:underline inline-flex items-center gap-1">Explore <ArrowRight size={10} /></Link>
+              <Link href="/news" className="font-mono text-xs uppercase tracking-[0.1em] text-blue hover:underline inline-flex items-center gap-1">Explore <ArrowRight size={10} /></Link>
             </div>
 
             {/* Compact highlight cards — 2 column */}
@@ -354,7 +354,7 @@ export function CompassClient({
                     <div className="flex-1 min-w-0">
                       {theme && <span className="font-mono text-[9px] uppercase tracking-[0.1em] block mb-0.5" style={{ color: theme.color }}>{theme.name}</span>}
                       <span className="block text-[13px] font-bold text-ink group-hover:text-blue leading-snug line-clamp-2">{c.title_6th_grade}</span>
-                      <span className="block text-[10px] text-faint mt-0.5 font-mono">{c.source_org_name}</span>
+                      <span className="block text-xs text-faint mt-0.5 font-mono">{c.source_org_name}</span>
                     </div>
                   </Link>
                 )
@@ -376,7 +376,7 @@ export function CompassClient({
                 <h2 className="font-display text-xl font-bold text-ink">Discover Who&rsquo;s Doing the Work</h2>
                 <p className="text-[12px] text-muted">Organizations in Houston aligned with your pathways. Start here.</p>
               </div>
-              <Link href="/organizations" className="font-mono text-[10px] uppercase tracking-[0.1em] text-blue hover:underline inline-flex items-center gap-1">All orgs <ArrowRight size={10} /></Link>
+              <Link href="/organizations" className="font-mono text-xs uppercase tracking-[0.1em] text-blue hover:underline inline-flex items-center gap-1">All orgs <ArrowRight size={10} /></Link>
             </div>
 
             <p className="text-[14px] text-muted mb-5 leading-relaxed pl-11">
@@ -425,7 +425,7 @@ export function CompassClient({
                           )}
 
                           {/* Meta row */}
-                          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3 font-mono text-[10px] text-faint">
+                          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3 font-mono text-xs text-faint">
                             {org.city && <span className="inline-flex items-center gap-1"><MapPin size={10} /> {org.city}</span>}
                             {org.phone && <span className="inline-flex items-center gap-1"><Phone size={10} /> {org.phone}</span>}
                             {org.website && <span className="text-blue inline-flex items-center gap-1"><ExternalLink size={10} /> Website</span>}
@@ -455,10 +455,10 @@ export function CompassClient({
           <section id="step-3" className="bg-white border-2 border-rule p-6">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-7 h-7 flex items-center justify-center flex-shrink-0" style={{ background: JOURNEY_STEPS[2].color }}>
-                <span className="text-white text-[10px] font-bold font-mono">3</span>
+                <span className="text-white text-xs font-bold font-mono">3</span>
               </div>
               <h2 className="font-display text-base font-bold text-ink flex-1">Access Help &amp; Resources</h2>
-              <Link href="/services" className="font-mono text-[10px] uppercase tracking-[0.1em] text-blue hover:underline inline-flex items-center gap-1">All services <ArrowRight size={10} /></Link>
+              <Link href="/services" className="font-mono text-xs uppercase tracking-[0.1em] text-blue hover:underline inline-flex items-center gap-1">All services <ArrowRight size={10} /></Link>
             </div>
             <p className="text-[12px] text-muted mb-4 leading-relaxed">Free and low-cost services{zip ? ` near ZIP ${zip}` : ' in Houston'}, aligned with your topics.</p>
 
@@ -471,7 +471,7 @@ export function CompassClient({
                       <span className="text-[13px] font-bold text-ink group-hover:text-blue truncate block">{svc.service_name}</span>
                       {svc.description_5th_grade && <span className="text-[11px] text-muted line-clamp-1 block">{svc.description_5th_grade}</span>}
                     </div>
-                    {svc.phone && <span className="font-mono text-[10px] text-faint flex-shrink-0 hidden sm:block">{svc.phone}</span>}
+                    {svc.phone && <span className="font-mono text-xs text-faint flex-shrink-0 hidden sm:block">{svc.phone}</span>}
                   </Link>
                 )
               })}
@@ -499,8 +499,8 @@ export function CompassClient({
               {guidePolicies.length > 0 && (
                 <div className="bg-white border-2 border-rule p-5">
                   <div className="flex items-center justify-between mb-3">
-                    <h3 className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted font-bold">Policies to Watch</h3>
-                    <Link href="/policies" className="font-mono text-[10px] uppercase tracking-[0.08em] text-blue hover:underline">All</Link>
+                    <h3 className="font-mono text-xs uppercase tracking-[0.15em] text-muted font-bold">Policies to Watch</h3>
+                    <Link href="/policies" className="font-mono text-xs uppercase tracking-[0.08em] text-blue hover:underline">All</Link>
                   </div>
                   <div className="space-y-3">
                     {guidePolicies.slice(0, 4).map(function (p: any) {
@@ -524,8 +524,8 @@ export function CompassClient({
               {guideOfficials.length > 0 && (
                 <div className="bg-white border-2 border-rule p-5">
                   <div className="flex items-center justify-between mb-3">
-                    <h3 className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted font-bold">Who&rsquo;s Accountable</h3>
-                    <Link href="/officials" className="font-mono text-[10px] uppercase tracking-[0.08em] text-blue hover:underline">All</Link>
+                    <h3 className="font-mono text-xs uppercase tracking-[0.15em] text-muted font-bold">Who&rsquo;s Accountable</h3>
+                    <Link href="/officials" className="font-mono text-xs uppercase tracking-[0.08em] text-blue hover:underline">All</Link>
                   </div>
                   <div className="space-y-3">
                     {['City', 'County', 'State', 'Federal'].map(function (level) {
@@ -551,7 +551,7 @@ export function CompassClient({
                                 </Link>
                               )
                             })}
-                            {group.length > 4 && <span className="text-[10px] text-faint self-center font-mono">+{group.length - 4}</span>}
+                            {group.length > 4 && <span className="text-xs text-faint self-center font-mono">+{group.length - 4}</span>}
                           </div>
                         </div>
                       )
@@ -570,10 +570,10 @@ export function CompassClient({
           <section id="step-5" className="bg-white border-2 border-rule p-6">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-7 h-7 flex items-center justify-center flex-shrink-0" style={{ background: JOURNEY_STEPS[4].color }}>
-                <span className="text-white text-[10px] font-bold font-mono">5</span>
+                <span className="text-white text-xs font-bold font-mono">5</span>
               </div>
               <h2 className="font-display text-base font-bold text-ink flex-1">Show Up</h2>
-              <Link href="/opportunities" className="font-mono text-[10px] uppercase tracking-[0.1em] text-blue hover:underline inline-flex items-center gap-1">All <ArrowRight size={10} /></Link>
+              <Link href="/opportunities" className="font-mono text-xs uppercase tracking-[0.1em] text-blue hover:underline inline-flex items-center gap-1">All <ArrowRight size={10} /></Link>
             </div>
 
             <div className="divide-y divide-rule">
@@ -585,13 +585,13 @@ export function CompassClient({
                     </div>
                     <div className="flex-1 min-w-0">
                       <Link href={'/opportunities/' + evt.opportunity_id} className="text-[13px] font-bold text-ink hover:text-blue leading-snug block">{evt.opportunity_name}</Link>
-                      <span className="font-mono text-[10px] text-muted mt-0.5 block">
+                      <span className="font-mono text-xs text-muted mt-0.5 block">
                         {evt.start_date && new Date(evt.start_date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
                         {evt.city && <> · {evt.city}</>}
                         {evt.is_virtual && ' · Virtual'}
                       </span>
                       {evt.registration_url && (
-                        <a href={evt.registration_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.08em] text-blue hover:underline mt-1">
+                        <a href={evt.registration_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 font-mono text-xs uppercase tracking-[0.08em] text-blue hover:underline mt-1">
                           Register <ExternalLink size={9} />
                         </a>
                       )}
@@ -616,7 +616,7 @@ export function CompassClient({
 
         {/* ── 24/7 Hotlines ── */}
         <div className="border-t border-rule pt-8">
-          <p className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted font-bold mb-3">24/7 Lines — Always Available</p>
+          <p className="font-mono text-xs uppercase tracking-[0.15em] text-muted font-bold mb-3">24/7 Lines — Always Available</p>
           <div className="flex flex-wrap gap-x-6 gap-y-1 font-mono text-[11px] text-muted">
             <span>Crisis: <strong className="text-ink">988</strong></span>
             <span>City: <strong className="text-ink">311</strong></span>

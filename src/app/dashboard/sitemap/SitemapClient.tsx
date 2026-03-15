@@ -447,7 +447,7 @@ function TreeNode({ node, depth = 0 }: { node: RouteNode; depth?: number }) {
           <code className="text-[11px] text-brand-muted bg-brand-bg px-1.5 py-0.5 rounded ml-1">{node.path}</code>
         )}
         {node.dynamic && (
-          <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 font-medium ml-1">dynamic</span>
+          <span className="text-xs px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 font-medium ml-1">dynamic</span>
         )}
         {node.description && (
           <span className="text-xs text-brand-muted ml-auto hidden sm:inline">{node.description}</span>

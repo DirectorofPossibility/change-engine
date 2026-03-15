@@ -19,7 +19,7 @@ export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Who Represents You — Change Engine',
-  description: 'Find your elected officials at every level of government in Houston, Texas.',
+  description: 'Find your elected officials at every level of government — from city hall to the Capitol.',
 }
 
 export default async function OfficialsPage() {

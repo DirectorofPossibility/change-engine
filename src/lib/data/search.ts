@@ -28,6 +28,8 @@ export interface TaxonomyFilter {
   gov_level?: string // gov_level_id
   action_type?: string // action_type_id
   time?: string     // time_id
+  ntee?: string     // ntee_code
+  airs?: string     // airs_code
 }
 
 /**
@@ -96,6 +98,18 @@ export async function searchByTaxonomy(filter: TaxonomyFilter): Promise<SearchRe
   if (filter.time) {
     // Time commitment is stored on opportunities, not content
     // For now just return empty for this filter type
+  }
+
+  if (filter.ntee) {
+    // NTEE code is stored directly on organizations table
+    const { data } = await supabase.from('organizations').select('org_id').eq('ntee_code', filter.ntee)
+    data?.forEach(r => orgIds.add(r.org_id))
+  }
+
+  if (filter.airs) {
+    // AIRS codes stored as text on services_211 table
+    const { data } = await supabase.from('services_211').select('service_id').eq('airs_codes', filter.airs)
+    data?.forEach(r => serviceIds.add(r.service_id))
   }
 
   // Fetch full entities for all collected IDs

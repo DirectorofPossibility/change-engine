@@ -84,7 +84,7 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
-          <p style={{ fontSize: '0.7rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
+          <p style={{ fontSize: '0.875rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
             The Change Engine
           </p>
           <h1 style={{ fontSize: '2.2rem', lineHeight: 1.15, marginTop: '0.75rem' }}>
@@ -100,7 +100,7 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
 
       {/* Breadcrumb */}
       <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontSize: '0.7rem', color: "#5c6474" }}>
+        <nav style={{ fontSize: '0.875rem', color: "#5c6474" }}>
           <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
           <Link href="/help" className="hover:underline" style={{ color: "#1b5e8a" }}>Available Resources</Link>
@@ -114,7 +114,7 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
         {isCritical && (
           <div className="p-4 mb-6" style={{ border: '1px solid #c00', background: '#fef2f2' }}>
             <p style={{ fontSize: '0.9rem', fontWeight: 600, color: '#991b1b', marginBottom: '0.25rem' }}>Crisis Resources</p>
-            <p style={{ fontSize: '0.85rem', color: '#b91c1c' }}>
+            <p style={{ fontSize: '0.875rem', color: '#b91c1c' }}>
               Call <a href="tel:911" className="font-bold underline">911</a> for emergencies &bull;{' '}
               <a href="tel:988" className="font-bold underline">988</a> for mental health crisis &bull;{' '}
               <a href="tel:1-800-799-7233" className="font-bold underline">1-800-799-7233</a> for domestic violence
@@ -132,7 +132,7 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
               <h2 style={{ fontSize: '1.5rem',  }}>Related Resources</h2>
             </div>
             <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '0.5rem' }} />
-            <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{content.length} resources</span>
+            <span style={{ fontSize: '0.875rem', color: "#5c6474" }}>{content.length} resources</span>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
               {content.map(function (item) {
                 const ct = item.inbox_id ? contentTranslations[item.inbox_id] : undefined
@@ -166,7 +166,7 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
               <h2 style={{ fontSize: '1.5rem',  }}>Services</h2>
             </div>
             <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '0.5rem' }} />
-            <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{services.length} services</span>
+            <span style={{ fontSize: '0.875rem', color: "#5c6474" }}>{services.length} services</span>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
               {services.map(function (svc: any) {
                 const st = serviceTranslations[svc.service_id]
@@ -198,7 +198,7 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
               <h2 style={{ fontSize: '1.5rem',  }}>Opportunities</h2>
             </div>
             <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '0.5rem' }} />
-            <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{opportunities.length} opportunities</span>
+            <span style={{ fontSize: '0.875rem', color: "#5c6474" }}>{opportunities.length} opportunities</span>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
               {opportunities.map(function (o) {
                 const ot = opportunityTranslations[o.opportunity_id]
@@ -230,7 +230,7 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
               <h2 style={{ fontSize: '1.5rem',  }}>Related Policies</h2>
             </div>
             <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '0.5rem' }} />
-            <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>{policies.length} policies</span>
+            <span style={{ fontSize: '0.875rem', color: "#5c6474" }}>{policies.length} policies</span>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
               {policies.map(function (p) {
                 const pt = policyTranslations[p.policy_id]
@@ -259,7 +259,7 @@ export default async function HelpDetailPage({ params }: { params: Promise<{ slu
               <h2 style={{ fontSize: '1.5rem',  }}>Learning Path</h2>
             </div>
             <div style={{ height: 1, borderBottom: '1px dotted ' + '#dde1e8', marginBottom: '0.5rem' }} />
-            <span style={{ fontSize: '0.7rem', color: "#5c6474" }}>1 path</span>
+            <span style={{ fontSize: '0.875rem', color: "#5c6474" }}>1 path</span>
             <div className="max-w-md mt-4">
               <Link href={'/learn/' + ((relatedPath as any).slug || relatedPath.path_id)}>
                 <LearningPathCard

@@ -86,7 +86,7 @@ export default async function CollectionDetailPage({ params }: { params: Promise
           <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
         </div>
         <div className="max-w-[900px] mx-auto px-6 py-16 relative z-10">
-          <p style={{ fontSize: '0.7rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
+          <p style={{ fontSize: '0.875rem', letterSpacing: '0.15em', color: "#5c6474", textTransform: 'uppercase' }}>
             The Change Engine
           </p>
           <h1 style={{ fontSize: '2.2rem', lineHeight: 1.15, marginTop: '0.75rem' }}>
@@ -98,14 +98,14 @@ export default async function CollectionDetailPage({ params }: { params: Promise
             </p>
           )}
           {items.length > 0 && (
-            <span style={{ fontSize: '0.7rem', color: "#5c6474", marginTop: '1rem', display: 'block' }}>{items.length} Resources</span>
+            <span style={{ fontSize: '0.875rem', color: "#5c6474", marginTop: '1rem', display: 'block' }}>{items.length} Resources</span>
           )}
         </div>
       </div>
 
       {/* Breadcrumb */}
       <div className="max-w-[900px] mx-auto px-6 pt-6">
-        <nav style={{ fontSize: '0.7rem', color: "#5c6474" }}>
+        <nav style={{ fontSize: '0.875rem', color: "#5c6474" }}>
           <Link href="/" className="hover:underline" style={{ color: "#1b5e8a" }}>Home</Link>
           <span className="mx-2">/</span>
           <Link href="/collections" className="hover:underline" style={{ color: "#1b5e8a" }}>Collections</Link>
@@ -151,10 +151,10 @@ export default async function CollectionDetailPage({ params }: { params: Promise
                           {title}
                         </h3>
                         {summary && (
-                          <p style={{ fontSize: '0.85rem', color: "#5c6474", marginTop: '0.25rem' }} className="line-clamp-2">{summary}</p>
+                          <p style={{ fontSize: '0.875rem', color: "#5c6474", marginTop: '0.25rem' }} className="line-clamp-2">{summary}</p>
                         )}
                         {item.source_url && (
-                          <div className="flex items-center gap-1 mt-2" style={{ fontSize: '0.65rem', color: "#5c6474" }}>
+                          <div className="flex items-center gap-1 mt-2" style={{ fontSize: '0.875rem', color: "#5c6474" }}>
                             <ExternalLink size={10} />
                             <span className="truncate">{new URL(item.source_url).hostname.replace('www.', '')}</span>
                           </div>
@@ -200,7 +200,7 @@ export default async function CollectionDetailPage({ params }: { params: Promise
                               {title}
                             </h3>
                             {summary && (
-                              <p style={{ fontSize: '0.85rem', color: "#5c6474", marginTop: '0.25rem' }} className="line-clamp-2">{summary}</p>
+                              <p style={{ fontSize: '0.875rem', color: "#5c6474", marginTop: '0.25rem' }} className="line-clamp-2">{summary}</p>
                             )}
                           </div>
                         </div>
