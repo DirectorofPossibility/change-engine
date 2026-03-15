@@ -9,6 +9,7 @@ import { InteractiveMap } from '@/components/maps/dynamic'
 import { GEO_LAYERS } from '@/lib/constants'
 import { getLangId, fetchTranslationsForTable, getWayfinderContext, getRandomQuote } from '@/lib/data/exchange'
 import { getRelatedServices } from '@/lib/data/services'
+import { getRelatedContentForGuide } from '@/lib/data/content'
 import { getUserProfile } from '@/lib/auth/roles'
 import { getLibraryNuggets } from '@/lib/data/library'
 import { LibraryNugget } from '@/components/exchange/LibraryNugget'
@@ -102,11 +103,12 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
   const displayDesc = translatedDesc || service.description_5th_grade
 
   const userProfile = await getUserProfile()
-  const [wayfinderData, quote, libraryNuggets, focusRelatedServices] = await Promise.all([
+  const [wayfinderData, quote, libraryNuggets, focusRelatedServices, relatedContent] = await Promise.all([
     getWayfinderContext('service', id, userProfile?.role),
     getRandomQuote(primaryTheme ? primaryTheme[0] : undefined),
     getLibraryNuggets([], focusIds, 3),
     getRelatedServices(focusIds),
+    getRelatedContentForGuide(focusIds),
   ])
 
   const allRelated = [...relatedServices]
@@ -215,18 +217,32 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
 
             </div>
 
-            {/* Org logo */}
-            {org?.logo_url && (
-              <div className="w-full lg:w-[280px] flex-shrink-0 rounded-2xl overflow-hidden shadow-2xl border-[3px] border-white/30 bg-white/10 flex items-center justify-center p-6">
-                <Image
-                  src={org.logo_url}
-                  alt={org.org_name}
-                  className="max-w-full max-h-[180px] w-auto h-auto object-contain"
-                  width={280}
-                  height={180}
-                />
+            {/* Org logo + big CTAs */}
+            <div className="w-full lg:w-[320px] flex-shrink-0 flex flex-col items-center gap-4">
+              {org?.logo_url && (
+                <div className="rounded-2xl overflow-hidden shadow-2xl border-[3px] border-white/30 bg-white/10 flex items-center justify-center p-8 w-full">
+                  <Image
+                    src={org.logo_url}
+                    alt={org.org_name || ''}
+                    className="max-w-full max-h-[240px] w-auto h-auto object-contain"
+                    width={320}
+                    height={240}
+                  />
+                </div>
+              )}
+              <div className="flex flex-col gap-2 w-full">
+                {service.phone && (
+                  <a href={'tel:' + service.phone} className="flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl text-base font-bold text-white transition-all hover:scale-[1.02] hover:shadow-lg" style={{ background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(8px)' }}>
+                    <Phone size={18} /> Call for locations
+                  </a>
+                )}
+                {service.website && (
+                  <a href={service.website} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl text-base font-bold text-white transition-all hover:scale-[1.02] hover:shadow-lg" style={{ background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(8px)' }}>
+                    <Globe size={18} /> Visit website for locations
+                  </a>
+                )}
               </div>
-            )}
+            </div>
           </div>
         </div>
       </section>
@@ -340,6 +356,38 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
                   </div>
                   <div className="h-[3px] mb-3" style={{ background: `${themeColor}30` }} />
                   <LibraryNugget nuggets={libraryNuggets} variant="section" color={themeColor} labels={{ goDeeper: t('detail.go_deeper') }} />
+                </section>
+              )}
+
+              {/* Related Content from the Library */}
+              {relatedContent.length > 0 && (
+                <section className="mb-10">
+                  <div className="flex items-baseline justify-between">
+                    <h2 className="font-display text-2xl font-bold" style={{ color: INK }}>From the Library</h2>
+                    <Link href="/resources" className="inline-flex items-center gap-1 hover:underline text-sm font-medium" style={{ color: themeColor }}>
+                      Browse all <ArrowRight size={11} />
+                    </Link>
+                  </div>
+                  <div className="h-[3px] mb-3" style={{ background: `${themeColor}30` }} />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {relatedContent.slice(0, 4).map(function (item) {
+                      return (
+                        <Link key={item.id} href={'/content/' + item.id}
+                          className="block rounded-xl border-2 overflow-hidden transition-all hover:-translate-y-0.5 hover:shadow-md"
+                          style={{ borderColor: `${themeColor}25` }}>
+                          {item.image_url && (
+                            <div className="h-32 overflow-hidden">
+                              <Image src={item.image_url} alt="" width={400} height={128} className="w-full h-full object-cover" />
+                            </div>
+                          )}
+                          <div className="p-4" style={{ background: `${themeColor}05` }}>
+                            <span className="block font-bold text-base mb-1" style={{ color: INK }}>{item.title_6th_grade}</span>
+                            {item.summary_6th_grade && <span className="block text-sm line-clamp-2" style={{ color: DIM }}>{item.summary_6th_grade}</span>}
+                          </div>
+                        </Link>
+                      )
+                    })}
+                  </div>
                 </section>
               )}
 

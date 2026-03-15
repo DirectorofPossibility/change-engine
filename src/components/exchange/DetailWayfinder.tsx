@@ -161,11 +161,11 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole, 
     data.content.length + data.libraryNuggets.length +
     data.opportunities.length + data.services.length +
     data.officials.length + data.policies.length +
-    data.foundations.length + data.organizations.length
+    data.organizations.length
 
   const exploreCount = newsContent.length + data.libraryNuggets.length
   const actionCount = data.opportunities.length + data.services.length + eventContent.length
-  const accountabilityCount = data.officials.length + data.policies.length + data.foundations.length
+  const accountabilityCount = data.officials.length + data.policies.length
 
   return (
     <aside
@@ -451,17 +451,6 @@ export async function DetailWayfinder({ data, currentType, currentId, userRole, 
                   icon={<Scale size={13} className="text-blue-500" />}
                   label={p.title_6th_grade || p.policy_name}
                   meta={[p.bill_number, p.status].filter(Boolean).join(' · ') || undefined}
-                />
-              )
-            })}
-            {data.foundations.slice(0, 3).map(function (f) {
-              return (
-                <ActionRow
-                  key={f.foundation_id}
-                  href={f.website || '#'}
-                  icon={<Gift size={13} className="text-blue-400" />}
-                  label={f.name}
-                  external={!!f.website}
                 />
               )
             })}
