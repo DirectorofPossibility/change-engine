@@ -45,15 +45,21 @@ export const getExchangeStats = cache(async function getExchangeStats(): Promise
  */
 export const getCenterCounts = cache(async function getCenterCounts(): Promise<Record<string, number>> {
   const supabase = await createClient()
-  const { data } = await supabase
-    .from('content_published')
-    .select('center')
-    .eq('is_active', true)
+  // Fetch only distinct center values with head-only counts to avoid downloading all rows
+  const centers = ['Learning', 'Action', 'Resource', 'Accountability']
+  const results = await Promise.all(
+    centers.map(center =>
+      supabase
+        .from('content_published')
+        .select('id', { count: 'exact', head: true })
+        .eq('is_active', true)
+        .eq('center', center)
+    )
+  )
   const counts: Record<string, number> = {}
-  data?.forEach((item) => {
-    if (item.center) {
-      counts[item.center] = (counts[item.center] || 0) + 1
-    }
+  centers.forEach((center, i) => {
+    const c = results[i].count ?? 0
+    if (c > 0) counts[center] = c
   })
   return counts
 })

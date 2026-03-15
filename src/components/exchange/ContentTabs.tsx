@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import {
   BookOpen, Users, Megaphone, GraduationCap, Rocket,
   ArrowRight, Globe, ExternalLink, BookMarked, Wrench,
@@ -209,7 +210,7 @@ function PeopleTab({ orgData, relatedServices, relatedContent, themeColor }: Con
           <Link href={'/organizations/' + orgData.org_id} className="flex items-start gap-5 p-5 border border-rule hover:shadow-lg transition-all group bg-white">
             <div className="w-16 h-16 flex items-center justify-center flex-shrink-0" style={{ background: themeColor + '12' }}>
               {orgData.logo_url ? (
-                <img src={orgData.logo_url} alt="" className="w-full h-full object-contain p-1" />
+                <Image src={orgData.logo_url} alt="" width={64} height={64} className="w-full h-full object-contain p-1" />
               ) : (
                 <Users size={28} style={{ color: themeColor }} />
               )}
@@ -256,7 +257,7 @@ function PeopleTab({ orgData, relatedServices, relatedContent, themeColor }: Con
                 <Link key={r.id} href={'/content/' + r.id} className="p-4 border border-rule hover:shadow-md transition-all group bg-white">
                   {r.image_url && (
                     <div className="w-full h-24 mb-3 overflow-hidden bg-paper">
-                      <img src={r.image_url} alt="" className="w-full h-full object-cover" />
+                      <Image src={r.image_url} alt="" width={200} height={96} className="w-full h-full object-cover" />
                     </div>
                   )}
                   <span className="text-sm font-bold text-ink group-hover:text-blue block line-clamp-2">{r.title_6th_grade}</span>
@@ -330,7 +331,7 @@ function ShowUpTab({ opportunities, actionItems, themeColor, typedContent }: Con
                 >
                   {c.image_url ? (
                     <div className="w-16 h-16 flex-shrink-0 overflow-hidden bg-paper">
-                      <img src={c.image_url} alt="" className="w-full h-full object-cover" />
+                      <Image src={c.image_url} alt="" width={64} height={64} className="w-full h-full object-cover" />
                     </div>
                   ) : (
                     <div className="w-16 h-16 flex items-center justify-center flex-shrink-0" style={{ background: themeColor + '10' }}>
@@ -411,7 +412,7 @@ function DeeperTab({ relatedPolicies, libraryNuggets, programs, relatedBooks, th
                 >
                   {book.cover_image_url ? (
                     <div className="w-20 h-28 mb-3 overflow-hidden shadow-md">
-                      <img src={book.cover_image_url} alt="" className="w-full h-full object-cover" />
+                      <Image src={book.cover_image_url} alt="" width={80} height={112} className="w-full h-full object-cover" />
                     </div>
                   ) : (
                     <div className="w-20 h-28 mb-3 flex items-center justify-center bg-amber-50">
@@ -519,7 +520,7 @@ function MoveTab({ responsibleOfficials, relatedPolicies, themeColor }: ContentT
                 >
                   <div className="w-14 h-14 overflow-hidden flex-shrink-0 rounded-full border-2 border-rule">
                     {o.photo_url ? (
-                      <img src={o.photo_url} alt="" className="w-full h-full object-cover" />
+                      <Image src={o.photo_url} alt="" width={56} height={56} className="w-full h-full object-cover" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-base font-bold" style={{ color: themeColor, background: themeColor + '15' }}>
                         {o.official_name?.charAt(0)}

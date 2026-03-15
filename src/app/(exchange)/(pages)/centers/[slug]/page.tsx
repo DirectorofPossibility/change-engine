@@ -636,7 +636,7 @@ async function AccountabilityCenter({ meta, centerColor }: { meta: typeof CENTER
                   >
                     {c.image_url ? (
                       <div className="w-full h-36 overflow-hidden" style={{ borderBottom: `1px solid ${'#dde1e8'}` }}>
-                        <img src={c.image_url} alt="" className="w-full h-full object-cover" />
+                        <Image src={c.image_url} alt="" width={400} height={144} className="w-full h-full object-cover" />
                       </div>
                     ) : (
                       <div className="w-full h-2" style={{ background: pw?.color || centerColor }} />

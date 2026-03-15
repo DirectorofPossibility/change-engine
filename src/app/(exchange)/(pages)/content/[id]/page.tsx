@@ -17,6 +17,7 @@ import type { EditField } from '@/components/exchange/AdminEditPanel'
 import { SpiralTracker } from '@/components/exchange/SpiralTracker'
 import { ContentImage } from '@/components/exchange/ContentImage'
 import { articleJsonLd } from '@/lib/jsonld'
+import { getLinkableEntities, linkEntities, smartParagraphs } from '@/lib/data/entity-linker'
 import { FlowerOfLife } from '@/components/geo/sacred'
 import { CollapsibleSidebarSection } from '@/components/exchange/CollapsibleSidebarSection'
 import { BookmarkButton } from '@/components/exchange/BookmarkButton'
@@ -314,7 +315,10 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
   const themeColor = themeEntry?.color || '#1b5e8a'
 
   const bodyText = sanitizeBody(translatedBody || item.body || '')
-  const bodyBlocks = bodyText.split(/\n\n+/).map(function (b) { return b.trim() }).filter(Boolean)
+  const bodyBlocks = smartParagraphs(bodyText)
+
+  // Fetch linkable entities for auto-linking org names, officials, neighborhoods
+  const linkableEntities = await getLinkableEntities()
 
   // Build body HTML for ContentTabs
   const bodyHtml = bodyBlocks.map(function (block) {
@@ -327,11 +331,22 @@ export default async function ContentDetailPage({ params }: { params: Promise<{ 
     if (block.match(/^[-\u2022*] /m)) {
       const items = block.split(/\n/).filter(function (l) { return l.trim() })
       return '<ul class="space-y-2 my-4 list-disc list-inside">' + items.map(function (li) {
-        return '<li class="text-ink leading-relaxed">' + li.replace(/^[-\u2022*]\s*/, '').trim() + '</li>'
+        return '<li class="text-ink leading-relaxed">' + linkEntities(li.replace(/^[-\u2022*]\s*/, '').trim(), linkableEntities) + '</li>'
       }).join('') + '</ul>'
     }
-    // Bold parsing
-    const processed = block.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    // Bold parsing then entity linking
+    let processed = block.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    // Only apply entity linking to blocks that don't already contain HTML tags (from bold)
+    if (!processed.includes('<strong>')) {
+      processed = linkEntities(processed, linkableEntities)
+    } else {
+      // For blocks with bold, link entities in the non-bold parts
+      const parts = processed.split(/(<strong>[^<]+<\/strong>)/)
+      processed = parts.map(function (part) {
+        if (part.startsWith('<strong>')) return part
+        return linkEntities(part, linkableEntities)
+      }).join('')
+    }
     return '<p class="text-ink leading-relaxed mb-4" style="font-size:1.0625rem;line-height:1.85">' + processed + '</p>'
   }).join('\n')
 

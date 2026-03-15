@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { FolFallback } from '@/components/ui/FolFallback'
 
 interface NewsItem {
@@ -46,7 +47,7 @@ export function HomeNewsFeed({ newsFeed, latestContent }: HomeNewsFeedProps) {
               <Link href={'/content/' + newsFeed[0].id} className="group block">
                 <div className="mb-5 overflow-hidden">
                   {newsFeed[0].image_url ? (
-                    <img src={newsFeed[0].image_url} alt="" className="w-full object-cover max-h-[340px]" />
+                    <Image src={newsFeed[0].image_url} alt="" width={720} height={340} className="w-full object-cover max-h-[340px]" />
                   ) : (
                     <FolFallback pathway={newsFeed[0].pathway_primary} size="hero" />
                   )}
@@ -88,7 +89,7 @@ export function HomeNewsFeed({ newsFeed, latestContent }: HomeNewsFeedProps) {
                   )}
                 </div>
                 {item.image_url ? (
-                  <img src={item.image_url} alt="" className="w-[72px] h-[72px] object-cover shrink-0" />
+                  <Image src={item.image_url} alt="" width={72} height={72} className="w-[72px] h-[72px] object-cover shrink-0" />
                 ) : (
                   <div className="w-[72px] h-[72px] shrink-0 overflow-hidden">
                     <FolFallback pathway={item.pathway_primary} height="h-full" />
@@ -145,7 +146,7 @@ export function HomeNewsFeed({ newsFeed, latestContent }: HomeNewsFeedProps) {
                     )}
                   </div>
                   {item.image_url ? (
-                    <img src={item.image_url as string} alt="" className="w-20 h-20 object-cover shrink-0" />
+                    <Image src={item.image_url as string} alt="" width={80} height={80} className="w-20 h-20 object-cover shrink-0" />
                   ) : (
                     <div className="w-20 h-20 shrink-0 overflow-hidden">
                       <FolFallback pathway={item.pathway_primary} height="h-full" />

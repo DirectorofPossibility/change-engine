@@ -1,33 +1,54 @@
 /**
- * @fileoverview Next.js middleware for Supabase auth session management.
+ * @fileoverview Next.js middleware for auth + feature-flag gating.
  *
- * Runs on every request that matches the `config.matcher` patterns
- * (`/dashboard/*` and `/me/*`). The middleware:
- *
- * 1. Creates a Supabase server client backed by request cookies so that the
- *    auth session is refreshed transparently on each navigation.
- * 2. Calls `supabase.auth.getUser()` to verify the session.
- * 3. Redirects unauthenticated users to `/login` with a `redirect` search
- *    param so they can be returned to the originally requested page.
+ * Performance-optimised: feature flags are checked BEFORE any Supabase
+ * call.  The expensive auth round-trip only runs on protected routes
+ * (/dashboard/*, /me/*).  Public pages that pass the feature-flag check
+ * return immediately with zero network overhead.
  */
-
-// ── Imports ──
 
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { isRouteEnabled } from '@/lib/feature-flags'
 
-// ── Middleware ──
+/** Routes that require an authenticated Supabase session. */
+const AUTH_PREFIXES = ['/dashboard', '/me']
 
-/**
- * Next.js middleware function that refreshes Supabase auth sessions and
- * protects authenticated routes.
- *
- * @param request - The incoming Next.js request object.
- * @returns The (possibly cookie-updated) response, or a redirect to `/login`.
- */
+function needsAuth(pathname: string): boolean {
+  return AUTH_PREFIXES.some(p => pathname === p || pathname.startsWith(p + '/'))
+}
+
 export async function middleware(request: NextRequest) {
+  const pathname = request.nextUrl.pathname
+
+  // ── Feature-flag gate (no Supabase call needed for non-admins) ──
+  // If the route is disabled and this isn't already /coming-soon, check
+  // whether the user might be an admin before redirecting.  For visitors
+  // without an auth cookie we can redirect immediately.
+  if (!isRouteEnabled(pathname) && pathname !== '/coming-soon') {
+    const hasAuthCookie = request.cookies.getAll().some(c => c.name.startsWith('sb-'))
+
+    if (!hasAuthCookie) {
+      // No auth cookie → definitely not an admin → redirect fast
+      const comingSoonUrl = request.nextUrl.clone()
+      comingSoonUrl.pathname = '/coming-soon'
+      comingSoonUrl.search = ''
+      return NextResponse.redirect(comingSoonUrl)
+    }
+
+    // Has auth cookie — need to check if admin (fall through to auth block below)
+  }
+
+  // ── Public routes that passed feature-flag check: return immediately ──
+  if (!needsAuth(pathname)) {
+    // For disabled routes with an auth cookie, we still need to check admin status
+    if (isRouteEnabled(pathname)) {
+      return NextResponse.next({ request })
+    }
+  }
+
+  // ── Auth session refresh (only for protected routes or admin bypass check) ──
   let supabaseResponse = NextResponse.next({ request })
 
   const supabase = createServerClient(
@@ -51,9 +72,7 @@ export async function middleware(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser()
 
-  const pathname = request.nextUrl.pathname
-
-  // Look up profile for authenticated users (needed for role checks + feature flag bypass)
+  // Look up profile for authenticated users (role checks + feature flag bypass)
   let profileData: { account_status?: string; role?: string } | null = null
   if (user) {
     try {
@@ -64,7 +83,6 @@ export async function middleware(request: NextRequest) {
         .single()
       profileData = profile as { account_status?: string; role?: string } | null
     } catch {
-      // If profile fetch fails, proceed as unauthenticated to avoid gateway timeout
       profileData = null
     }
   }
@@ -79,34 +97,6 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(comingSoonUrl)
   }
 
-  // Homepage is now at / — no redirect needed
-
-  // Beta gate — TEMPORARILY DISABLED
-  // To re-enable, uncomment the block below:
-  //
-  // const PUBLIC_PATHS = [
-  //   '/',
-  //   '/login',
-  //   '/signup',
-  //   '/reset-password',
-  //   '/about',
-  //   '/privacy',
-  //   '/terms',
-  //   '/accessibility',
-  //   '/contact',
-  //   '/account-locked',
-  //   '/coming-soon',
-  // ]
-  // const isPublicPath = PUBLIC_PATHS.includes(pathname)
-  //   || pathname.startsWith('/auth/')
-  //
-  // if (!user && !isPublicPath) {
-  //   const loginUrl = request.nextUrl.clone()
-  //   loginUrl.pathname = '/login'
-  //   loginUrl.searchParams.set('redirect', pathname)
-  //   return NextResponse.redirect(loginUrl)
-  // }
-
   // Check account status and role for authenticated users
   if (user && !pathname.startsWith('/account-locked')) {
     if (profileData?.account_status === 'locked') {
@@ -116,7 +106,6 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(lockedUrl)
     }
 
-    // Enforce role-based access for /dashboard routes
     if (pathname.startsWith('/dashboard')) {
       const role = profileData?.role || 'neighbor'
       if (role !== 'admin' && role !== 'partner' && role !== 'neighbor') {
@@ -131,20 +120,12 @@ export async function middleware(request: NextRequest) {
   return supabaseResponse
 }
 
-// ── Route Matcher ──
-
-/**
- * Next.js middleware configuration. Only requests whose pathnames match
- * these patterns will invoke the {@link middleware} function.
- */
 export const config = {
   matcher: [
     /*
-     * Match all routes except:
-     * - _next/static, _next/image (Next.js internals)
-     * - favicon.ico, sitemap.xml, robots.txt
-     * - /api/* (API routes handle their own auth)
-     * - Static assets (images, geo, etc.)
+     * Match all routes except static assets and API routes.
+     * Feature-flag checks run first (no network call).
+     * Supabase auth only fires for /dashboard/* and /me/* routes.
      */
     '/((?!_next/static|_next/image|favicon\\.ico|sitemap\\.xml|robots\\.txt|api/|images/|geo/).*)',
   ],
