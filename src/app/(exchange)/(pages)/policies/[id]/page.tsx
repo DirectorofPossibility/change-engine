@@ -165,83 +165,68 @@ export default async function PolicyDetailPage({ params }: { params: Promise<{ i
         <div className="absolute bottom-[-20%] left-[-5%] opacity-[0.06] pointer-events-none" aria-hidden="true">
           <FlowerOfLife color="#ffffff" size={400} />
         </div>
+        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'6\' height=\'6\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M0 6L6 0M-1 1L1-1M5 7L7 5\' stroke=\'%23fff\' stroke-width=\'.5\'/%3E%3C/svg%3E")', backgroundSize: '6px 6px' }} />
+        <div className="absolute inset-0 bg-gradient-radial from-white/5 via-transparent to-transparent" />
 
-        <div className="max-w-[1080px] mx-auto px-6 py-12 sm:py-16 relative z-10">
-          {/* Breadcrumb */}
-          <nav className="font-mono text-[0.65rem] uppercase tracking-[0.12em] text-white/70 mb-4">
+        <div className="max-w-[1080px] mx-auto px-6 py-6 sm:py-10 relative z-10">
+          {/* Breadcrumb + type in one line */}
+          <nav className="text-xs uppercase tracking-wider text-white/60 mb-4 flex items-center gap-2">
             <Link href="/" className="hover:text-white transition-colors">Home</Link>
-            <span className="mx-1.5">&rsaquo;</span>
+            <span>&rsaquo;</span>
             <Link href="/policies" className="hover:text-white transition-colors">{t('policy.policies')}</Link>
-          </nav>
-
-          {/* Badge row: level pill + status + policy_type */}
-          <div className="flex flex-wrap items-center gap-3 mb-5">
             {policy.level && (
-              <span
-                className="inline-block px-4 py-1.5 rounded-full text-white font-mono text-[0.65rem] uppercase tracking-[0.14em] font-bold"
-                style={{ background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(10px)' }}
-              >
-                {policy.level}
-              </span>
+              <>
+                <span>&rsaquo;</span>
+                <span className="text-white/40">{policy.level}</span>
+              </>
             )}
             {policy.status && (
-              <span className="inline-flex items-center gap-1.5 text-white">
-                <span className="inline-block shrink-0 rounded-full" style={{ width: 7, height: 7, background: '#ffffff' }} />
-                <span className="font-mono text-[0.65rem] uppercase tracking-wider">{policy.status}</span>
-              </span>
+              <>
+                <span>&rsaquo;</span>
+                <span className="text-white/40">{policy.status}</span>
+              </>
             )}
             {policy.policy_type && (
-              <span className="font-mono text-[0.65rem] uppercase tracking-wider text-white/80">{policy.policy_type}</span>
+              <>
+                <span>&rsaquo;</span>
+                <span className="text-white/40">{policy.policy_type}</span>
+              </>
             )}
-          </div>
+          </nav>
 
           {/* Title */}
-          <h1 className="font-display font-black text-white leading-[1.1] tracking-[-0.02em] mb-5"
-            style={{ fontSize: 'clamp(28px, 4vw, 44px)' }}
+          <h1 className="font-display font-black text-white leading-[1.1] tracking-[-0.02em] mb-4"
+            style={{ fontSize: 'clamp(26px, 3.5vw, 40px)' }}
           >
             {displayName}
           </h1>
 
           {/* Summary */}
           {displaySummary && (
-            <p className="text-white/90 leading-[1.7] mb-6 max-w-[600px]" style={{ fontSize: '1.05rem' }}>
+            <p className="text-white/90 leading-relaxed mb-5 max-w-[560px]" style={{ fontSize: '1.05rem' }}>
               {displaySummary.length > 200 ? displaySummary.slice(0, 200) + '...' : displaySummary}
             </p>
           )}
 
-          {/* Bookmark */}
-          <BookmarkButton
-            contentType="policy"
-            contentId={id}
-            title={displayName}
-          />
-
-          {/* Meta strip: bill_number, source link, introduced date, data source */}
-          <div className="font-mono text-[0.6rem] uppercase tracking-[0.1em] text-white/60 flex flex-wrap items-center gap-x-3 gap-y-1 mt-4">
-            {policy.bill_number && (
-              <span>{policy.bill_number}</span>
-            )}
-            {policy.source_url && (
-              <>
-                {policy.bill_number && <span>&middot;</span>}
-                <a href={policy.source_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:text-white transition-colors">
-                  <ExternalLink size={10} /> Source
-                </a>
-              </>
-            )}
-            {policy.introduced_date && (
-              <>
-                {(policy.bill_number || policy.source_url) && <span>&middot;</span>}
-                <span>Introduced {new Date(policy.introduced_date).toLocaleDateString()}</span>
-              </>
-            )}
-            {policy.data_source && (
-              <>
-                {(policy.bill_number || policy.source_url || policy.introduced_date) && <span>&middot;</span>}
-                <span className="capitalize">{policy.data_source.replace(/_/g, ' ')}</span>
-              </>
-            )}
+          {/* Bookmark + meta inline */}
+          <div className="flex items-center gap-4">
+            <BookmarkButton
+              contentType="policy"
+              contentId={id}
+              title={displayName}
+            />
+            <span className="text-xs text-white/40">
+              {[policy.bill_number, policy.introduced_date ? `Introduced ${new Date(policy.introduced_date).toLocaleDateString()}` : null, policy.data_source?.replace(/_/g, ' ')].filter(Boolean).join(' \u00b7 ')}
+            </span>
           </div>
+
+          {policy.source_url && (
+            <div className="text-[0.7rem] uppercase tracking-[0.1em] text-white/60 flex flex-wrap items-center gap-x-3 gap-y-1 mt-3">
+              <a href={policy.source_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:text-white transition-colors">
+                <ExternalLink size={10} /> Source
+              </a>
+            </div>
+          )}
         </div>
       </section>
 

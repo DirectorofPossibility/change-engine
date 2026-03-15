@@ -144,31 +144,28 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
         <div className="absolute bottom-[-20%] left-[-5%] opacity-[0.06] pointer-events-none" aria-hidden="true">
           <FlowerOfLife color="#ffffff" size={400} />
         </div>
+        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'6\' height=\'6\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M0 6L6 0M-1 1L1-1M5 7L7 5\' stroke=\'%23fff\' stroke-width=\'.5\'/%3E%3C/svg%3E")', backgroundSize: '6px 6px' }} />
+        <div className="absolute inset-0 bg-gradient-radial from-white/5 via-transparent to-transparent" />
 
-        <div className="max-w-[1080px] mx-auto px-6 py-12 sm:py-16 relative z-10">
-          <div className="flex flex-col lg:flex-row gap-10 items-center">
-            <div className="flex-1">
-              {/* Breadcrumb */}
-              <nav className="font-mono text-[0.65rem] uppercase tracking-[0.12em] text-white/70 mb-4">
+        <div className="max-w-[1080px] mx-auto px-6 py-6 sm:py-10 relative z-10">
+          <div className="flex flex-col lg:flex-row gap-8 items-center">
+            <div className="flex-1 min-w-0">
+              {/* Breadcrumb + type in one line */}
+              <nav className="text-xs uppercase tracking-wider text-white/60 mb-4 flex items-center gap-2">
                 <Link href="/" className="hover:text-white transition-colors">Home</Link>
-                <span className="mx-1.5">&rsaquo;</span>
+                <span>&rsaquo;</span>
                 <Link href="/services" className="hover:text-white transition-colors">{t('detail.all_services')}</Link>
+                {themeName && (
+                  <>
+                    <span>&rsaquo;</span>
+                    <span className="text-white/40">{themeName}</span>
+                  </>
+                )}
               </nav>
 
-              {/* Badge */}
-              {themeName && (
-                <div className="mb-5">
-                  <span className="inline-block px-4 py-1.5 rounded-full text-white font-mono text-[0.65rem] uppercase tracking-[0.14em] font-bold"
-                    style={{ background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(10px)' }}
-                  >
-                    {themeName}
-                  </span>
-                </div>
-              )}
-
               {/* Title */}
-              <h1 className="font-display font-black text-white leading-[1.1] tracking-[-0.02em] mb-5"
-                style={{ fontSize: 'clamp(28px, 4vw, 44px)' }}
+              <h1 className="font-display font-black text-white leading-[1.1] tracking-[-0.02em] mb-4"
+                style={{ fontSize: 'clamp(26px, 3.5vw, 40px)' }}
               >
                 {displayName}
               </h1>
@@ -185,20 +182,25 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
 
               {/* Summary */}
               {displayDesc && (
-                <p className="text-white/90 leading-[1.7] mb-6 max-w-[600px]" style={{ fontSize: '1.05rem' }}>
+                <p className="text-white/90 leading-relaxed mb-5 max-w-[560px]" style={{ fontSize: '1.05rem' }}>
                   {displayDesc.length > 200 ? displayDesc.slice(0, 200) + '...' : displayDesc}
                 </p>
               )}
 
-              {/* Bookmark */}
-              <BookmarkButton
-                contentType="service"
-                contentId={service.service_id}
-                title={displayName}
-              />
+              {/* Bookmark + meta inline */}
+              <div className="flex items-center gap-4">
+                <BookmarkButton
+                  contentType="service"
+                  contentId={service.service_id}
+                  title={displayName}
+                />
+                <span className="text-xs text-white/40">
+                  {[fullAddress, service.hours].filter(Boolean).join(' \u00b7 ')}
+                </span>
+              </div>
 
               {/* Contact links in hero */}
-              <div className="flex flex-wrap items-center gap-3 mt-6">
+              <div className="flex flex-wrap items-center gap-3 mt-4">
                 {service.phone && (
                   <a href={'tel:' + service.phone} className="inline-flex items-center gap-1.5 px-4 py-2 text-white text-xs font-mono uppercase tracking-wider font-semibold transition-colors hover:bg-white/20 rounded-full" style={{ background: 'rgba(255,255,255,0.15)' }}>
                     <Phone size={13} /> {service.phone}
@@ -211,18 +213,6 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
                 )}
               </div>
 
-              {/* Meta strip */}
-              <div className="font-mono text-[0.6rem] uppercase tracking-[0.1em] text-white/60 flex flex-wrap items-center gap-x-3 gap-y-1 mt-4">
-                {fullAddress && (
-                  <span className="inline-flex items-center gap-1"><MapPin size={10} /> {fullAddress}</span>
-                )}
-                {service.hours && (
-                  <>
-                    {fullAddress && <span>&middot;</span>}
-                    <span className="inline-flex items-center gap-1"><Clock size={10} /> {service.hours}</span>
-                  </>
-                )}
-              </div>
             </div>
 
             {/* Org logo */}

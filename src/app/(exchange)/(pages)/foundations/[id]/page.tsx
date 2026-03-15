@@ -74,48 +74,49 @@ export default async function FoundationDetailPage({ params }: { params: Promise
         <div className="absolute bottom-[-20%] left-[-5%] opacity-[0.06] pointer-events-none" aria-hidden="true">
           <FlowerOfLife color="#ffffff" size={400} />
         </div>
+        <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'6\' height=\'6\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M0 6L6 0M-1 1L1-1M5 7L7 5\' stroke=\'%23fff\' stroke-width=\'.5\'/%3E%3C/svg%3E")', backgroundSize: '6px 6px' }} />
+        <div className="absolute inset-0 bg-gradient-radial from-white/5 via-transparent to-transparent" />
 
-        <div className="max-w-[1080px] mx-auto px-6 py-12 sm:py-16 relative z-10">
-          {/* Breadcrumb */}
-          <nav className="font-mono text-[0.65rem] uppercase tracking-[0.12em] text-white/70 mb-4">
+        <div className="max-w-[1080px] mx-auto px-6 py-6 sm:py-10 relative z-10">
+          {/* Breadcrumb + type in one line */}
+          <nav className="text-xs uppercase tracking-wider text-white/60 mb-4 flex items-center gap-2">
             <Link href="/" className="hover:text-white transition-colors">Home</Link>
-            <span className="mx-1.5">&rsaquo;</span>
+            <span>&rsaquo;</span>
             <Link href="/foundations" className="hover:text-white transition-colors">Foundations</Link>
+            {eyebrowParts.length > 0 && (
+              <>
+                <span>&rsaquo;</span>
+                <span className="text-white/40">{eyebrowParts.join(' / ')}</span>
+              </>
+            )}
           </nav>
-
-          {/* Badge */}
-          {eyebrowParts.length > 0 && (
-            <div className="mb-5">
-              <span
-                className="inline-block px-4 py-1.5 rounded-full text-white font-mono text-[0.65rem] uppercase tracking-[0.14em] font-bold"
-                style={{ background: 'rgba(255,255,255,0.2)', backdropFilter: 'blur(10px)' }}
-              >
-                {eyebrowParts.join(' / ')}
-              </span>
-            </div>
-          )}
 
           {/* Title */}
           <h1
-            className="font-display font-black text-white leading-[1.1] tracking-[-0.02em] mb-5"
-            style={{ fontSize: 'clamp(28px, 4vw, 44px)' }}
+            className="font-display font-black text-white leading-[1.1] tracking-[-0.02em] mb-4"
+            style={{ fontSize: 'clamp(26px, 3.5vw, 40px)' }}
           >
             {f.name}
           </h1>
 
           {/* Mission */}
           {heroText && (
-            <p className="text-white/90 leading-[1.7] mb-6 max-w-[600px]" style={{ fontSize: '1.1rem' }}>
+            <p className="text-white/90 leading-relaxed mb-5 max-w-[560px]" style={{ fontSize: '1.1rem' }}>
               {heroText.length > 200 ? heroText.slice(0, 200) + '...' : heroText}
             </p>
           )}
 
-          {/* Bookmark */}
-          <BookmarkButton
-            contentType="foundation"
-            contentId={id}
-            title={f.name}
-          />
+          {/* Bookmark + meta inline */}
+          <div className="flex items-center gap-4">
+            <BookmarkButton
+              contentType="foundation"
+              contentId={id}
+              title={f.name}
+            />
+            <span className="text-xs text-white/40">
+              {[f.assets ? `Assets: ${f.assets}` : null, f.annual_giving ? `Annual Giving: ${f.annual_giving}` : null, f.founded_year ? `Est. ${f.founded_year}` : null].filter(Boolean).join(' \u00b7 ')}
+            </span>
+          </div>
 
           {/* Contact links — absorbed into hero */}
           <div className="flex flex-wrap items-center gap-3 mt-4">
@@ -136,24 +137,6 @@ export default async function FoundationDetailPage({ params }: { params: Promise
             )}
           </div>
 
-          {/* Meta strip — assets, annual giving, founded */}
-          <div className="font-mono text-[0.6rem] uppercase tracking-[0.1em] text-white/60 flex flex-wrap items-center gap-x-3 gap-y-1 mt-6">
-            {f.assets && (
-              <span>Assets: {f.assets}</span>
-            )}
-            {f.annual_giving && (
-              <>
-                {f.assets && <span>&middot;</span>}
-                <span>Annual Giving: {f.annual_giving}</span>
-              </>
-            )}
-            {f.founded_year && (
-              <>
-                {(f.assets || f.annual_giving) && <span>&middot;</span>}
-                <span>Est. {f.founded_year}</span>
-              </>
-            )}
-          </div>
         </div>
       </section>
 
