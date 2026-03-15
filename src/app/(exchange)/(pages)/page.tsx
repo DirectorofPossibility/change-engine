@@ -194,7 +194,7 @@ export default async function ExchangeHomePage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
             {CENTER_LIST.map(function (c) {
               const count = centerCounts[c.slug] || 0
               const friendly = CENTER_FRIENDLY[c.slug]
@@ -202,36 +202,35 @@ export default async function ExchangeHomePage() {
                 <Link
                   key={c.slug}
                   href={c.href}
-                  className="relative overflow-hidden transition-all hover:shadow-lg hover:translate-y-[-2px] group rounded-lg"
-                  style={{ background: '#ffffff', border: `1px solid ${RULE}` }}
+                  className="relative overflow-hidden transition-all hover:shadow-xl hover:translate-y-[-3px] hover:scale-[1.02] group rounded-xl"
+                  style={{ background: `linear-gradient(135deg, ${c.color} 0%, ${c.color}dd 50%, ${c.color}99 100%)` }}
                 >
-                  {/* Color accent top */}
-                  <div className="h-1.5 rounded-t-lg" style={{ background: c.color }} />
+                  {/* Texture layers */}
+                  <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")' }} />
+                  <div className="absolute top-[-40%] right-[-20%] w-[200px] h-[200px] rounded-full opacity-20" style={{ background: 'radial-gradient(circle, white 0%, transparent 70%)' }} />
 
-                  {/* FOL background graphic */}
-                  <div className="absolute top-0 right-0 w-[160px] h-[160px] pointer-events-none" aria-hidden="true">
-                    <div
-                      className="absolute inset-0 transition-all duration-500 group-hover:scale-110 group-hover:opacity-[0.12]"
-                      style={{ opacity: 0.06, transform: 'translate(30%, -20%)' }}
-                    >
-                      <Geo type={c.geoType} color={c.color} opacity={1} />
-                    </div>
+                  {/* Large geo watermark */}
+                  <div className="absolute bottom-[-30px] right-[-20px] w-[180px] h-[180px] pointer-events-none transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12" aria-hidden="true" style={{ opacity: 0.12 }}>
+                    <Geo type={c.geoType} color="#ffffff" opacity={1} />
                   </div>
 
-                  <div className="relative z-10 p-5">
-                    <div className="w-10 h-10 mb-3 flex items-center justify-center" style={{ opacity: 0.4 }}>
-                      <Geo type={c.geoType} color={c.color} opacity={1} />
+                  <div className="relative z-10 p-6 min-h-[220px] flex flex-col justify-between">
+                    <div>
+                      <div className="w-12 h-12 mb-4 flex items-center justify-center rounded-lg" style={{ background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(10px)' }}>
+                        <Geo type={c.geoType} color="#ffffff" opacity={0.9} />
+                      </div>
+
+                      <h3 className="font-display text-xl font-black text-white mb-1">{friendly?.name || c.name}</h3>
+                      <p className="text-sm text-white/70 italic mb-3">{friendly?.tagline || c.tagline}</p>
+                      <p className="text-sm leading-relaxed text-white/80">{friendly?.description || c.description}</p>
                     </div>
 
-                    <div className="flex items-baseline justify-between mb-1">
-                      <h3 className="text-base font-bold" style={{ color: INK }}>{friendly?.name || c.name}</h3>
-                      {count > 0 && <span className="text-xs font-mono" style={{ color: DIM }}>{count.toLocaleString()}</span>}
+                    <div className="flex items-center justify-between mt-5 pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.15)' }}>
+                      {count > 0 && <span className="text-xs font-mono text-white/50">{count.toLocaleString()} resources</span>}
+                      <span className="inline-flex items-center gap-1.5 text-sm font-bold text-white group-hover:gap-2.5 transition-all">
+                        Explore <ArrowRight size={16} />
+                      </span>
                     </div>
-                    <p className="text-sm italic mb-2" style={{ color: c.color }}>{friendly?.tagline || c.tagline}</p>
-                    <p className="text-sm leading-relaxed mb-3" style={{ color: DIM }}>{friendly?.description || c.description}</p>
-                    <span className="inline-flex items-center gap-1 text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: c.color }}>
-                      Explore <ArrowRight size={14} />
-                    </span>
                   </div>
                 </Link>
               )
