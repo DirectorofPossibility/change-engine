@@ -11,9 +11,10 @@
  */
 
 import { redirect } from 'next/navigation'
+import { cookies } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
-import { Sidebar } from '@/components/layout/Sidebar'
-import { DashboardHeader } from '@/components/layout/DashboardHeader'
+import { DashboardShell } from '@/components/layout/DashboardShell'
+import { LanguageProvider } from '@/lib/contexts/LanguageContext'
 import { getPipelineStats } from '@/lib/data/dashboard'
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -63,20 +64,24 @@ export default async function DashboardLayout({ children }: { children: React.Re
     pendingRequestCount = count || 0
   }
 
+  // Read language preference from cookie
+  const cookieStore = await cookies()
+  const initialLang = cookieStore.get('lang')?.value
+
   return (
-    <div className="min-h-screen bg-brand-bg">
-      <Sidebar pipelineStats={stats} role={role} orgName={orgName} pendingRequestCount={pendingRequestCount} />
-      <div className="ml-60 min-h-screen flex flex-col">
-        <DashboardHeader
-          displayName={displayName}
+    <div className="min-h-screen" style={{ background: '#FAF8F5' }}>
+      <LanguageProvider initialLang={initialLang}>
+        <DashboardShell
+          pipelineStats={stats}
           role={role}
           orgName={orgName}
+          pendingRequestCount={pendingRequestCount}
+          displayName={displayName}
           reviewCount={stats.needsReview}
-        />
-        <main className="flex-1 p-8">
+        >
           {children}
-        </main>
-      </div>
+        </DashboardShell>
+      </LanguageProvider>
     </div>
   )
 }

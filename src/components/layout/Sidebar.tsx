@@ -7,7 +7,7 @@ import type { PipelineStats } from '@/lib/types/dashboard'
 import {
   LayoutDashboard, Search, FileText, Zap,
   Languages, Wrench, Users, BookOpen, HelpCircle,
-  Briefcase, CalendarDays, Building2, Globe,
+  Briefcase, CalendarDays, Building2,
   Compass, BookMarked, Quote, Library,
   ChevronDown, Scale, Megaphone, MapPin,
   Tag, Network, Linkedin, CircleDot, Map,
@@ -161,9 +161,11 @@ interface SidebarProps {
   role?: string
   orgName?: string | null
   pendingRequestCount?: number
+  mobileOpen?: boolean
+  onMobileClose?: () => void
 }
 
-export function Sidebar({ pipelineStats, role = 'admin', orgName, pendingRequestCount = 0 }: SidebarProps) {
+export function Sidebar({ pipelineStats, role = 'admin', orgName, pendingRequestCount = 0, mobileOpen = false, onMobileClose }: SidebarProps) {
   const pathname = usePathname()
 
   const groups = role === 'partner'
@@ -189,14 +191,17 @@ export function Sidebar({ pipelineStats, role = 'admin', orgName, pendingRequest
   }
 
   return (
-    <aside className="fixed left-0 top-0 bottom-0 w-60 bg-sidebar-bg text-white flex flex-col z-40">
+    <aside
+      className={'fixed left-0 top-0 bottom-0 w-60 text-white flex flex-col z-40 transition-transform duration-200 md:translate-x-0 ' + (mobileOpen ? 'translate-x-0' : '-translate-x-full')}
+      style={{ background: '#1a1714' }}
+    >
       {/* Logo */}
-      <div className="px-5 py-5 border-b border-white/10">
+      <div className="px-5 py-5" style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
         <Link href={role === 'partner' ? '/dashboard/partner' : '/dashboard'} className="block">
-          <h1 className="text-lg font-bold tracking-tight">THE CHANGE LAB</h1>
-          <p className="text-xs text-white/50 mt-0.5">{portalLabel}</p>
+          <h1 className="font-display text-lg font-bold tracking-tight">The Change Engine</h1>
+          <p className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.4)' }}>{portalLabel}</p>
           {role === 'partner' && orgName && (
-            <p className="text-xs text-brand-accent mt-1 truncate">{orgName}</p>
+            <p className="text-xs mt-1 truncate" style={{ color: '#C75B2A' }}>{orgName}</p>
           )}
         </Link>
       </div>
@@ -210,25 +215,15 @@ export function Sidebar({ pipelineStats, role = 'admin', orgName, pendingRequest
               group={group}
               isActive={isActive}
               pendingRequestCount={pendingRequestCount}
+              onNavClick={onMobileClose}
             />
           )
         })}
       </nav>
 
-      {/* Sidebar footer */}
-      <div className="px-3 py-3 border-t border-white/10">
-        <Link
-          href="/"
-          className="flex items-center gap-3 px-3 py-2 rounded-md text-sm text-white/70 hover:bg-sidebar-hover hover:text-white"
-        >
-          <Globe size={16} className="flex-shrink-0" />
-          <span>View Site</span>
-        </Link>
-      </div>
-
       {/* Pipeline Mini Status (admin only) */}
       {role === 'admin' && (
-        <div className="px-5 py-4 border-t border-white/10">
+        <div className="px-5 py-4" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
           <p className="text-xs text-white/40 uppercase tracking-wide mb-2">Pipeline</p>
           <div className="flex items-center gap-1 text-xs">
             <span className="text-blue-300 font-medium">{pipelineStats.totalIngested}</span>
@@ -250,10 +245,11 @@ export function Sidebar({ pipelineStats, role = 'admin', orgName, pendingRequest
   )
 }
 
-function NavGroupSection({ group, isActive, pendingRequestCount }: {
+function NavGroupSection({ group, isActive, pendingRequestCount, onNavClick }: {
   group: NavGroup
   isActive: (href: string) => boolean
   pendingRequestCount: number
+  onNavClick?: () => void
 }) {
   const hasActive = group.items.some(item => isActive(item.href))
   const [open, setOpen] = useState(group.defaultOpen || hasActive)
@@ -263,7 +259,7 @@ function NavGroupSection({ group, isActive, pendingRequestCount }: {
       <button
         onClick={function () { setOpen(!open) }}
         aria-expanded={open}
-        className="flex items-center justify-between w-full px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-white/40 hover:text-white/60 transition-colors"
+        className="flex items-center justify-between w-full px-3 py-1.5 text-xs font-mono font-bold uppercase tracking-wider text-white/40 hover:text-white/60 transition-colors"
       >
         {group.label}
         <ChevronDown
@@ -279,10 +275,11 @@ function NavGroupSection({ group, isActive, pendingRequestCount }: {
               <Link
                 key={item.href}
                 href={item.href}
-                className={'flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors ' +
-                  (isActive(item.href)
-                    ? 'bg-sidebar-active text-white font-medium'
-                    : 'text-white/70 hover:bg-sidebar-hover hover:text-white')
+                onClick={onNavClick}
+                className="flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors"
+                style={isActive(item.href)
+                  ? { background: 'rgba(199,91,42,0.15)', color: '#C75B2A', fontWeight: 500 }
+                  : { color: 'rgba(255,255,255,0.7)' }
                 }
               >
                 <Icon size={15} className="flex-shrink-0" />

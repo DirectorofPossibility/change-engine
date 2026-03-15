@@ -7,9 +7,18 @@ import { X, Search } from 'lucide-react'
 import { HeaderSearch } from './HeaderSearch'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import { ZipInput } from './ZipInput'
+import { AuthButton } from './AuthButton'
 import { FlowerOfLife } from '@/components/geo/sacred'
 import { useTranslation } from '@/lib/use-translation'
 import { filterNavItems } from '@/lib/feature-flags'
+import { useCity } from '@/lib/contexts/CityContext'
+import { MapPin } from 'lucide-react'
+
+const CITIES = [
+  { slug: 'houston', name: 'Houston', state: 'TX' },
+  { slug: 'berkeley', name: 'Berkeley', state: 'CA' },
+  { slug: 'san-francisco', name: 'San Francisco', state: 'CA' },
+]
 
 const DRAWER_LINKS = [
   { href: '/news', label: 'News' },
@@ -24,6 +33,7 @@ export function D2Nav() {
   const [drawerOpen, setDrawerOpen] = useState(false)
   const { t } = useTranslation()
 
+  const { citySlug, setCity } = useCity()
   const visibleLinks = filterNavItems(DRAWER_LINKS)
 
   const closeDrawer = useCallback(function () { setDrawerOpen(false) }, [])
@@ -73,21 +83,24 @@ export function D2Nav() {
                 Community Exchange
               </span>
               <span className="text-xs text-muted">
-                Powered by The Change Lab
+                {CITIES.find(function (c) { return c.slug === citySlug })?.name || 'Houston'} Edition
               </span>
             </div>
           </Link>
 
-          {/* Hamburger */}
-          <button
-            className="p-2 min-w-[44px] min-h-[44px] flex flex-col items-center justify-center gap-[5px] hover:bg-paper transition-colors group"
-            onClick={function () { setDrawerOpen(true) }}
-            aria-label="Open menu"
-          >
-            <span className="block w-5 h-[2px] bg-ink group-hover:bg-blue transition-colors" />
-            <span className="block w-5 h-[2px] bg-ink group-hover:bg-blue transition-colors" />
-            <span className="block w-3.5 h-[2px] bg-ink group-hover:bg-blue transition-colors" />
-          </button>
+          {/* Right: auth + hamburger */}
+          <div className="flex items-center gap-2">
+            <AuthButton />
+            <button
+              className="p-2 min-w-[44px] min-h-[44px] flex flex-col items-center justify-center gap-[5px] hover:bg-paper transition-colors group"
+              onClick={function () { setDrawerOpen(true) }}
+              aria-label="Open menu"
+            >
+              <span className="block w-5 h-[2px] bg-ink group-hover:bg-blue transition-colors" />
+              <span className="block w-5 h-[2px] bg-ink group-hover:bg-blue transition-colors" />
+              <span className="block w-3.5 h-[2px] bg-ink group-hover:bg-blue transition-colors" />
+            </button>
+          </div>
         </div>
       </nav>
 
@@ -137,6 +150,28 @@ export function D2Nav() {
                 </div>
               </div>
 
+              {/* City selector */}
+              <div className="py-4 border-b border-rule">
+                <div className="flex items-center gap-1.5 mb-2">
+                  <MapPin size={13} className="text-muted" />
+                  <span className="text-xs font-semibold text-muted uppercase tracking-wider">City</span>
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {CITIES.map(function (city) {
+                    const active = citySlug === city.slug
+                    return (
+                      <button
+                        key={city.slug}
+                        onClick={function () { setCity(city.slug); window.location.reload() }}
+                        className={'px-3 py-1.5 text-sm transition-colors ' + (active ? 'bg-ink text-white font-semibold' : 'bg-paper text-ink hover:bg-rule')}
+                      >
+                        {city.name}, {city.state}
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+
               {/* Main links */}
               <div className="py-4 space-y-1">
                 {visibleLinks.map(function (link) {
@@ -156,14 +191,8 @@ export function D2Nav() {
               </div>
 
               {/* Account */}
-              <div className="pt-4 border-t border-rule">
-                <Link
-                  href="/me"
-                  className="flex items-center justify-center py-2.5 bg-ink text-white text-sm font-semibold hover:bg-blue transition-colors"
-                  onClick={closeDrawer}
-                >
-                  {t('d2nav.my_account')}
-                </Link>
+              <div className="pt-4 border-t border-rule flex items-center justify-center">
+                <AuthButton />
               </div>
             </div>
           </div>

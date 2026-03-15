@@ -74,7 +74,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen relative bg-paper">
+    <div className="min-h-screen relative" style={{ background: '#FAF8F5' }}>
       {/* Sacred geometry watermark */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
         <Image
@@ -89,14 +89,14 @@ export default function LoginPage() {
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 py-16">
         {/* Header */}
         <Link href="/" className="mb-12 hover:opacity-80 transition-opacity">
-          <p style={{ fontSize: 11, letterSpacing: '0.12em', color: "#1b5e8a", textTransform: 'uppercase' }}>
+          <p style={{ fontSize: 11, letterSpacing: '0.12em', color: "#C75B2A", textTransform: 'uppercase' }}>
             The Change Engine
           </p>
         </Link>
 
         <div className="w-full max-w-[400px]">
           {/* Title */}
-          <h1 style={{ fontSize: 32, lineHeight: 1.15, marginBottom: 8 }}>
+          <h1 className="font-display font-black" style={{ fontSize: 32, lineHeight: 1.15, marginBottom: 8, color: '#1a1714' }}>
             Good to have you back.
           </h1>
           <p style={{ fontSize: 15, color: "#5c6474", marginBottom: 32 }}>
@@ -164,7 +164,7 @@ export default function LoginPage() {
               type="submit"
               disabled={loading}
               className="w-full py-3 text-white transition-opacity hover:opacity-90 disabled:opacity-50"
-              style={{ fontSize: 13, letterSpacing: '0.04em', background: '#1b5e8a' }}
+              style={{ fontSize: 13, letterSpacing: '0.04em', background: '#C75B2A' }}
             >
               {loading ? 'Signing in...' : 'Sign In'}
             </button>
@@ -178,13 +178,13 @@ export default function LoginPage() {
             <Link
               href="/reset-password"
               className="block hover:underline"
-              style={{ fontSize: 14, fontStyle: 'italic', color: "#1b5e8a" }}
+              style={{ fontSize: 14, fontStyle: 'italic', color: "#C75B2A" }}
             >
               Forgot your password? No stress.
             </Link>
             <p style={{ fontSize: 14, color: "#5c6474" }}>
               No account? You don&apos;t need one to look around. But if you want to save things and get updates —{' '}
-              <Link href="/signup" className="hover:underline" style={{ color: "#1b5e8a" }}>
+              <Link href="/signup" className="hover:underline" style={{ color: "#C75B2A" }}>
                 join free
               </Link>.
             </p>
@@ -194,11 +194,11 @@ export default function LoginPage() {
         {/* Footer */}
         <div className="mt-16">
           <Link
-            href="/exchange"
+            href="/"
             className="hover:underline"
             style={{ fontSize: 13, fontStyle: 'italic', color: "#5c6474" }}
           >
-            &larr; Back to The Community Exchange
+            &larr; Back to The Change Engine
           </Link>
         </div>
       </div>

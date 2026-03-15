@@ -136,13 +136,13 @@ export default function SignupPage() {
 
   if (success) {
     return (
-      <div className="min-h-screen relative flex items-center justify-center px-6 bg-paper">
+      <div className="min-h-screen relative flex items-center justify-center px-6" style={{ background: '#FAF8F5' }}>
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
           <Image src="/images/fol/seed-of-life.svg" alt="" width={400} height={400} className="opacity-[0.04]" />
         </div>
         <div className="relative z-10 w-full max-w-[440px] text-center">
           <Image src="/images/fol/flower-full.svg" alt="" width={60} height={60} className="mx-auto mb-6 opacity-30" />
-          <h1 style={{ fontSize: 28, marginBottom: 12 }}>
+          <h1 className="font-display font-black" style={{ fontSize: 28, marginBottom: 12 }}>
             Check your email.
           </h1>
           <p style={{ fontSize: 15, color: "#5c6474", lineHeight: 1.7, marginBottom: 24 }}>
@@ -159,7 +159,7 @@ export default function SignupPage() {
               onClick={handleResendVerification}
               disabled={resending}
               className="hover:underline disabled:opacity-50 mb-4 block mx-auto"
-              style={{ fontSize: 14, fontStyle: 'italic', color: "#1b5e8a" }}
+              style={{ fontSize: 14, fontStyle: 'italic', color: "#C75B2A" }}
             >
               {resending ? 'Resending...' : 'Didn\u2019t get it? Resend.'}
             </button>
@@ -167,7 +167,7 @@ export default function SignupPage() {
           {error && (
             <p style={{ fontSize: 13, color: '#C53030', marginBottom: 16 }}>{error}</p>
           )}
-          <Link href="/login" className="hover:underline" style={{ fontSize: 14, fontStyle: 'italic', color: "#1b5e8a" }}>
+          <Link href="/login" className="hover:underline" style={{ fontSize: 14, fontStyle: 'italic', color: "#C75B2A" }}>
             Back to sign in
           </Link>
         </div>
@@ -178,7 +178,7 @@ export default function SignupPage() {
   // ── Main form ──
 
   return (
-    <div className="min-h-screen relative bg-paper">
+    <div className="min-h-screen relative" style={{ background: '#FAF8F5' }}>
       {/* Watermark */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
         <Image src="/images/fol/flower-full.svg" alt="" width={600} height={600} className="opacity-[0.03]" />
@@ -187,14 +187,14 @@ export default function SignupPage() {
       <div className="relative z-10 flex flex-col items-center py-12 px-6">
         {/* Header */}
         <Link href="/" className="mb-10 hover:opacity-80 transition-opacity">
-          <p style={{ fontSize: 11, letterSpacing: '0.12em', color: "#1b5e8a", textTransform: 'uppercase' }}>
+          <p style={{ fontSize: 11, letterSpacing: '0.12em', color: "#C75B2A", textTransform: 'uppercase' }}>
             The Change Engine
           </p>
         </Link>
 
         <div className="w-full max-w-[460px]">
           {/* Title */}
-          <h1 style={{ fontSize: 32, lineHeight: 1.15, marginBottom: 8 }}>
+          <h1 className="font-display font-black" style={{ fontSize: 32, lineHeight: 1.15, marginBottom: 8 }}>
             Join the Exchange.
           </h1>
           <p style={{ fontSize: 15, color: "#5c6474", marginBottom: 32 }}>
@@ -301,11 +301,11 @@ export default function SignupPage() {
                   type="checkbox" checked={agreedPrivacy}
                   onChange={function () { setAgreedPrivacy(!agreedPrivacy) }}
                   className="mt-0.5 w-4 h-4"
-                  style={{ accentColor: '#1b5e8a' }}
+                  style={{ accentColor: '#C75B2A' }}
                 />
                 <span style={{ fontSize: 14,  }}>
                   I have read and agree to the{' '}
-                  <Link href="/privacy" target="_blank" className="hover:underline" style={{ color: "#1b5e8a" }}>Privacy Policy</Link>
+                  <Link href="/privacy" target="_blank" className="hover:underline" style={{ color: "#C75B2A" }}>Privacy Policy</Link>
                 </span>
               </label>
 
@@ -314,11 +314,11 @@ export default function SignupPage() {
                   type="checkbox" checked={agreedAccessibility}
                   onChange={function () { setAgreedAccessibility(!agreedAccessibility) }}
                   className="mt-0.5 w-4 h-4"
-                  style={{ accentColor: '#1b5e8a' }}
+                  style={{ accentColor: '#C75B2A' }}
                 />
                 <span style={{ fontSize: 14,  }}>
                   I have read the{' '}
-                  <Link href="/accessibility" target="_blank" className="hover:underline" style={{ color: "#1b5e8a" }}>Accessibility Statement</Link>
+                  <Link href="/accessibility" target="_blank" className="hover:underline" style={{ color: "#C75B2A" }}>Accessibility Statement</Link>
                 </span>
               </label>
 
@@ -327,11 +327,11 @@ export default function SignupPage() {
                   type="checkbox" checked={agreedTerms}
                   onChange={function () { setAgreedTerms(!agreedTerms) }}
                   className="mt-0.5 w-4 h-4"
-                  style={{ accentColor: '#1b5e8a' }}
+                  style={{ accentColor: '#C75B2A' }}
                 />
                 <span style={{ fontSize: 14,  }}>
                   I agree to the{' '}
-                  <Link href="/terms" target="_blank" className="hover:underline" style={{ color: "#1b5e8a" }}>Terms of Service</Link>
+                  <Link href="/terms" target="_blank" className="hover:underline" style={{ color: "#C75B2A" }}>Terms of Service</Link>
                 </span>
               </label>
             </div>
@@ -340,7 +340,7 @@ export default function SignupPage() {
               type="submit"
               disabled={loading || !allAgreed}
               className="w-full py-3 text-white transition-opacity hover:opacity-90 disabled:opacity-50"
-              style={{ fontSize: 13, letterSpacing: '0.04em', background: '#1b5e8a' }}
+              style={{ fontSize: 13, letterSpacing: '0.04em', background: '#C75B2A' }}
             >
               {loading ? 'Creating account...' : 'Create Account'}
             </button>
@@ -348,12 +348,12 @@ export default function SignupPage() {
 
           <p className="mt-6 text-center" style={{ fontSize: 14, color: "#5c6474" }}>
             Already have an account?{' '}
-            <Link href="/login" className="hover:underline" style={{ color: "#1b5e8a" }}>Sign in</Link>
+            <Link href="/login" className="hover:underline" style={{ color: "#C75B2A" }}>Sign in</Link>
           </p>
 
           {/* Account tier */}
           <div className="mt-8 p-5 text-center" style={{ background: "#f4f5f7", border: '1px solid #dde1e8' }}>
-            <p style={{ fontSize: 10, letterSpacing: '0.1em', color: "#1b5e8a", textTransform: 'uppercase', marginBottom: 4 }}>
+            <p style={{ fontSize: 10, letterSpacing: '0.1em', color: "#C75B2A", textTransform: 'uppercase', marginBottom: 4 }}>
               Neighbor Account
             </p>
             <p style={{ fontSize: 24,  }}>Free</p>
@@ -368,8 +368,8 @@ export default function SignupPage() {
 
         {/* Footer */}
         <div className="mt-12">
-          <Link href="/exchange" className="hover:underline" style={{ fontSize: 13, fontStyle: 'italic', color: "#5c6474" }}>
-            &larr; Back to The Community Exchange
+          <Link href="/" className="hover:underline" style={{ fontSize: 13, fontStyle: 'italic', color: "#5c6474" }}>
+            &larr; Back to The Change Engine
           </Link>
         </div>
       </div>

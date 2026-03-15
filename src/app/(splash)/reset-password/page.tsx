@@ -38,19 +38,19 @@ export default function ResetPasswordPage() {
 
   if (success) {
     return (
-      <div className="min-h-screen relative flex items-center justify-center px-6 bg-paper">
+      <div className="min-h-screen relative flex items-center justify-center px-6" style={{ background: '#FAF8F5' }}>
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
           <Image src="/images/fol/seed-of-life.svg" alt="" width={400} height={400} className="opacity-[0.04]" />
         </div>
         <div className="relative z-10 w-full max-w-[400px] text-center">
-          <h1 style={{ fontSize: 28, marginBottom: 12 }}>
+          <h1 className="font-display font-black" style={{ fontSize: 28, marginBottom: 12 }}>
             Check your inbox.
           </h1>
           <p style={{ fontSize: 15, color: "#5c6474", lineHeight: 1.7, marginBottom: 8 }}>
             The link expires in 24 hours. We sent it to <strong style={{  }}>{email}</strong>.
           </p>
           <div className="mt-8">
-            <Link href="/login" className="hover:underline" style={{ fontSize: 14, fontStyle: 'italic', color: "#1b5e8a" }}>
+            <Link href="/login" className="hover:underline" style={{ fontSize: 14, fontStyle: 'italic', color: "#C75B2A" }}>
               Back to sign in
             </Link>
           </div>
@@ -60,20 +60,20 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen relative bg-paper">
+    <div className="min-h-screen relative" style={{ background: '#FAF8F5' }}>
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
         <Image src="/images/fol/seed-of-life.svg" alt="" width={500} height={500} className="opacity-[0.04]" />
       </div>
 
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 py-16">
         <Link href="/" className="mb-12 hover:opacity-80 transition-opacity">
-          <p style={{ fontSize: 11, letterSpacing: '0.12em', color: "#1b5e8a", textTransform: 'uppercase' }}>
+          <p style={{ fontSize: 11, letterSpacing: '0.12em', color: "#C75B2A", textTransform: 'uppercase' }}>
             The Change Engine
           </p>
         </Link>
 
         <div className="w-full max-w-[400px]">
-          <h1 style={{ fontSize: 32, lineHeight: 1.15, marginBottom: 8 }}>
+          <h1 className="font-display font-black" style={{ fontSize: 32, lineHeight: 1.15, marginBottom: 8 }}>
             Let&apos;s get you back in.
           </h1>
           <p style={{ fontSize: 15, color: "#5c6474", marginBottom: 32 }}>
@@ -110,7 +110,7 @@ export default function ResetPasswordPage() {
               type="submit"
               disabled={loading}
               className="w-full py-3 text-white transition-opacity hover:opacity-90 disabled:opacity-50"
-              style={{ fontSize: 13, letterSpacing: '0.04em', background: '#1b5e8a' }}
+              style={{ fontSize: 13, letterSpacing: '0.04em', background: '#C75B2A' }}
             >
               {loading ? 'Sending...' : 'Send Reset Link'}
             </button>
@@ -120,13 +120,13 @@ export default function ResetPasswordPage() {
 
           <p className="text-center" style={{ fontSize: 14, color: "#5c6474" }}>
             Remember your password?{' '}
-            <Link href="/login" className="hover:underline" style={{ color: "#1b5e8a" }}>Sign in</Link>
+            <Link href="/login" className="hover:underline" style={{ color: "#C75B2A" }}>Sign in</Link>
           </p>
         </div>
 
         <div className="mt-16">
-          <Link href="/exchange" className="hover:underline" style={{ fontSize: 13, fontStyle: 'italic', color: "#5c6474" }}>
-            &larr; Back to The Community Exchange
+          <Link href="/" className="hover:underline" style={{ fontSize: 13, fontStyle: 'italic', color: "#5c6474" }}>
+            &larr; Back to The Change Engine
           </Link>
         </div>
       </div>

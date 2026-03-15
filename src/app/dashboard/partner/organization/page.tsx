@@ -10,6 +10,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import Image from 'next/image'
+import { EditOrgForm } from './EditOrgForm'
 
 export default async function PartnerOrganizationPage() {
   const supabase = await createClient()
@@ -188,15 +189,23 @@ export default async function PartnerOrganizationPage() {
         </div>
       )}
 
-      {/* Note */}
-      <div className="bg-brand-bg rounded-xl border border-brand-border p-4">
-        <p className="text-xs text-brand-muted">
-          Organization details are managed by The Change Lab team. If you need to update your
-          organization information, please contact us at{' '}
-          <a href="mailto:hello@thechangelab.net" className="text-brand-accent hover:underline">
-            hello@thechangelab.net
-          </a>.
-        </p>
+      {/* Edit Form */}
+      <div className="bg-white rounded-xl border border-brand-border p-6">
+        <EditOrgForm org={{
+          org_id: orgData.org_id,
+          org_name: orgData.org_name,
+          mission_statement: orgData.mission_statement || null,
+          description_full: orgData.description_full || null,
+          email: orgData.email || null,
+          phone: orgData.phone || null,
+          phone_secondary: orgData.phone_secondary || null,
+          website: orgData.website || null,
+          address: orgData.address || null,
+          city: orgData.city || null,
+          state: orgData.state || null,
+          zip_code: orgData.zip_code || null,
+          service_area: orgData.service_area || null,
+        }} />
       </div>
     </div>
   )

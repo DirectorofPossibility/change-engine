@@ -7,6 +7,7 @@ import { Search, Menu, X, ChevronDown } from 'lucide-react'
 import { FlowerOfLifeIcon } from '@/components/exchange/FlowerIcons'
 import { LanguageSwitcher } from '@/components/exchange/LanguageSwitcher'
 import { ZipInput } from '@/components/exchange/ZipInput'
+import { AuthButton } from '@/components/exchange/AuthButton'
 
 const NAV_CENTERS = [
   {
@@ -133,6 +134,9 @@ export function Design2Nav({ election }: Design2NavProps) {
             <div className="hidden md:block">
               <LanguageSwitcher />
             </div>
+            <div className="hidden md:block">
+              <AuthButton />
+            </div>
             <Link
               href="/design2/search"
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs"
@@ -156,6 +160,7 @@ export function Design2Nav({ election }: Design2NavProps) {
             <div className="flex items-center gap-3 mb-4 md:hidden">
               <ZipInput />
               <LanguageSwitcher />
+              <AuthButton />
             </div>
             {NAV_CENTERS.map(function (center) {
               return (
