@@ -20,6 +20,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { validateApiRequest } from '@/lib/api-auth'
+import { geocodeOrg, calculateProfileCompleteness, type OrgGeo } from './handlers/geocode-org'
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY!
@@ -300,8 +301,18 @@ async function classifyPage(
   meta: { title: string; description: string },
   url: string,
   orgName: string,
+  orgContext?: OrgGeo | null,
 ): Promise<PageClassification> {
-  const userPrompt = `Organization: ${orgName}
+  // Inject org geography context so child entities inherit location
+  const geoContext = orgContext ? `
+SOURCE ORGANIZATION: "${orgName}"
+ORG GEOGRAPHY: ${orgContext.zip}${orgContext.neighborhoodName ? `, ${orgContext.neighborhoodName}` : ''}${orgContext.councilDistrict ? `, Council District ${orgContext.councilDistrict}` : ''}${orgContext.congressionalDistrict ? `, ${orgContext.congressionalDistrict}` : ''}
+ORG COORDINATES: ${orgContext.lat}, ${orgContext.lng}
+
+The resource INHERITS this org's geography unless the page specifies a different location.
+` : ''
+
+  const userPrompt = `${geoContext}Organization: ${orgName}
 Page URL: ${url}
 Page Title: ${meta.title}
 Meta Description: ${meta.description}
@@ -535,6 +546,17 @@ export async function POST(req: NextRequest) {
     domain,
   }).catch(() => {})
 
+  // Step 2b: Geocode the org from homepage HTML
+  let orgGeo: OrgGeo | null = null
+  try {
+    // Load existing address fields from org record
+    const existingOrg = await supaRest('GET', `organizations?org_id=eq.${encodeURIComponent(orgId)}&select=address,city,state,zip_code&limit=1`).catch(() => [])
+    const existing = existingOrg?.[0] || {}
+    orgGeo = await geocodeOrg(orgId, homepage.html, existing)
+  } catch (e) {
+    console.error('Geocoding failed (non-fatal):', (e as Error).message)
+  }
+
   // Step 3: Discover internal pages
   const discoveredUrls = discoverPages(homepage.html, orgUrl)
 
@@ -579,7 +601,7 @@ export async function POST(req: NextRequest) {
         continue
       }
 
-      const classification = await classifyPage(page.text, page.meta, pageUrl, orgName)
+      const classification = await classifyPage(page.text, page.meta, pageUrl, orgName, orgGeo)
 
       if (classification.entity_type === 'skip') {
         results.push({ url: pageUrl, entity_type: 'skip', name: classification.name, status: 'skipped' })
@@ -725,13 +747,27 @@ export async function POST(req: NextRequest) {
   const skippedCount = results.filter(r => r.status === 'skipped').length
   const errors = results.filter(r => r.status === 'error').length
 
-  // Update org crawl tracking
-  await supaRest('PATCH', `organizations?org_id=eq.${encodeURIComponent(orgId)}`, {
+  // Update org crawl tracking + profile completeness
+  const profileUpdate: Record<string, unknown> = {
     last_crawled_at: new Date().toISOString(),
     crawl_status: errors === 0 ? 'completed' : 'partial',
     pages_found: discoveredUrls.length,
     entities_found: created,
-  }).catch(() => {})
+    objects_cataloged: created,
+    last_profiled_at: new Date().toISOString(),
+    profile_status: created > 0 ? 'partial' : 'stub',
+  }
+  // Re-fetch org to calculate completeness
+  try {
+    const orgRow = await supaRest('GET', `organizations?org_id=eq.${encodeURIComponent(orgId)}&select=*&limit=1`)
+    if (orgRow?.[0]) {
+      const merged = { ...orgRow[0], ...profileUpdate }
+      const completeness = calculateProfileCompleteness(merged)
+      profileUpdate.profile_completeness = completeness
+      if (completeness >= 60) profileUpdate.profile_status = 'complete'
+    }
+  } catch { /* non-fatal */ }
+  await supaRest('PATCH', `organizations?org_id=eq.${encodeURIComponent(orgId)}`, profileUpdate).catch(() => {})
 
   await supaRest('POST', 'ingestion_log', {
     event_type: 'org_deep_crawl',
@@ -747,6 +783,7 @@ export async function POST(req: NextRequest) {
     org_id: orgId,
     org_name: orgName,
     domain,
+    geocoded: orgGeo ? { zip: orgGeo.zip, neighborhood: orgGeo.neighborhoodName, lat: orgGeo.lat, lng: orgGeo.lng } : null,
     pages_discovered: discoveredUrls.length,
     pages_processed: toProcess.length,
     entities_created: created,
